@@ -1,1 +1,1 @@
-DEBUG = TRUE
+DEBUG = True
