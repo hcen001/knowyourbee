@@ -5,8 +5,7 @@ entry_point = Blueprint('dashboard', __name__)
 
 # Set the route and accepted methods
 @entry_point.route('/', methods=['GET'])
-def signin():
-    print('Sign in')
+def index():
     logged_in = False
     if logged_in is False:
         try:
@@ -14,4 +13,8 @@ def signin():
         except Exception as e:
             raise e
             abort(404)
+    return redirect(url_for('dashboard.dashboard'))
+
+@entry_point.route('/dashboard', methods=['GET'])
+def dashboard():
     return 'Hello, world!'
