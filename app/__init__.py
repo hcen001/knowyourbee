@@ -12,4 +12,16 @@ app.config.from_pyfile('config.py')
 # Variables defined here will override those in the default configuration
 app.config.from_envvar('APP_CONFIG_FILE')
 
-from app import routes
+# Import a module / component using its blueprint handler variable (mod_auth)
+from app.mod_auth.controllers import mod_auth as auth_module
+from app.mod_dashboard.controllers import entry_point as index
+
+# Register blueprint(s)
+app.register_blueprint(index)
+app.register_blueprint(auth_module)
+
+# Load Boostrap
+from flask_bootstrap import Bootstrap
+bootstrap = Bootstrap(app)
+
+# from app import routes
