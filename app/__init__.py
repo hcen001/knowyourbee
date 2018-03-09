@@ -33,8 +33,8 @@ app.register_blueprint(entry_point)
 app.register_blueprint(auth_module)
 
 # Load Boostrap
-from flask_bootstrap import Bootstrap
-bootstrap = Bootstrap(app)
+# from flask_bootstrap import Bootstrap
+# bootstrap = Bootstrap(app)
 
 #
 @app.shell_context_processor
