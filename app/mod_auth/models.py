@@ -29,6 +29,11 @@ class User(UserMixin, Base):
         db.session.add(self)
         db.session.commit()
 
+    def logout(self):
+        self.authenticated = False
+        db.session.add(self)
+        db.session.commit()
+
     @property
     def is_authenticated(self):
         """Return True if the user is authenticated."""

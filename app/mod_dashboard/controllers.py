@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for, abort
 from app import login
 from app.mod_auth.models import User
-from flask_login import login_required
+from flask_login import login_required, current_user, logout_user
 
 @login.user_loader
 def load_user(id):
@@ -26,3 +26,11 @@ def index():
 @login_required
 def dashboard():
     return 'Hello, world!'
+
+@entry_point.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    user = current_user
+    user.logout()
+    logout_user()
+    return redirect(url_for('dashboard.index'))
