@@ -62,6 +62,10 @@ local_settings.py
 instance/
 .webassets-cache
 
+.DS_Store
+._.DS_Store
+._*
+
 # Scrapy stuff:
 .scrapy
 
