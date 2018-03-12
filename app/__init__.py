@@ -1,6 +1,6 @@
 from flask import Flask
 
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__, instance_relative_config=True, static_folder='static')
 
 # Load the default configuration
 app.config.from_object('config.default')
@@ -30,11 +30,11 @@ from app.mod_dashboard.controllers import entry_point as entry_point
 
 # Register blueprint(s)
 app.register_blueprint(entry_point)
-app.register_blueprint(auth_module)
+app.register_blueprint(auth_module, url_prefix='/auth')
 
 # Load Boostrap
-from flask_bootstrap import Bootstrap
-bootstrap = Bootstrap(app)
+# from flask_bootstrap import Bootstrap
+# bootstrap = Bootstrap(app)
 
 #
 @app.shell_context_processor
