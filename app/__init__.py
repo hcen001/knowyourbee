@@ -40,5 +40,3 @@ app.register_blueprint(auth_module, url_prefix='/auth')
 @app.shell_context_processor
 def make_shell_context():
     return {'db': db}
-
-from app.mod_auth import models
