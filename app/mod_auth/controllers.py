@@ -77,7 +77,7 @@ def requestaccount():
                 account_request = AccountRequest(email, password, fname, lname)
                 account_request.request()
                 flash('Account requested. You should receive an email with your credentials soon.')
-            flash('There is a pendinr request for an account with this email.')
+            flash('There is a pending request for an account with this email.')
         else:
             flash('Invalid form data')
         return redirect(url_for('auth.login'))

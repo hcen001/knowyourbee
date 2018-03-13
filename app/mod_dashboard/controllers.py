@@ -25,7 +25,7 @@ def index():
 @entry_point.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return 'Hello, world!'
+    return render_template('dashboard/index.html', title=Dashboard)
 
 @entry_point.route('/logout', methods=['GET'])
 @login_required
