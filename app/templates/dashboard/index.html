@@ -71,7 +71,7 @@
                                     </li>
                                     <li>
                                         <a href="{{ url_for('auth.logout')}}">
-                                            <i class="icon-key"></i> Log Out </a>
+                                            <i class="icon-logout"></i> Log Out </a>
                                     </li>
                                 </ul>
                             </li>
@@ -105,7 +105,7 @@
                     <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
                     <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
                         <li class="nav-item start active open">
-                            <a href="javascript:;" class="nav-link nav-toggle">
+                            <a href="{{ url_for('dashboard.index') }}" class="nav-link nav-toggle">
                                 <i class="icon-home"></i>
                                 <span class="title">Dashboard</span>
                                 <span class="selected"></span>
@@ -114,7 +114,7 @@
                         </li>
                         <li class="nav-item  ">
                             <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="icon-diamond"></i>
+                                <i class="icon-folder"></i>
                                 <span class="title">Packages</span>
                                 <span class="arrow"></span>
                             </a>
@@ -135,13 +135,6 @@
                         </li>
                         <li class="nav-item  ">
                             <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="icon-bulb"></i>
-                                <span class="title">Profile</span>
-                                <span class="arrow"></span>
-                            </a>
-                        </li>
-                        <li class="nav-item  ">
-                            <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="icon-user"></i>
                                 <span class="title">User</span>
                                 <span class="arrow"></span>
@@ -154,9 +147,9 @@
                                     </a>
                                 </li>
                                 <li class="nav-item  ">
-                                    <a href="javascript:;" class="nav-link nav-toggle">
-                                        <i class="icon-notebook"></i>
-                                        <span class="title">Login</span>
+                                    <a href="{{ url_for('auth.logout') }}" class="nav-link nav-toggle">
+                                        <i class="icon-logout"></i>
+                                        <span class="title">Logout</span>
                                     </a>
                                 </li>
                             </ul>
@@ -258,18 +251,18 @@
                     </div>
                     <!-- END THEME PANEL -->
                     <h1 class="page-title"> {{ title }}
-                        <small>statistics, charts, recent events and reports</small>
+                        <small>register packages, samples, grant access to new users and request reports</small>
                     </h1>
                     <div class="page-bar">
                         <ul class="page-breadcrumb">
                             <li>
                                 <i class="icon-home"></i>
-                                <a href="index.html">Home</a>
-                                <i class="fa fa-angle-right"></i>
+                                <a href="{{ url_for('dashboard.index') }}">Dashboard</a>
+                                <!-- <i class="fa fa-angle-right"></i> -->
                             </li>
-                            <li>
+                            <!-- <li>
                                 <span>Dashboard</span>
-                            </li>
+                             --></li>
                         </ul>
                     </div>
                     <!-- END PAGE HEADER-->
