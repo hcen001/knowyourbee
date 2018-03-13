@@ -1,11 +1,10 @@
 from app.models import Base
 from app import db
-from flask_login import UserMixin
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Define a User model
-class User(UserMixin, Base):
+class User(Base):
 
     __tablename__ = 'user'
 
@@ -13,12 +12,16 @@ class User(UserMixin, Base):
     email            = db.Column(db.String(128),  nullable=False, unique=True)
     password         = db.Column(db.String(192),  nullable=False)
     authenticated    = db.Column(db.Boolean, nullable=False, server_default='f', default=False)
+    fname            = db.Column(db.String(50),  nullable=False)
+    lname            = db.Column(db.String(50),  nullable=False)
 
     # New instance instantiation procedure
-    def __init__(self, email, password):
+    def __init__(self, email, password, fname, lname):
 
         self.email    = email
         self.password = password
+        self.fname    = fname
+        self.lname    = lname
         self.is_authenticated = False
 
     def check_password(self, password):
@@ -58,4 +61,35 @@ class User(UserMixin, Base):
         return str(self.id)
 
     def __repr__(self):
-        return '<User {}>'.format(self.email)
+        return '<User: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
+
+# Define a User model
+class AccountRequest(Base):
+
+    __tablename__ = 'account_request'
+
+    email            = db.Column(db.String(128),  nullable=False, unique=True)
+    password         = db.Column(db.String(192),  nullable=False)
+    fname            = db.Column(db.String(50),  nullable=False)
+    lname            = db.Column(db.String(50),  nullable=False)
+    granted          = db.Column(db.Boolean, nullable=False, default=False, server_default='f')
+
+    def __init__(self, email, password, fname, lname):
+
+        self.email    = email
+        self.password = generate_password_hash(password)
+        self.fname    = fname
+        self.lname    = lname
+        self.granted  = False
+
+    def request(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def grant(self):
+        self.granted = True
+        db.session.add(self)
+        db.session.commit()
+
+    def __repr__(self):
+        return '<Account request: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)

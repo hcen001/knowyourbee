@@ -1,5 +1,7 @@
 #!/bin/bash
 
+message=$1
+
 export FLASK_APP=run.py
 export FLASK_DEBUG=1
-flask run --host=0.0.0.0
+flask db migrate -m "$message"
