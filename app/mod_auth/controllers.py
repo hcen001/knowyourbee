@@ -8,7 +8,7 @@ from werkzeug import check_password_hash, generate_password_hash
 
 # Import module forms
 from app.mod_auth.forms import LoginForm, ForgotPasswordForm, RequestAccountForm
-from app.mod_auth.models import User
+from app.mod_auth.models import User, AccountRequest
 from app.mod_util.utils import is_safe_url
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
@@ -64,11 +64,20 @@ def requestaccount():
         flash('Authenticated users cannot request accounts')
         return redirect(url_for('dashboard.index'))
 
-    form = RequestAccountForm(request.form)
-    print("form data: ", form.data)
+    request_form = RequestAccountForm(request.form)
+    print("form data: ", request_form.data)
     if request.method == 'POST':
-        if form.validate_on_submit():
-            flash('Account request')
+        if request_form.validate_on_submit():
+            pending = AccountRequest.query.filter(AccountRequest.email==request_form.request_email.data, AccountRequest.granted==False).first()
+            if not pending:
+                fname = request_form.fname.data
+                lname = request_form.lname.data
+                email = request_form.request_email.data
+                password = request_form.request_password.data
+                account_request = AccountRequest(email, password, fname, lname)
+                account_request.request()
+                flash('Account requested. You should receive an email with your credentials soon.')
+            flash('There is a pendinr request for an account with this email.')
         else:
             flash('Invalid form data')
         return redirect(url_for('auth.login'))
