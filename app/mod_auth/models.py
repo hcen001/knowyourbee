@@ -24,6 +24,10 @@ class User(Base):
         self.lname    = lname
         self.is_authenticated = False
 
+    @property
+    def name(self):
+        return self.fname+' '+self.lname
+
     def check_password(self, password):
         return check_password_hash(self.password, password)
 

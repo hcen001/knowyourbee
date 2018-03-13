@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, abort
+from flask import Blueprint, redirect, url_for, abort, render_template
 from app import login
 from app.mod_auth.models import User
 from flask_login import login_required, current_user, logout_user
@@ -25,12 +25,4 @@ def index():
 @entry_point.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('dashboard/index.html', title=Dashboard)
-
-@entry_point.route('/logout', methods=['GET'])
-@login_required
-def logout():
-    user = current_user
-    user.logout()
-    logout_user()
-    return redirect(url_for('dashboard.index'))
+    return render_template('dashboard/index.html', title='Dashboard', user=current_user)

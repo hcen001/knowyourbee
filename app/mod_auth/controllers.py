@@ -1,7 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, flash, redirect, url_for, abort
 from jinja2 import TemplateNotFound
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 
 # Import password / encryption helper tools
 from werkzeug import check_password_hash, generate_password_hash
@@ -38,6 +38,14 @@ def login():
                 return abort(400)
             return redirect(_next or url_for('dashboard.index'))
     return render_template('auth/login.html', title='Sign In', login_form=login_form, forgot_pw=forgot_password_form, request_form=request_form)
+
+@mod_auth.route('/logout/', methods=['GET'])
+def logout():
+    user = current_user
+    user.logout()
+    logout_user()
+    flash('Logged out successfully.')
+    return redirect(url_for('auth.login'))
 
 @mod_auth.route('/forgotpassword/', methods=['POST'])
 def forgotpassword():
