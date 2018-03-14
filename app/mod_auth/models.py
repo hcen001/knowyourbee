@@ -15,14 +15,16 @@ class User(Base):
     fname            = db.Column(db.String(50),  nullable=False)
     lname            = db.Column(db.String(50),  nullable=False)
 
+    roles            = db.relationship('Role', secondary='user_role')
+
     # New instance instantiation procedure
     def __init__(self, email, password, fname, lname):
 
         self.email    = email
-        self.password = password
+        self.password = generate_password_hash(password)
         self.fname    = fname
         self.lname    = lname
-        self.is_authenticated = False
+        self.authenticated = False
 
     @property
     def name(self):
@@ -43,6 +45,12 @@ class User(Base):
 
     def forgot_password(self):
         print(self)
+
+    def is_admin(self):
+        for role in self.roles:
+            if role.is_admin_role():
+                return True
+        return False
 
     @property
     def is_authenticated(self):
@@ -67,15 +75,14 @@ class User(Base):
     def __repr__(self):
         return '<User: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
 
-# Define a User model
 class AccountRequest(Base):
 
     __tablename__ = 'account_request'
 
-    email            = db.Column(db.String(128),  nullable=False, unique=True)
-    password         = db.Column(db.String(192),  nullable=False)
-    fname            = db.Column(db.String(50),  nullable=False)
-    lname            = db.Column(db.String(50),  nullable=False)
+    email            = db.Column(db.String(128), nullable=False, unique=True)
+    password         = db.Column(db.String(192), nullable=False)
+    fname            = db.Column(db.String(50), nullable=False)
+    lname            = db.Column(db.String(50), nullable=False)
     granted          = db.Column(db.Boolean, nullable=False, default=False, server_default='f')
 
     def __init__(self, email, password, fname, lname):
@@ -97,3 +104,47 @@ class AccountRequest(Base):
 
     def __repr__(self):
         return '<Account request: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
+
+class Role(Base):
+
+    __tablename__ = 'role'
+
+    name            = db.Column(db.String(64), nullable=False, default='Role', server_default='Role')
+    description     = db.Column(db.String(256), default='A description', server_default='A description')
+    can_admin       = db.Column(db.Boolean, nullable=False, default=False, server_default='f')
+
+    users           = db.relationship('User', secondary='user_role')
+
+    def __init__(self, name, description, can_admin=False):
+
+        self.name           = name
+        self.description    = description
+        self.can_admin      = can_admin
+
+    def __repr__(self):
+        return '<Role: name={}>'.format(self.name)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def is_admin_role(self):
+        return self.can_admin
+
+class UserRole(Base):
+
+    __tablename__ = 'user_role'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+
+    user = db.relationship(User, backref=db.backref('user'))
+    role = db.relationship(Role, backref=db.backref('role'))
+
+    def __init__(self, user_id, role_id):
+
+        self.user_id = user_id
+        self.role_id = role_id
+
+    def __repr__(self):
+        return '<UserRole: email={}, role={}>'.format(self.user.email, self.role.name)
