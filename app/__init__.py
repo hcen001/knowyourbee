@@ -24,17 +24,14 @@ from flask_login import LoginManager
 login = LoginManager(app)
 login.login_view = 'auth.login'
 
-# Import a module / component using its blueprint handler variable (mod_auth)
-from app.mod_auth.controllers import mod_auth as auth_module
-from app.mod_dashboard.controllers import entry_point as entry_point
-
 # Register blueprint(s)
-app.register_blueprint(entry_point)
+from app.mod_auth.controllers import mod_auth as auth_module
 app.register_blueprint(auth_module, url_prefix='/auth')
 
-# Load Boostrap
-# from flask_bootstrap import Bootstrap
-# bootstrap = Bootstrap(app)
+from app.mod_dashboard.controllers import entry_point
+app.register_blueprint(entry_point)
+from app.mod_package.controllers import mod_package
+app.register_blueprint(mod_package, url_prefix='/packages')
 
 #
 @app.shell_context_processor

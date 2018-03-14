@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for, abort, render_template
 from app import login
 from app.mod_auth.models import User
-from flask_login import login_required, current_user, logout_user
+from flask_login import login_required, current_user
 
 @login.user_loader
 def load_user(id):
@@ -10,7 +10,7 @@ def load_user(id):
     except User.DoesNotExist:
         return None
 
-# Define the blueprint: 'auth', set its url prefix: app.url/auth
+# Define the blueprint
 entry_point = Blueprint('dashboard', __name__)
 
 # Set the route and accepted methods

@@ -11,7 +11,7 @@ from app.mod_auth.forms import LoginForm, ForgotPasswordForm, RequestAccountForm
 from app.mod_auth.models import User, AccountRequest
 from app.mod_util.utils import is_safe_url
 
-# Define the blueprint: 'auth', set its url prefix: app.url/auth
+# Define the blueprint
 mod_auth = Blueprint('auth', __name__)
 
 # Set the route and accepted methods

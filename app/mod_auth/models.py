@@ -1,19 +1,17 @@
-from app.models import Base
+from app.models import Base, Person
 from app import db
 
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Define a User model
-class User(Base):
+class User(UserMixin, Person):
 
     __tablename__ = 'user'
 
     # Identification Data: email & password
-    email            = db.Column(db.String(128),  nullable=False, unique=True)
     password         = db.Column(db.String(192),  nullable=False)
     authenticated    = db.Column(db.Boolean, nullable=False, server_default='f', default=False)
-    fname            = db.Column(db.String(50),  nullable=False)
-    lname            = db.Column(db.String(50),  nullable=False)
 
     roles            = db.relationship('Role', secondary='user_role')
 
@@ -75,14 +73,11 @@ class User(Base):
     def __repr__(self):
         return '<User: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
 
-class AccountRequest(Base):
+class AccountRequest(Person):
 
     __tablename__ = 'account_request'
 
-    email            = db.Column(db.String(128), nullable=False, unique=True)
     password         = db.Column(db.String(192), nullable=False)
-    fname            = db.Column(db.String(50), nullable=False)
-    lname            = db.Column(db.String(50), nullable=False)
     granted          = db.Column(db.Boolean, nullable=False, default=False, server_default='f')
 
     def __init__(self, email, password, fname, lname):
