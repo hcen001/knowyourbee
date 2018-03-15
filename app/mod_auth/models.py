@@ -1,11 +1,11 @@
-from app.models import Base, Person
+from app.models import Base, PersonBase
 from app import db
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Define a User model
-class User(UserMixin, Person):
+class User(PersonBase):
 
     __tablename__ = 'user'
 
@@ -71,9 +71,9 @@ class User(UserMixin, Person):
         return str(self.id)
 
     def __repr__(self):
-        return '<User: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
+        return '<User: email={}, name={}>'.format(self.email, self.name)
 
-class AccountRequest(Person):
+class AccountRequest(PersonBase):
 
     __tablename__ = 'account_request'
 
@@ -98,7 +98,7 @@ class AccountRequest(Person):
         db.session.commit()
 
     def __repr__(self):
-        return '<Account request: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
+        return '<Account request: email={}, name={}>'.format(self.email, self.name)
 
 class Role(Base):
 
@@ -133,8 +133,8 @@ class UserRole(Base):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
-    user = db.relationship(User, backref=db.backref('user'))
-    role = db.relationship(Role, backref=db.backref('role'))
+    user = db.relationship('User', backref=db.backref('user'))
+    role = db.relationship('Role', backref=db.backref('role'))
 
     def __init__(self, user_id, role_id):
 

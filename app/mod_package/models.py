@@ -6,8 +6,8 @@ class Package(Base):
     __tablename__       = 'package'
 
     package_id          = db.Column(db.String(128), nullable=False)
-    date_sent           = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-    date_received       = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    date_sent           = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    date_received       = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     tracking_number     = db.Column(db.String(64))
     comments            = db.Column(db.String(512))
 
@@ -20,8 +20,8 @@ class Package(Base):
     partner             = db.relationship('Partner', backref='packages', lazy=True)
     location            = db.relationship('Location', backref='packages', lazy=True)
     courier             = db.relationship('Courier', backref='packages', lazy=True)
-    sender              = db.relationship('Person', backref='sent_packages', lazy=True)
-    receiver            = db.relationship('Person', backref='received_packages', lazy=True)
+    sender              = db.relationship('Person', backref='sent_packages', foreign_keys=[sender_id], lazy=True)
+    receiver            = db.relationship('Person', backref='received_packages', foreign_keys=[receiver_id], lazy=True)
 
     def __init__(self, arg):
         self.arg = arg
@@ -52,7 +52,7 @@ class Person(PersonBase):
         self.phone = phone
 
     def __repr__():
-        return '<Person: name={}, email={}, phone={}>'.format(self.name, self.email)
+        return '<Person: name={}, email={}, phone={}>'.format(self.name, self.email, self.phone)
 
 class Partner(PersonBase):
 
@@ -74,10 +74,8 @@ class Location(Base):
 
     __tablename__ = 'location'
 
-    name            = db.Column(db.Column(db.String(256)), nullable=False)
-    description     = db.Column(db.Column(db.String(512)), nullable=False)
-
-    packages        = db.relationship('Package', backref='packages', lazy=True)
+    name            = db.Column(db.String(256), nullable=False)
+    description     = db.Column(db.String(512), nullable=False)
 
     def __init__(self, name, description):
         self.name = name
@@ -90,10 +88,8 @@ class Courier(Base):
 
     __tablename__   = 'courier'
 
-    name            = db.Column(db.Column(db.String(64)), nullable=False)
-    description     = db.Column(db.Column(db.String(128)), nullable=False)
-
-    packages        = db.relationship('Package', backref='packages', lazy=True)
+    name            = db.Column(db.String(64), nullable=False)
+    description     = db.Column(db.String(128), nullable=False)
 
     def __init__(self, name, description):
 
