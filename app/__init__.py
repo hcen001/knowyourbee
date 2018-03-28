@@ -30,11 +30,20 @@ app.register_blueprint(auth_module, url_prefix='/auth')
 
 from app.mod_dashboard.controllers import entry_point
 app.register_blueprint(entry_point)
+
 from app.mod_package.controllers import mod_package
 app.register_blueprint(mod_package, url_prefix='/packages')
+
+from app.mod_sample.controllers import mod_sample
+app.register_blueprint(mod_sample, url_prefix='/samples')
+
+from app.mod_specimen.controllers import mod_specimen
+app.register_blueprint(mod_specimen, url_prefix='/specimens')
 
 #
 @app.shell_context_processor
 def make_shell_context():
     from app.mod_auth.models import User, Role, UserRole
-    return {'db': db, 'User': User, 'Role': Role, 'UserRole': UserRole}
+    from app.mod_package.models import Package, Person, Partner, Location, Courier
+    return {'db': db, 'User': User, 'Role': Role, 'UserRole': UserRole, 'Package': Package, \
+            'Person': Person, 'Partner': Partner, 'Location': Location, 'Courier': Courier}
