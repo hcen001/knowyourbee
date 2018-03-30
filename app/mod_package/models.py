@@ -10,18 +10,18 @@ class Package(Base):
 
     __tablename__       = 'package'
 
-    __package_id          = db.Column('package_id', db.GUID(), default=uuid.uuid4(), nullable=False)
-    __date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=False)
-    __date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
-    __tracking_number     = db.Column('tracking_number', db.String(64))
-    __sender_source_id    = db.Column('sender_source_id', db.String(64), nullable=True)
-    __comments            = db.Column('comments', db.String(512))
+    package_id          = db.Column('package_id', db.GUID(), default=uuid.uuid4(), nullable=False)
+    date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
+    tracking_number     = db.Column('tracking_number', db.String(64))
+    sender_source_id    = db.Column('sender_source_id', db.String(64), nullable=True)
+    comments            = db.Column('comments', db.String(512))
 
-    __partner_id          = db.Column('partner_id', db.Integer, db.ForeignKey('partner.id'), nullable=False)
-    __location_id         = db.Column('location_id', db.Integer, db.ForeignKey('location.id'), nullable=False)
-    __courier_id          = db.Column('courier_id', db.Integer, db.ForeignKey('courier.id'), nullable=False)
-    __sender_id           = db.Column('sender_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
-    __receiver_id         = db.Column('receiver_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
+    partner_id          = db.Column('partner_id', db.Integer, db.ForeignKey('partner.id'), nullable=False)
+    location_id         = db.Column('location_id', db.Integer, db.ForeignKey('location.id'), nullable=False)
+    courier_id          = db.Column('courier_id', db.Integer, db.ForeignKey('courier.id'), nullable=False)
+    sender_id           = db.Column('sender_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
+    receiver_id         = db.Column('receiver_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
 
     partner             = db.relationship('Partner', backref='_packages', foreign_keys=[__partner_id], lazy=True)
     location            = db.relationship('Location', backref='_packages', foreign_keys=[__location_id], lazy=True)
@@ -43,94 +43,6 @@ class Package(Base):
         self.courier_id = courier_id
         self.sender_id = sender_id
         self.receiver_id = receiver_id
-
-    @property
-    def package_id(self):
-        return self.__package_id
-
-    @package_id.setter
-    def package_id(self, package_id):
-        self.__package_id = package_id
-
-    @property
-    def date_sent(self):
-        return self.__date_sent
-
-    @date_sent.setter
-    def date_sent(self, date):
-        self.__date_sent = date
-
-    @property
-    def date_received(self):
-        return self.__date_received
-
-    @date_received.setter
-    def date_received(self, date):
-        self.__date_received = date
-
-    @property
-    def tracking_number(self):
-        return self.__tracking_number
-
-    @tracking_number.setter
-    def tracking_number(self, tracking_number):
-        self.__tracking_number = tracking_number
-
-    @property
-    def sender_source_id(self):
-        return self.__sender_source_id
-
-    @sender_source_id.setter
-    def sender_source_id(self, sender_source_id):
-        self.__sender_source_id = sender_source_id()
-
-    @property
-    def comments(self):
-        return self.__comments
-
-    @comments.setter
-    def comments(self, comments):
-        self.__comments = comments
-
-    @property
-    def partner_id(self):
-        return self.__partner_id
-
-    @partner_id.setter
-    def partner_id(self, partner_id):
-        self.__partner_id = partner_id
-
-    @property
-    def location_id(self):
-        return self.__location_id
-
-    @location_id.setter
-    def location_id(self, location_id):
-        self.__location_id = location_id
-
-    @property
-    def courier_id(self):
-        return self.__courier_id
-
-    @courier_id.setter
-    def courier_id(self, courier_id):
-        self.__courier_id = courier_id
-
-    @property
-    def sender_id(self):
-        return self.__sender_id
-
-    @sender_id.setter
-    def sender_id(self, sender_id):
-        self.__sender_id = sender_id
-
-    @property
-    def receiver_id(self):
-        return self.__receiver_id
-
-    @receiver_id.setter
-    def receiver_id(self, receiver_id):
-        self.__receiver_id = receiver_id
 
     def stored_at(self):
         return self.location
@@ -186,7 +98,7 @@ class Partner(PersonBase):
 
     __tablename__    = 'partner'
 
-    __institution      = db.Column(db.String(256))
+    institution      = db.Column(db.String(256))
 
     def __init__(self, fname, lname, email, institution, phone):
         self.fname          = fname
@@ -197,14 +109,6 @@ class Partner(PersonBase):
 
     def packages(self):
         return self._packages
-
-    @property
-    def institution(self):
-        return self.__institution
-
-    @institution.setter
-    def institution(self, institution):
-        self.__institution = institution
 
     def __repr__(self):
         return '<Partner: name={}, email={}, institution={}, phone={}>'.format(self.full_name(), self.email, self.institution, self.phone)
