@@ -22,13 +22,13 @@ class Package(Base):
     sender_id           = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
     receiver_id         = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
 
-    partner             = db.relationship('Partner', backref='packages', foreign_keys=[partner_id], lazy=True)
-    location            = db.relationship('Location', backref='packages', foreign_keys=[location_id], lazy=True)
-    courier             = db.relationship('Courier', backref='packages', foreign_keys=[courier_id], lazy=True)
-    sender              = db.relationship('Person', backref='sent_packages', foreign_keys=[sender_id], lazy=True)
-    receiver            = db.relationship('Person', backref='received_packages', foreign_keys=[receiver_id], lazy=True)
+    partner             = db.relationship('Partner', back_populates='packages', foreign_keys=[partner_id], lazy=True)
+    location            = db.relationship('Location', back_populates='packages', foreign_keys=[location_id], lazy=True)
+    courier             = db.relationship('Courier', back_populates='packages', foreign_keys=[courier_id], lazy=True)
+    sender              = db.relationship('Person', back_populates='sent_packages', foreign_keys=[sender_id], lazy=True)
+    receiver            = db.relationship('Person', back_populates='received_packages', foreign_keys=[receiver_id], lazy=True)
 
-    samples             = db.relationship('Sample', back_populates='package')
+    samples             = db.relationship('Sample', back_populates='package', lazy=True)
 
     def __init__(self, arg):
         self.arg = arg
@@ -61,6 +61,9 @@ class Person(PersonBase):
 
     __tablename__ = 'person'
 
+    sent_packages       = db.relationship('Package', back_populates='sender')
+    received_packages   = db.relationship('Package', back_populates='receiver')
+
     def __init__(self, fname, lname, email, phone):
         self.fname = fname
         self.lname = lname
@@ -75,6 +78,8 @@ class Partner(PersonBase):
     __tablename__    = 'partner'
 
     institution      = db.Column(db.String(256))
+
+    packages         = db.relationship('Package', back_populates='partner')
 
     def __init__(self, fname, lname, email, institution, phone):
         self.fname          = fname
@@ -93,6 +98,8 @@ class Location(Base):
     name            = db.Column(db.String(256), nullable=False)
     description     = db.Column(db.String(512), nullable=False)
 
+    packages        = db.relationship('Package', back_populates='location')
+
     def __init__(self, name, description):
         self.name = name
         self.description = description
@@ -106,6 +113,8 @@ class Courier(Base):
 
     name            = db.Column(db.String(64), nullable=False)
     description     = db.Column(db.String(128), nullable=False)
+
+    packages        = db.relationship('Package', back_populates='packages')
 
     def __init__(self, name, description):
 
