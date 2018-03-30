@@ -44,12 +44,10 @@ class Sample(Base):
     box                 = db.Column(db.String(32), nullable=False)
 
     #Relationships
-    package             = db.relationship('Package', back_populates='samples', foreign_keys=[package_id], lazy=True)
-    collector           = db.relationship('Person', backref='samples', foreign_keys=[collector_id], lazy=True)
-    processor           = db.relationship('Person', backref='processed_samples', foreign_keys=[processor_id], lazy=True)
-    process_location    = db.relationship('Location', backref='samples', foreign_keys=[process_location_id], lazy=True)
-
-    specimens           = db.relationship('Specimen', back_populates='sample', lazy=True)
+    package             = db.relationship('Package', backref='_samples', foreign_keys=[package_id], lazy=True)
+    collector           = db.relationship('Person', backref='_collected_samples', foreign_keys=[collector_id], lazy=True)
+    processor           = db.relationship('Person', backref='_processed_samples', foreign_keys=[processor_id], lazy=True)
+    process_location    = db.relationship('Location', backref='_samples', foreign_keys=[process_location_id], lazy=True)
 
     def __init__(self):
 
@@ -68,6 +66,6 @@ class Sample(Base):
         return self.process_location
 
     def specimens_in_vial(self):
-        return len(self.specimens)
+        return self._specimens
 
 from app.mod_specimen.models import Specimen

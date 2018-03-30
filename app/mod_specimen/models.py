@@ -28,11 +28,11 @@ class Specimen(Base):
     subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=False)
     group_id            = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
 
-    sample              = db.relationship('Sample', back_populates='specimens', foreign_keys=[sample_id], lazy=True)
-    genus               = db.relationship('Genus', back_populates='specimens', foreign_keys=[genus_id], lazy=True)
-    species             = db.relationship('Species', back_populates='specimens', foreign_keys=[species_id], lazy=True)
-    subspecies          = db.relationship('Subspecies', back_populates='specimens', foreign_keys=[subspecies_id], lazy=True)
-    group               = db.relationship('Group', back_populates='specimens', foreign_keys=[group_id], lazy=True)
+    sample              = db.relationship('Sample', backref='_specimens', foreign_keys=[sample_id], lazy=True)
+    genus               = db.relationship('Genus', backref='_specimens', foreign_keys=[genus_id], lazy=True)
+    species             = db.relationship('Species', backref='_specimens', foreign_keys=[species_id], lazy=True)
+    subspecies          = db.relationship('Subspecies', backref='_specimens', foreign_keys=[subspecies_id], lazy=True)
+    group               = db.relationship('Group', backref='_specimens', foreign_keys=[group_id], lazy=True)
 
     def __init__(self, arg):
 
@@ -42,11 +42,12 @@ class Genus(Base):
 
     __tablename__ = 'genus'
 
-    specimens           = db.relationship('Specimen', back_populates='sample', lazy=True)
-
     def __init__(self, arg):
 
         self.arg = arg
+
+    def specimens(self):
+        return self._specimens
 
     def __repr__(self):
         pass
@@ -57,11 +58,12 @@ class Species(Base):
 
     name                = db.Column(db.String(128), nullable=False)
 
-    specimens           = db.relationship('Specimen', back_populates='sample', lazy=True)
-
     def __init__(self, arg):
 
         self.arg = arg
+
+    def specimens(self):
+        return self._specimens
 
     def __repr__(self):
         pass
@@ -72,11 +74,12 @@ class Subspecies(Base):
 
     name                = db.Column(db.String(128), nullable=False)
 
-    specimens           = db.relationship('Specimen', back_populates='sample', lazy=True)
-
     def __init__(self, arg):
 
         self.arg = arg
+
+    def specimens(self):
+        return self._specimens
 
     def __repr__(self):
         pass
@@ -87,11 +90,12 @@ class Group(Base):
 
     name                = db.Column(db.String(128), nullable=False)
 
-    specimens           = db.relationship('Specimen', back_populates='sample', lazy=True)
-
     def __init__(self, arg):
 
         self.arg = arg
+
+    def specimens(self):
+        return self._specimens
 
     def __repr__(self):
         pass

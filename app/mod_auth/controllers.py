@@ -73,7 +73,6 @@ def requestaccount():
         return redirect(url_for('dashboard.index'))
 
     request_form = RequestAccountForm(request.form)
-    print("form data: ", request_form.data)
     if request.method == 'POST':
         if request_form.validate_on_submit():
             pending = AccountRequest.query.filter(AccountRequest.email==request_form.request_email.data, AccountRequest.granted==False).first()
