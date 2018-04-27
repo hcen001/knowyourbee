@@ -1,34 +1,27 @@
-from app.models import Base
+from app.models import Base, PersonBase
 from app import db
 
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Define a User model
-class User(Base):
+class User(PersonBase):
 
-    __tablename__ = 'user'
+    __tablename__ = 'user_account'
 
     # Identification Data: email & password
-    email            = db.Column(db.String(128),  nullable=False, unique=True)
     password         = db.Column(db.String(192),  nullable=False)
     authenticated    = db.Column(db.Boolean, nullable=False, server_default='f', default=False)
-    fname            = db.Column(db.String(50),  nullable=False)
-    lname            = db.Column(db.String(50),  nullable=False)
 
     roles            = db.relationship('Role', secondary='user_role')
 
     # New instance instantiation procedure
     def __init__(self, email, password, fname, lname):
-
-        self.email    = email
-        self.password = generate_password_hash(password)
-        self.fname    = fname
-        self.lname    = lname
-        self.authenticated = False
-
-    @property
-    def name(self):
-        return self.fname+' '+self.lname
+        self.email              = email
+        self.password           = generate_password_hash(password)
+        self.fname              = fname
+        self.lname              = lname
+        self.authenticated      = False
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -73,16 +66,13 @@ class User(Base):
         return str(self.id)
 
     def __repr__(self):
-        return '<User: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
+        return '<User: email={}, name={}>'.format(self.email, self.full_name)
 
-class AccountRequest(Base):
+class AccountRequest(PersonBase):
 
     __tablename__ = 'account_request'
 
-    email            = db.Column(db.String(128), nullable=False, unique=True)
     password         = db.Column(db.String(192), nullable=False)
-    fname            = db.Column(db.String(50), nullable=False)
-    lname            = db.Column(db.String(50), nullable=False)
     granted          = db.Column(db.Boolean, nullable=False, default=False, server_default='f')
 
     def __init__(self, email, password, fname, lname):
@@ -103,7 +93,7 @@ class AccountRequest(Base):
         db.session.commit()
 
     def __repr__(self):
-        return '<Account request: email={}, fname={}, lname={}>'.format(self.email, self.fname, self.lname)
+        return '<Account request: email={}, name={}>'.format(self.email, self.full_name())
 
 class Role(Base):
 
@@ -135,11 +125,11 @@ class UserRole(Base):
 
     __tablename__ = 'user_role'
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
-    user = db.relationship(User, backref=db.backref('user'))
-    role = db.relationship(Role, backref=db.backref('role'))
+    user = db.relationship('User', backref=db.backref('role'))
+    role = db.relationship('Role', backref=db.backref('user'))
 
     def __init__(self, user_id, role_id):
 

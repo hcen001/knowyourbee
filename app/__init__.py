@@ -24,20 +24,29 @@ from flask_login import LoginManager
 login = LoginManager(app)
 login.login_view = 'auth.login'
 
-# Import a module / component using its blueprint handler variable (mod_auth)
-from app.mod_auth.controllers import mod_auth as auth_module
-from app.mod_dashboard.controllers import entry_point as entry_point
-
 # Register blueprint(s)
-app.register_blueprint(entry_point)
+from app.mod_auth.controllers import mod_auth as auth_module
 app.register_blueprint(auth_module, url_prefix='/auth')
 
-# Load Boostrap
-# from flask_bootstrap import Bootstrap
-# bootstrap = Bootstrap(app)
+from app.mod_dashboard.controllers import entry_point
+app.register_blueprint(entry_point)
+
+from app.mod_package.controllers import mod_package
+app.register_blueprint(mod_package, url_prefix='/packages')
+
+from app.mod_sample.controllers import mod_sample
+app.register_blueprint(mod_sample, url_prefix='/samples')
+
+from app.mod_specimen.controllers import mod_specimen
+app.register_blueprint(mod_specimen, url_prefix='/specimens')
 
 #
 @app.shell_context_processor
 def make_shell_context():
     from app.mod_auth.models import User, Role, UserRole
-    return {'db': db, 'User': User, 'Role': Role, 'UserRole': UserRole}
+    from app.mod_package.models import Package, Person, Partner, Location, Courier
+    from app.mod_sample.models import Sample
+    from app.mod_specimen.models import Specimen, Genus, Species, Subspecies, Lineage
+    return {'db': db, 'User': User, 'Role': Role, 'UserRole': UserRole, 'Package': Package, \
+            'Sample': Sample, 'Specimen': Specimen, 'Genus': Genus, 'Species': Species, 'Subspecies': Subspecies, 'Lineage': Lineage,  \
+            'Person': Person, 'Partner': Partner, 'Location': Location, 'Courier': Courier}

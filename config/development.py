@@ -13,3 +13,4 @@ POSTGRES = {
 
 SQLALCHEMY_DATABASE_URI = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_ECHO=True
