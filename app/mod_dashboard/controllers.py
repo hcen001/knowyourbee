@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, abort, render_template
+from flask import Blueprint, redirect, url_for, abort, render_template, render_template_string
 from app import login
 from app.mod_auth.models import User
 from flask_login import login_required, current_user
@@ -25,4 +25,5 @@ def index():
 @entry_point.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('dashboard/index.html', title='Dashboard', user=current_user)
+    js = render_template('package/index.js')
+    return render_template('dashboard/index.html', title='Dashboard', user=current_user, js=js)

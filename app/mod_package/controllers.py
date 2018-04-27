@@ -20,4 +20,5 @@ mod_package = Blueprint('package', __name__)
 @mod_package.route('/', methods=['GET'])
 @login_required
 def index():
-    return render_template('package/index.html')
+    js = render_template('package/index.js')
+    return render_template('package/index.html', user=current_user, title='Packages', js=js)
