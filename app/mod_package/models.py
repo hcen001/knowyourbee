@@ -15,7 +15,7 @@ class Package(Base):
     date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
     tracking_number     = db.Column('tracking_number', db.String(64))
     sender_source_id    = db.Column('sender_source_id', db.String(64), nullable=True)
-    comments            = db.Column('comments', db.String(512))
+    comments            = db.Column('comments', db.String(512), nullable=True)
 
     partner_id          = db.Column('partner_id', db.Integer, db.ForeignKey('partner.id'), nullable=False)
     location_id         = db.Column('location_id', db.Integer, db.ForeignKey('location.id'), nullable=False)
@@ -23,14 +23,14 @@ class Package(Base):
     sender_id           = db.Column('sender_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
     receiver_id         = db.Column('receiver_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
 
-    partner             = db.relationship('Partner', backref='_packages', foreign_keys=[__partner_id], lazy=True)
-    location            = db.relationship('Location', backref='_packages', foreign_keys=[__location_id], lazy=True)
-    courier             = db.relationship('Courier', backref='_packages', foreign_keys=[__courier_id], lazy=True)
-    sender              = db.relationship('Person', backref='_sent_packages', foreign_keys=[__sender_id], lazy=True)
-    receiver            = db.relationship('Person', backref='_received_packages', foreign_keys=[__receiver_id], lazy=True)
+    partner             = db.relationship('Partner', backref='_packages', foreign_keys=[partner_id], lazy=True)
+    location            = db.relationship('Location', backref='_packages', foreign_keys=[location_id], lazy=True)
+    courier             = db.relationship('Courier', backref='_packages', foreign_keys=[courier_id], lazy=True)
+    sender              = db.relationship('Person', backref='_sent_packages', foreign_keys=[sender_id], lazy=True)
+    receiver            = db.relationship('Person', backref='_received_packages', foreign_keys=[receiver_id], lazy=True)
 
-    def __init__(self, date_sent, date_received, tracking_number, comments, partner_id,
-                location_id, courier_id, sender_id, receiver_id, sender_source_id):
+    def __init__(self, date_sent, date_received, tracking_number, partner_id, location_id,
+                courier_id, sender_id, receiver_id, sender_source_id, comments=''):
 
         self.date_sent = date_sent
         self.date_received = date_received
@@ -111,7 +111,7 @@ class Partner(PersonBase):
         return self._packages
 
     def __repr__(self):
-        return '<Partner: name={}, email={}, institution={}, phone={}>'.format(self.full_name(), self.email, self.institution, self.phone)
+        return '<Partner: name={}, email={}, institution={}, phone={}>'.format(self.full_name, self.email, self.institution, self.phone)
 
 class Location(Base):
 

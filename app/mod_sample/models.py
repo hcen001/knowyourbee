@@ -68,4 +68,13 @@ class Sample(Base):
     def specimens_in_vial(self):
         return self._specimens
 
+    def number_of_specimens_in_vial(self):
+        return len(self.specimens_in_vial())
+
+    def sample_quality(self):
+        return self.sample_quality
+
+    def __repr__(self):
+        return '<Sample: ID={}>'.format(self.sample_id)
+
 from app.mod_specimen.models import Specimen
