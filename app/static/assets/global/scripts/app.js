@@ -215,7 +215,7 @@ var App = function() {
     };
 
     // handle group element heights
-   var handleHeight = function() {
+    var handleHeight = function() {
        $('[data-auto-height]').each(function() {
             var parent = $(this);
             var items = $('[data-height]', parent);
