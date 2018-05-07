@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateField, SelectField, SubmitField, ValidationError
+from wtforms import StringField, TextAreaField, DateField, SelectField, RadioField
 from wtforms.validators import DataRequired, InputRequired, Optional
 from app.mod_package.models import Courier, Partner, Location, Person
+
 
 class PackageForm(FlaskForm):
     # data to populate select fields
@@ -10,9 +11,9 @@ class PackageForm(FlaskForm):
     locations       = Location.select_list()
     persons         = Person.select_list()
 
-    # fields definition
+    # package metadata definition
     date_sent       = DateField('Date sent', format='%d-%m-%Y', validators=[InputRequired()])
-    date_received   = DateField('Date received', format='%m-%d-%Y', validators=[InputRequired()])
+    date_received   = DateField('Date received', format='%d-%m-%Y', validators=[InputRequired()])
     courier_id      = SelectField('Courier', choices=couriers, validators=[InputRequired()])
     partner_id      = SelectField('Partner', choices=partners, validators=[InputRequired()])
     location_id     = SelectField('Stored at', choices=locations, validators=[InputRequired()])

@@ -10,7 +10,7 @@ class Package(Base):
 
     __tablename__       = 'package'
 
-    package_id          = db.Column('package_id', db.GUID(), default=uuid.uuid4(), nullable=False)
+    package_id          = db.Column('package_id', db.GUID(), default=uuid.uuid1(), nullable=False)
     date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=False)
     date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
     tracking_number     = db.Column('tracking_number', db.String(64))
@@ -29,8 +29,8 @@ class Package(Base):
     sender              = db.relationship('Person', backref='_sent_packages', foreign_keys=[sender_id], lazy=True)
     receiver            = db.relationship('Person', backref='_received_packages', foreign_keys=[receiver_id], lazy=True)
 
-    def __init__(self, date_sent, date_received, tracking_number, partner_id, location_id,
-                courier_id, sender_id, receiver_id, sender_source_id, comments=''):
+    def __init__(self, date_sent, date_received, partner_id, location_id, courier_id,
+                sender_id, receiver_id, sender_source_id=None, comments=None, tracking_number=None):
 
         self.date_sent = date_sent
         self.date_received = date_received
@@ -56,11 +56,6 @@ class Package(Base):
     def samples(self):
         #backref from mod_sample: Sample
         return self._samples
-
-    def deactivate(self):
-        self.deactivate = False
-        db.session.add(self)
-        db.session.commit()
 
     @classmethod
     def packages_datatable(cls):
@@ -130,7 +125,7 @@ class Partner(PersonBase):
     @classmethod
     def select_list(cls):
         partners = cls.query.filter(cls.active == True)
-        data = [(partner.id, partner.full_name) for partner in partners]
+        data = [(partner.id, partner.full_name+' - '+partner.institution) for partner in partners]
         data.insert(0,('',''))
         return data
 

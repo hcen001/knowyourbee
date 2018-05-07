@@ -9,7 +9,7 @@ var FormWizard = function () {
                 rtl: App.isRTL(),
                 orientation: "left",
                 autoclose: true,
-                format: "dd/mm/yy"
+                format: "dd/mm/yyyy"
             }).on('changeDate', function(ev){
                 if (ev.target.id == "date_sent") {
                     $("#date_received").prop("disabled", false);
@@ -120,58 +120,6 @@ var FormWizard = function () {
                     comments: {
                         required: false,
                         maxlength: 512
-                    },
-                    //samples data
-                    fullname: {
-                        required: true
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    phone: {
-                        required: true
-                    },
-                    gender: {
-                        required: true
-                    },
-                    address: {
-                        required: true
-                    },
-                    city: {
-                        required: true
-                    },
-                    country: {
-                        required: true
-                    },
-                    //payment
-                    card_name: {
-                        required: true
-                    },
-                    card_number: {
-                        minlength: 16,
-                        maxlength: 16,
-                        required: true
-                    },
-                    card_cvc: {
-                        digits: true,
-                        required: true,
-                        minlength: 3,
-                        maxlength: 4
-                    },
-                    card_expiry_date: {
-                        required: true
-                    },
-                    'payment[]': {
-                        required: true,
-                        minlength: 1
-                    }
-                },
-
-                messages: { // custom messages for radio buttons and checkboxes
-                    'payment[]': {
-                        required: "Please select at least one option",
-                        minlength: jQuery.validator.format("Please select at least one option")
                     }
                 },
 
@@ -216,15 +164,16 @@ var FormWizard = function () {
                 submitHandler: function (form) {
                     success.show();
                     error.hide();
-                    form[0].submit();
+                    form.submit();
                     //add here some ajax code to submit your form or just call form.submit() if you want to submit the form without ajax
                 }
 
             });
 
             var displayConfirm = function() {
-                $('#tab4 .form-control-static', form).each(function(){
+                $('#tab3 .form-control-static', form).each(function(){
                     var input = $('[name="'+$(this).attr("data-display")+'"]', form);
+                    console.log(input)
                     if (input.is(":radio")) {
                         input = $('[name="'+$(this).attr("data-display")+'"]:checked', form);
                     }
@@ -234,12 +183,6 @@ var FormWizard = function () {
                         $(this).html(input.find('option:selected').text());
                     } else if (input.is(":radio") && input.is(":checked")) {
                         $(this).html(input.attr("data-title"));
-                    } else if ($(this).attr("data-display") == 'payment[]') {
-                        var payment = [];
-                        $('[name="payment[]"]:checked', form).each(function(){
-                            payment.push($(this).attr('data-title'));
-                        });
-                        $(this).html(payment.join("<br>"));
                     }
                 });
             }
@@ -316,7 +259,7 @@ var FormWizard = function () {
 
             $('#form_wizard_1').find('.button-previous').hide();
             $('#form_wizard_1 .button-submit').click(function () {
-                alert('Finished! Hope you like it :)');
+                $(form).submit();
             }).hide();
 
             //apply validation on select2 dropdown value change, this only needed for chosen dropdown integration.
@@ -332,6 +275,146 @@ var FormWizard = function () {
 
 }();
 
+var FormRepeater = function () {
+
+    return {
+        //main function to initiate the module
+        init: function () {
+            $('#tab2').repeater({
+                show: function () {
+                    $(this).slideDown();
+                    $("select[name*='collector']").select2({
+                        placeholder: "Select a collector",
+                        width: null
+                    });
+                    $("select[name*='processor']").select2({
+                        placeholder: "Select a processor",
+                        width: null
+                    });
+                    $("select[name*='process_location']").select2({
+                        placeholder: "Select a process location",
+                        width: null
+                    });
+                    $("select[name*='country']").select2({
+                        placeholder: "Select the country of origin",
+                        width: null
+                    });
+                    $("select[name*='state']").select2({
+                        placeholder: "Select a state",
+                        width: null
+                    });
+                    $("select[name*='city']").select2({
+                        placeholder: "Select a city",
+                        width: null
+                    });
+                    $("select[name*='genus_id']").select2({
+                        placeholder: "Select genus",
+                        width: null
+                    });
+                    $("select[name*='species_id']").select2({
+                        placeholder: "Select species",
+                        width: null
+                    });
+                    $("select[name*='subspecies_id']").select2({
+                        placeholder: "Select subspecies",
+                        width: null
+                    });
+                    $("select[name*='lineage_id']").select2({
+                        placeholder: "Select lineage",
+                        width: null
+                    });
+                    $("input[name*='sample_date']").datepicker({
+                        rtl: App.isRTL(),
+                        orientation: "left",
+                        autoclose: true,
+                        format: "dd/mm/yyyy"
+                    })
+                },
+
+                hide: function (deleteElement) {
+                    $(this).slideUp(deleteElement);
+                },
+                repeaters: [{
+                    selector: '.inner-repeater',
+                    show: function () {
+                        $(this).slideDown();
+                        $("select[name*='genus_id']").select2({
+                            placeholder: "Select genus",
+                            width: null
+                        });
+                        $("select[name*='species_id']").select2({
+                            placeholder: "Select species",
+                            width: null
+                        });
+                        $("select[name*='subspecies_id']").select2({
+                            placeholder: "Select subspecies",
+                            width: null
+                        });
+                        $("select[name*='lineage_id']").select2({
+                            placeholder: "Select ineage",
+                            width: null
+                        });
+                    },
+
+                    hide: function (deleteElement) {
+                        $(this).slideUp(deleteElement);
+                    }
+                }]
+
+            });
+        }
+
+    };
+
+}();
+
 jQuery(document).ready(function() {
     FormWizard.init();
+    FormRepeater.init();
+    $("#collector").select2({
+        placeholder: "Select a collector",
+        width: null
+    });
+    $("#processor").select2({
+        placeholder: "Select a processor",
+        width: null
+    });
+    $("#process_location").select2({
+        placeholder: "Select a process location",
+        width: null
+    });
+    $("#country").select2({
+        placeholder: "Select the country of origin",
+        width: null
+    });
+    $("#state").select2({
+        placeholder: "Select a state",
+        width: null
+    });
+    $("#city").select2({
+        placeholder: "Select a city",
+        width: null
+    });
+    $("#genus_id").select2({
+        placeholder: "Select genus",
+        width: null
+    });
+    $("#species_id").select2({
+        placeholder: "Select species",
+        width: null
+    });
+    $("#subspecies_id").select2({
+        placeholder: "Select subspecies",
+        width: null
+    });
+    $("#lineage_id").select2({
+        placeholder: "Select lineage",
+        width: null
+    });
+    $('#sample_date_sampled, #sample_date_received').datepicker({
+        rtl: App.isRTL(),
+        orientation: "left",
+        autoclose: true,
+        format: "dd/mm/yyyy"
+    });
 });

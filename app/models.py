@@ -10,6 +10,14 @@ class Base(db.Model):
     date_updated = db.Column('date_updated', db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     active       = db.Column('active', db.Boolean, default=True, server_default='t')
 
+    def add_or_update(self, deactivate=False):
+
+        if deactivate:
+            self.active = False
+
+        db.session.add(self)
+        db.session.commit()
+
 class PersonBase(Base):
 
     __abstract__ = True
@@ -22,3 +30,10 @@ class PersonBase(Base):
     @property
     def full_name(self):
         return self.fname+' '+self.lname
+
+class TaxonBase(Base):
+
+    __abstract__ = True
+
+    name                = db.Column(db.String(128), nullable=False)
+    description         = db.Column(db.String(512), nullable=True)

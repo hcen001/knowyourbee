@@ -31,12 +31,12 @@
                     <div class="caption">
                         <i class=" icon-layers font-red"></i>
                         <span class="caption-subject font-red bold uppercase"> Package registration -
-                            <span class="step-title"> Step 1 of 4 </span>
+                            <span class="step-title"> Step 1 of 3 </span>
                         </span>
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    <form class="form-horizontal" action="#" id="submit_form" method="POST">
+                    <form class="form-horizontal mt-repeater" action="{{ url_for('package.add')}}" id="submit_form" method="POST">
                         {{ form.csrf_token }}
                         <div class="form-wizard">
                             <div class="form-body">
@@ -52,21 +52,14 @@
                                         <a href="#tab2" data-toggle="tab" class="step">
                                             <span class="number"> 2 </span>
                                             <span class="desc">
-                                                <i class="fa fa-check"></i> Samples data </span>
+                                                <i class="fa fa-check"></i> Samples and specimens data </span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#tab3" data-toggle="tab" class="step active">
+                                        <a href="#tab3" data-toggle="tab" class="step">
                                             <span class="number"> 3 </span>
                                             <span class="desc">
-                                                <i class="fa fa-check"></i> Specimens data </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#tab4" data-toggle="tab" class="step">
-                                            <span class="number"> 4 </span>
-                                            <span class="desc">
-                                                <i class="fa fa-check"></i> Summary and confirmation </span>
+                                                <i class="fa fa-check"></i> Data summary and confirmation </span>
                                         </a>
                                     </li>
                                 </ul>
@@ -196,150 +189,276 @@
                                     </div>
                                     <div class="tab-pane" id="tab2">
                                         <h3 class="block">Provide details of the samples</h3>
+                                        <hr>
+                                        <div data-repeater-list="samples">
+                                            <div data-repeater-item class="mt-repeater-item">
+                                                <!-- jQuery Repeater Container -->
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.sender_source_id.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.sender_source_id(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.collection_sample_id.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.collection_sample_id(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.sample_date_sampled.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.sample_date_sampled(class="input-group form-control form-control-inline date-picker", readonly=true) }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input mt-checkbox-inline">
+                                                            <label class="control-label">{{ sample_form.sample_date_received.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.sample_date_received(class="input-group form-control form-control-inline date-picker", readonly=true) }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.collector.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.collector(class="form-control select2") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                        <label class="control-label">{{ sample_form.processor.label }}</label>
+                                                        <br/>
+                                                        {{ sample_form.processor(class="form-control select2") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                                <!--/row-->
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.process_location.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.process_location(class="form-control select2") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <!-- <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.country.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.country(class="form-control select2") }} </div> -->
+                                                            <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.freezer.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.freezer(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <!-- <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.state.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.state(class="form-control select2") }} </div> -->
+                                                            <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.shelf.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.shelf(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <!-- <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.city.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.city(class="form-control select2") }} </div> -->
+                                                            <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.box.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.box(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.locality.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.locality(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.hive.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.hive(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                                <!--/row-->
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.coordinates.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.coordinates(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.additional_gps_info.label }}</label>
+                                                            <br/>
+                                                            {{ sample_form.additional_gps_info(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.additional_info.label }}</label>
+                                                                <br/>
+                                                                {{ sample_form.additional_info(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-4">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.comments.label }}</label>
+                                                                <br/>
+                                                                {{ sample_form.comments(class="form-control") }} </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <a href="javascript:;" data-repeater-delete class="btn btn-danger mt-repeater-delete">
+                                                            <i class="fa fa-close"></i> Delete sample</a>
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                                <!--/row-->
+                                                </div>
+                                                <div class="inner-repeater">
+                                                    <div data-repeater-list="specimens">
+                                                        <h3 class="block">Provide details of the samples</h3>
+                                                        <hr>
+                                                        <div data-repeater-item class="mt-repeater-item">
+                                                            <div class="row">
+                                                                <div class="col-md-1">
+                                                                </div>
+                                                                <div class="col-md-11">
+                                                                    <div class="row">
+                                                                        <div class="col-md-2">
+                                                                            <div class="mt-repeater-input">
+                                                                                <label class="control-label">{{ specimen_form.genus_id.label }}</label>
+                                                                                <br/>
+                                                                                {{ specimen_form.genus_id(class="form-control select2") }} </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-2">
+                                                                            <div class="mt-repeater-input">
+                                                                                <label class="control-label">{{ specimen_form.species_id.label }}</label>
+                                                                                <br/>
+                                                                                {{ specimen_form.species_id(class="form-control select2") }} </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-2">
+                                                                            <div class="mt-repeater-input">
+                                                                                <label class="control-label">{{ specimen_form.subspecies_id.label }}</label>
+                                                                                <br/>
+                                                                                {{ specimen_form.subspecies_id(class="form-control select2") }} </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-4">
+                                                                            <div class="mt-repeater-input">
+                                                                                <label class="control-label">{{ specimen_form.lineage_id.label }}</label>
+                                                                                <br/>
+                                                                                {{ specimen_form.lineage_id(class="form-control select2") }} </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-2">
+                                                                            <div class="mt-repeater-input mt-radio-inline">
+                                                                                <label class="control-label">{{ specimen_form.gender.label }}</label>
+                                                                                <br/>
+                                                                                {% for subfield in specimen_form.gender %}
+                                                                                <label class="mt-radio">
+                                                                                    {{ subfield }} {{subfield.label}}
+                                                                                    <span></span>
+                                                                                </label>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!--/row-->
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <div class="mt-repeater-input mt-radio-inline">
+                                                                                <label class="control-label">{{ specimen_form.caste.label }}</label>
+                                                                                <br/>
+                                                                                {% for subfield in specimen_form.caste %}
+                                                                                <label class="mt-radio">
+                                                                                    {{ subfield }} {{subfield.label}}
+                                                                                    <span></span>
+                                                                                </label>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-4">
+                                                                            <div class="mt-repeater-input mt-radio-inline">
+                                                                                <label class="control-label">{{ specimen_form.stage.label }}</label>
+                                                                                <br/>
+                                                                                {% for subfield in specimen_form.stage %}
+                                                                                <label class="mt-radio">
+                                                                                    {{ subfield }} {{subfield.label}}
+                                                                                    <span></span>
+                                                                                </label>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-2">
+                                                                            <div class="mt-repeater-input mt-radio-inline">
+                                                                                <label class="control-label">{{ specimen_form.sample_quality.label }}</label>
+                                                                                <br/>
+                                                                                {% for subfield in specimen_form.sample_quality %}
+                                                                                <label class="mt-radio">
+                                                                                    {{ subfield }} {{subfield.label}}
+                                                                                    <span></span>
+                                                                                </label>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-2">
+                                                                            <!-- jQuery Repeater Container -->
+                                                                            <div class="mt-repeater-input">
+                                                                                <a href="javascript:;" data-repeater-delete class="btn btn-danger mt-repeater-delete">
+                                                                                    <i class="fa fa-close"></i> Delete specimen</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!--/row-->
+                                                                </div>
+                                                            </div>
+                                                            <!--/row-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-1">
 
+                                                        </div>
+                                                        <div class="col-md-11">
+                                                            <a href="javascript:;" data-repeater-create class="btn btn-success mt-repeater-add">
+                                                            <i class="fa fa-plus"></i> Add another specimen</a>
+                                                        </div>
+                                                    </div>
+                                                    <!--/row-->
+                                                </div>
+                                                <!--/inner repeater-->
+                                            </div>
+                                            <!--/data repeater item-->
+                                        </div>
+                                        <a href="javascript:;" data-repeater-create class="btn btn-primary mt-repeater-add">
+                                            <i class="fa fa-plus"></i> Add another sample</a>
                                     </div>
                                     <div class="tab-pane" id="tab3">
-                                        <h3 class="block">Provide your billing and credit card details</h3>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Card Holder Name
-                                                <span class="required"> * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" name="card_name" />
-                                                <span class="help-block"> </span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Card Number
-                                                <span class="required"> * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" name="card_number" />
-                                                <span class="help-block"> </span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">CVC
-                                                <span class="required"> * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <input type="text" placeholder="" class="form-control" name="card_cvc" />
-                                                <span class="help-block"> </span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Expiration(MM/YYYY)
-                                                <span class="required"> * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <input type="text" placeholder="MM/YYYY" maxlength="7" class="form-control" name="card_expiry_date" />
-                                                <span class="help-block"> e.g 11/2020 </span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Payment Options
-                                                <span class="required"> * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <div class="checkbox-list">
-                                                    <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Auto-Pay with this Credit Card." /> Auto-Pay with this Credit Card </label>
-                                                    <label>
-                                                        <input type="checkbox" name="payment[]" value="2" data-title="Email me monthly billing." /> Email me monthly billing </label>
-                                                </div>
-                                                <div id="form_payment_error"> </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" id="tab4">
-                                        <h3 class="block">Confirm your account</h3>
-                                        <h4 class="form-section">Account</h4>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Username:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="username"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Email:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="email"> </p>
-                                            </div>
-                                        </div>
-                                        <h4 class="form-section">Profile</h4>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Fullname:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="fullname"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Gender:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="gender"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Phone:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="phone"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Address:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="address"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">City/Town:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="city"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Country:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="country"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Remarks:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="remarks"> </p>
-                                            </div>
-                                        </div>
-                                        <h4 class="form-section">Billing</h4>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Card Holder Name:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="card_name"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Card Number:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="card_number"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">CVC:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="card_cvc"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Expiration:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="card_expiry_date"> </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Payment Options:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" data-display="payment[]"> </p>
-                                            </div>
-                                        </div>
+                                        <h3 class="block">Confirm the entered data</h3>
                                     </div>
                                 </div>
                             </div>
