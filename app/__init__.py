@@ -40,6 +40,8 @@ app.register_blueprint(mod_sample, url_prefix='/samples')
 from app.mod_specimen.controllers import mod_specimen
 app.register_blueprint(mod_specimen, url_prefix='/specimens')
 
+from app.mod_util.models import Country, State, City
+
 #
 @app.shell_context_processor
 def make_shell_context():
@@ -47,7 +49,9 @@ def make_shell_context():
     from app.mod_package.models import Package, Person, Partner, Location, Courier
     from app.mod_sample.models import Sample
     from app.mod_specimen.models import Specimen, Genus, Species, Subspecies, Lineage
+    from app.mod_util.models import Country, State, City
 
     return {'db': db, 'User': User, 'Role': Role, 'UserRole': UserRole, 'Package': Package, \
             'Sample': Sample, 'Specimen': Specimen, 'Genus': Genus, 'Species': Species, 'Subspecies': Subspecies, 'Lineage': Lineage,  \
-            'Person': Person, 'Partner': Partner, 'Location': Location, 'Courier': Courier}
+            'Person': Person, 'Partner': Partner, 'Location': Location, 'Courier': Courier, \
+            'Country': Country, 'State': State, 'City': City}
