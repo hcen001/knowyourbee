@@ -18,7 +18,7 @@ class Specimen(Base):
     __tablename__ = 'specimen'
 
     specimen_id         = db.Column(db.GUID(), default=uuid.uuid1(), nullable=False)
-    collection_sample_id    = db.Column(db.String(32), nullable=False)
+    collection_sample_id    = db.Column(db.String(32), nullable=False, default='122', server_default='122')
     sample_quality      = db.Column(db.Boolean, default=True, server_default='t', nullable=False)
     gender              = db.Column(ENUM(*genders, name='gender_enum'), nullable=False)
     caste               = db.Column(ENUM(*castes, name='caste_enum'), nullable=False)
