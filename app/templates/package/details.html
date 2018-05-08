@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="page-title"> {{ title }}
+        <small></small>
+    </h1>
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url_for('dashboard.index') }}">Home</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="icon-folder"></i>
+                <a href="{{ url_for('package.index') }}">Packages</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="icon-list"></i>
+                <span>Details</span>
+            </li>
+        </ul>
+    </div>
+    <!-- END PAGE HEADER-->
+
+{% endblock %}

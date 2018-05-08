@@ -10,7 +10,7 @@ class Package(Base):
 
     __tablename__       = 'package'
 
-    package_id          = db.Column('package_id', db.GUID(), default=uuid.uuid4(), nullable=False)
+    package_id          = db.Column('package_id', db.GUID(), default=uuid.uuid1(), nullable=False)
     date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=False)
     date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
     tracking_number     = db.Column('tracking_number', db.String(64))
@@ -29,8 +29,8 @@ class Package(Base):
     sender              = db.relationship('Person', backref='_sent_packages', foreign_keys=[sender_id], lazy=True)
     receiver            = db.relationship('Person', backref='_received_packages', foreign_keys=[receiver_id], lazy=True)
 
-    def __init__(self, date_sent, date_received, tracking_number, partner_id, location_id,
-                courier_id, sender_id, receiver_id, sender_source_id, comments=''):
+    def __init__(self, date_sent, date_received, partner_id, location_id, courier_id,
+                sender_id, receiver_id, sender_source_id=None, comments=None, tracking_number=None):
 
         self.date_sent = date_sent
         self.date_received = date_received
@@ -53,21 +53,29 @@ class Package(Base):
     def received_by(self):
         return self.receiver
 
-    def partner(self):
-        return self.partner
-
-    def partner_institution(self):
-        return self.partner().institution
-
-    def partner_contact(self):
-        return self.partner().email
-
-    def partner_phone(self):
-        return self.partner().phone
-
     def samples(self):
         #backref from mod_sample: Sample
         return self._samples
+
+    @classmethod
+    def packages_datatable(cls):
+        data = cls.query.filter(Package.active == True)
+        packages = []
+        for package in data:
+            _package = {}
+            _package['id'] = package.id
+            _package['package_id'] = package.package_id
+            _package['date_sent'] = package.date_sent
+            _package['date_received'] = package.date_received
+            _package['partner_name'] = package.partner.full_name
+            _package['process_location'] = package.location.name
+            _package['sender'] = package.sender.full_name
+            _package['receiver'] = package.receiver.full_name
+            packages.append(_package)
+        return packages
+
+    def __repr__(self):
+        return '<Package: ID={}, sent={}, received={}, partner={}>'.format(self.package_id, self.date_sent, self.date_received, self.partner)
 
 class Person(PersonBase):
 
@@ -91,8 +99,15 @@ class Person(PersonBase):
     def collected_samples(self):
         return self._collected_samples
 
+    @classmethod
+    def select_list(cls):
+        persons = cls.query.filter(cls.active == True)
+        data = [(person.id, person.full_name) for person in persons]
+        data.insert(0,('',''))
+        return data
+
     def __repr__(self):
-        return '<Person: name={}, email={}, phone={}>'.format(self.name, self.email, self.phone)
+        return '<Person: name={}, email={}, phone={}>'.format(self.full_name, self.email, self.phone)
 
 class Partner(PersonBase):
 
@@ -106,6 +121,13 @@ class Partner(PersonBase):
         self.email          = email
         self.institution    = institution
         self.phone          = phone
+
+    @classmethod
+    def select_list(cls):
+        partners = cls.query.filter(cls.active == True)
+        data = [(partner.id, partner.full_name+' - '+partner.institution) for partner in partners]
+        data.insert(0,('',''))
+        return data
 
     def packages(self):
         return self._packages
@@ -130,6 +152,13 @@ class Location(Base):
     def processed_samples(self):
         return self._samples
 
+    @classmethod
+    def select_list(cls):
+        locations = cls.query.filter(cls.active == True)
+        data = [(location.id, location.name) for location in locations]
+        data.insert(0,('',''))
+        return data
+
     def __repr__(self):
         return '<Location: name={}>'.format(self.name)
 
@@ -147,6 +176,13 @@ class Courier(Base):
 
     def packages(self):
         return self._packages
+
+    @classmethod
+    def select_list(cls):
+        couriers = cls.query.filter(cls.active == True)
+        data = [(courier.id, courier.name) for courier in couriers]
+        data.insert(0,('',''))
+        return data
 
     def __repr__(self):
         return '<Courier: name={}>'.format(self.name)

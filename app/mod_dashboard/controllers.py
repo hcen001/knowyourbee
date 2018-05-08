@@ -25,5 +25,5 @@ def index():
 @entry_point.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    js = render_template('package/index.js')
+    js = render_template('dashboard/index.js')
     return render_template('dashboard/index.html', title='Dashboard', user=current_user, js=js)
