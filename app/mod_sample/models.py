@@ -25,7 +25,6 @@ class Sample(Base):
 
     #Sample data and location
     sender_source_id        = db.Column(db.String(32), nullable=False)
-    collection_sample_id    = db.Column(db.String(32), nullable=False)
     origin_country          = db.Column(db.String(128), nullable=True)
     origin_state            = db.Column(db.String(128), nullable=True)
     origin_city             = db.Column(db.String(128), nullable=True)
@@ -49,9 +48,6 @@ class Sample(Base):
     processor           = db.relationship('Person', backref='_processed_samples', foreign_keys=[processor_id], lazy=True)
     process_location    = db.relationship('Location', backref='_samples', foreign_keys=[process_location_id], lazy=True)
 
-    # def __init__(self, package_id, collector_id, processor_id, process_location_id, date_sampled, date_received,
-    #             sender_source_id, collection_sample_id, origin_country, origin_state, origin_locality=None, hive=None,
-    #             coordinates=None, additional_gps_info=None, additional_info=None, comments=None):
     def __init__(self, **kwargs):
 
         self.package_id = kwargs.get('package_id')
@@ -61,7 +57,6 @@ class Sample(Base):
         self.date_sampled = kwargs.get('sample_date_sampled')
         self.date_received = kwargs.get('sample_date_received')
         self.sender_source_id = kwargs.get('sender_source_id')
-        self.collection_sample_id = kwargs.get('collection_sample_id')
         self.origin_country = kwargs.get('origin_country')
         self.origin_state = kwargs.get('origin_state')
         self.origin_locality = kwargs.get('origin_locality')

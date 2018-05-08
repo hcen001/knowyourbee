@@ -18,6 +18,7 @@ class Specimen(Base):
     __tablename__ = 'specimen'
 
     specimen_id         = db.Column(db.GUID(), default=uuid.uuid1(), nullable=False)
+    collection_sample_id    = db.Column(db.String(32), nullable=False)
     sample_quality      = db.Column(db.Boolean, default=True, server_default='t', nullable=False)
     gender              = db.Column(ENUM(*genders, name='gender_enum'), nullable=False)
     caste               = db.Column(ENUM(*castes, name='caste_enum'), nullable=False)
@@ -35,9 +36,10 @@ class Specimen(Base):
     subspecies          = db.relationship('Subspecies', backref='_specimens', foreign_keys=[subspecies_id], lazy=True)
     lineage             = db.relationship('Lineage', backref='_specimens', foreign_keys=[lineage_id], lazy=True)
 
-    # def __init__(self, sample_id, gender, caste, development_stage, genus_id, species_id, subspecies_id, lineage_id, sample_quality=True):
     def __init__(self, **kwargs):
+
         self.sample_id = kwargs.get('sample_id')
+        self.collection_sample_id = kwargs.get('collection_sample_id')
         self.gender = kwargs.get('gender')
         self.caste = kwargs.get('caste')
         self.development_stage = kwargs.get('stage')

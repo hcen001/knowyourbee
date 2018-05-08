@@ -10,7 +10,6 @@ class SampleForm(FlaskForm):
 
     # sample data
     sender_source_id        = StringField('Sender\'s Source ID', validators=[InputRequired()])
-    collection_sample_id    = StringField('Collection sample ID', validators=[InputRequired()])
     country                 = SelectField('Country of origin', choices=[], validators=[InputRequired()])
     state                   = SelectField('State or Province', choices=[], validators=[InputRequired()])
     city                    = SelectField('City', choices=[], validators=[InputRequired()])

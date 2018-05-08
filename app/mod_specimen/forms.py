@@ -16,11 +16,12 @@ class SpecimenForm(FlaskForm):
 
     # specimen data
 
-    genus_id        = SelectField('Genus', choices=genera, validators=[InputRequired()])
-    species_id      = SelectField('Species', choices=species, validators=[InputRequired()])
-    subspecies_id   = SelectField('Subspecies', choices=subspecies, validators=[InputRequired()])
-    lineage_id      = SelectField('Lineage', choices=lineage, validators=[InputRequired()])
-    sample_quality  = RadioField('95% Ethanol', choices=[(1, 'Yes'),(0, 'No')], validators=[InputRequired()])
-    gender          = RadioField('Gender', choices=genders, validators=[InputRequired()])
-    caste           = RadioField('Caste', choices=castes, validators=[InputRequired()])
-    stage           = RadioField('Development stage', choices=stages, validators=[InputRequired()])
+    collection_sample_id    = StringField('Collection sample ID', validators=[InputRequired()])
+    genus_id                = SelectField('Genus', choices=genera, validators=[InputRequired()])
+    species_id              = SelectField('Species', choices=species, validators=[InputRequired()])
+    subspecies_id           = SelectField('Subspecies', choices=subspecies, validators=[InputRequired()])
+    lineage_id              = SelectField('Lineage', choices=lineage, validators=[InputRequired()])
+    sample_quality          = RadioField('95% Ethanol', choices=[(1, 'Yes'),(0, 'No')], validators=[InputRequired()])
+    gender                  = RadioField('Gender', choices=genders, validators=[InputRequired()])
+    caste                   = RadioField('Caste', choices=castes, validators=[InputRequired()])
+    stage                   = RadioField('Development stage', choices=stages, validators=[InputRequired()])
