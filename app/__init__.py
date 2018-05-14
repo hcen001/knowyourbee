@@ -40,6 +40,9 @@ app.register_blueprint(mod_sample, url_prefix='/samples')
 from app.mod_specimen.controllers import mod_specimen
 app.register_blueprint(mod_specimen, url_prefix='/specimens')
 
+from app.mod_accreq.controllers import mod_accreq
+app.register_blueprint(mod_accreq, url_prefix='/accreq')
+
 from app.mod_util.models import Country, State, City
 
 #
