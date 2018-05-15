@@ -87,14 +87,10 @@ class AccountRequest(PersonBase):
         db.session.add(self)
         db.session.commit()
 
-    def grant(self):
-        self.granted = True
-        db.session.add(self)
-        db.session.commit()
-
-    def reject(self):
-        self.granted = False
-        self.active = False
+    def grant(self,approve):
+        self.granted = approve
+        if approve==False:
+            self.active = False
         db.session.add(self)
         db.session.commit()
 

@@ -31,7 +31,7 @@ def approveAccount(accid):
     if request.method == 'POST':
         pending = AccountRequest.query.filter(AccountRequest.id==accid).first()
         if inputparam['approve'] == True:          
-            pending.grant()
+            pending.grant(True)
         else:
-            pending.reject()
+            pending.grant(False)
     return jsonify({'data':1})
