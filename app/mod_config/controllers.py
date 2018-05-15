@@ -11,7 +11,7 @@ mod_config = Blueprint('config', __name__)
 
 @mod_config.route('/accreq/', methods=['GET'])
 @login_required
-def index():
+def accreqIndex():
     js = render_template('config/accreq/index.js')
     return render_template('config/accreq/index.html', user=current_user, title='Account Request', js=js)
 
