@@ -92,9 +92,15 @@ class AccountRequest(PersonBase):
         db.session.add(self)
         db.session.commit()
 
+    def reject(self):
+        self.granted = False
+        self.active = False
+        db.session.add(self)
+        db.session.commit()
+
     @classmethod
     def accreqs_datatable(cls):
-        data = cls.query.filter(AccountRequest.active == True)
+        data = cls.query.filter(AccountRequest.active == True,AccountRequest.granted == False)
         accreqs = []
         for accreq in data:
             _accreq = {}

@@ -1,5 +1,23 @@
 updateMenu('#accreq');
 
+function approveAccountRequest(ele,approve){
+    $this = $(ele);
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $.ajax({
+        url: $SCRIPT_ROOT+'/accreq/approveAccount/'+$this.data('accreqid'),
+        type: 'POST',
+        dataType: "json",
+        contentType:"application/json",
+        data: JSON.stringify({"approve": approve}),
+    })
+    .done(function(result) {
+        if(result.data===1){
+            window.location.href=$SCRIPT_ROOT+'/accreq';
+        }
+    });
+    
+};
+
 var initTable = function () {
 
     var table = $('#accreq_tbl');
@@ -47,21 +65,19 @@ var initTable = function () {
         "ajax": '{{ url_for('accreq.accreqs') }}',
 
         "columns": [
-            {
-                "data": "id",
-                "render": function(data, type, row, meta){
-                    if(type === 'display'){
-                        data = '<a href="{{ url_for('accreq.index') }}details/'+row['id']+'">' + data + '</a>';
-                    }
-                    return data;
-                }
-            },
             {"data": "fname"},
             {"data": "lname"},
             {"data": "email"},
             {"data": "phone"},
-            {"data": "password"},
-            {"data": "granted"}
+            {"data": "granted",
+                render: function(data, type, row, meta){
+                    if(data === false){
+                        data = '<a href="#" style="margin-right:20px" data-accreqid="'+row['id']+'" onclick="approveAccountRequest(this,true)">Approve</a>';
+                        data += '<a href="#" data-accreqid="'+row['id']+'" onclick="approveAccountRequest(this,false)">Reject</a>';
+                    }
+                    return data;
+                }
+            }
         ]
     });
 
@@ -70,6 +86,7 @@ var initTable = function () {
         var action = $(this).attr('data-action');
         oTable.DataTable().button(action).trigger();
     });
+
 }
 
 initTable();

@@ -21,3 +21,17 @@ def accreqs():
     data = AccountRequest.accreqs_datatable()
     output = {'data': data}
     return jsonify(output)
+
+@mod_accreq.route('/approveAccount/<accid>', methods=['POST'])
+@login_required
+def approveAccount(accid):
+    print(accid)
+    inputparam = request.get_json()
+    print(inputparam)
+    if request.method == 'POST':
+        pending = AccountRequest.query.filter(AccountRequest.id==accid).first()
+        if inputparam['approve'] == True:          
+            pending.grant()
+        else:
+            pending.reject()
+    return jsonify({'data':1})
