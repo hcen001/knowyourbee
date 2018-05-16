@@ -75,7 +75,6 @@ var initTable = function () {
 
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         $.ajax({
-            //url: $SCRIPT_ROOT+'/config/accreq/approveAccount/'+accreqid,
             url: '{{url_for('config.approveAccount')}}',
             type: 'POST',
             dataType: "json",
@@ -83,9 +82,7 @@ var initTable = function () {
             data: JSON.stringify({"accid":accid,"approve": approve}),
         })
         .done(function(result) {
-           //if(result.data===1){
                 window.location.href=$SCRIPT_ROOT+'/config/accreq';
-           //}
         });
         
     };
