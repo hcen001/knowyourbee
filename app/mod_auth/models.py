@@ -87,9 +87,9 @@ class AccountRequest(PersonBase):
         db.session.add(self)
         db.session.commit()
 
-    def grant(self,approve):
+    def grant(self,approve=True):
         self.granted = approve
-        if approve==False:
+        if approve is False:
             self.active = False
         db.session.add(self)
         db.session.commit()
@@ -105,7 +105,6 @@ class AccountRequest(PersonBase):
             _accreq['lname'] = accreq.lname
             _accreq['email'] = accreq.email
             _accreq['phone'] = accreq.phone
-            _accreq['password'] = accreq.password
             _accreq['granted'] = accreq.granted
             accreqs.append(_accreq)
         return accreqs

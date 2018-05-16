@@ -22,16 +22,15 @@ def accreqs():
     output = {'data': data}
     return jsonify(output)
 
-@mod_config.route('/accreq/approveAccount/<accid>', methods=['POST'])
+@mod_config.route('/accreq/approveAccount', methods=['POST'])
 @login_required
-def approveAccount(accid):
-    print(accid)
-    inputparam = request.get_json()
-    print(inputparam)
+def approveAccount():
+    
     if request.method == 'POST':
-        pending = AccountRequest.query.filter(AccountRequest.id==accid).first()
-        if inputparam['approve'] == True:          
-            pending.grant(True)
+        inputparam = request.get_json()
+        pending = AccountRequest.query.filter(AccountRequest.id==inputparam['accid']).first()
+        if inputparam['approve'] is True:          
+            pending.grant()
         else:
             pending.grant(False)
-    return jsonify({'data':1})
+    return jsonify({})

@@ -71,20 +71,21 @@ var initTable = function () {
         oTable.DataTable().button(action).trigger();
     });
 
-    function approveAccountRequest(accreqid,approve){
+    function approveAccountRequest(accid,approve){
 
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         $.ajax({
-            url: $SCRIPT_ROOT+'/config/accreq/approveAccount/'+accreqid,
+            //url: $SCRIPT_ROOT+'/config/accreq/approveAccount/'+accreqid,
+            url: '{{url_for('config.approveAccount')}}',
             type: 'POST',
             dataType: "json",
             contentType:"application/json",
-            data: JSON.stringify({"approve": approve}),
+            data: JSON.stringify({"accid":accid,"approve": approve}),
         })
         .done(function(result) {
-            if(result.data===1){
+           //if(result.data===1){
                 window.location.href=$SCRIPT_ROOT+'/config/accreq';
-            }
+           //}
         });
         
     };
