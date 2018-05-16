@@ -87,10 +87,27 @@ class AccountRequest(PersonBase):
         db.session.add(self)
         db.session.commit()
 
-    def grant(self):
-        self.granted = True
+    def grant(self,approve=True):
+        self.granted = approve
+        if approve is False:
+            self.active = False
         db.session.add(self)
         db.session.commit()
+
+    @classmethod
+    def accreqs_datatable(cls):
+        data = cls.query.filter(AccountRequest.active == True,AccountRequest.granted == False)
+        accreqs = []
+        for accreq in data:
+            _accreq = {}
+            _accreq['id'] = accreq.id
+            _accreq['fname'] = accreq.fname
+            _accreq['lname'] = accreq.lname
+            _accreq['email'] = accreq.email
+            _accreq['phone'] = accreq.phone
+            _accreq['granted'] = accreq.granted
+            accreqs.append(_accreq)
+        return accreqs
 
     def __repr__(self):
         return '<Account request: email={}, name={}>'.format(self.email, self.full_name())
