@@ -1,20 +1,20 @@
 from app.models import Base, PersonBase
 from app import db
 
-from app.mod_util.utils import GUID
-import uuid
+# from app.mod_util.utils import GUID
+# import uuid
 
-db.GUID = GUID
+# db.GUID = GUID
 
 class Package(Base):
 
     __tablename__       = 'package'
 
-    package_id          = db.Column('package_id', db.GUID(), default=uuid.uuid1(), nullable=False)
+    package_id          = db.Column('package_id', db.String(64), default='SOUTH AFRICA', nullable=False)
     date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=False)
     date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
     tracking_number     = db.Column('tracking_number', db.String(64))
-    sender_source_id    = db.Column('sender_source_id', db.String(64), nullable=True)
+    # sender_source_id    = db.Column('sender_source_id', db.String(64), nullable=True)
     comments            = db.Column('comments', db.String(512), nullable=True)
 
     partner_id          = db.Column('partner_id', db.Integer, db.ForeignKey('partner.id'), nullable=False)
@@ -29,20 +29,19 @@ class Package(Base):
     sender              = db.relationship('Person', backref='_sent_packages', foreign_keys=[sender_id], lazy=True)
     receiver            = db.relationship('Person', backref='_received_packages', foreign_keys=[receiver_id], lazy=True)
 
-    def __init__(self, date_sent, date_received, partner_id, location_id, courier_id,
-                sender_id, receiver_id, sender_source_id=None, comments=None, tracking_number=None):
+    def __init__(self, **kwargs):
 
-        self.date_sent = date_sent
-        self.date_received = date_received
-        self.tracking_number = tracking_number
-        self.sender_source_id = sender_source_id
-        self.comments = comments
+        self.package_id = kwargs.get('package_id')
+        self.date_sent = kwargs.get('date_sent')
+        self.date_received = kwargs.get('date_received')
+        self.tracking_number = kwargs.get('tracking_number')
+        self.comments = kwargs.get('comments')
 
-        self.partner_id = partner_id
-        self.location_id = location_id
-        self.courier_id = courier_id
-        self.sender_id = sender_id
-        self.receiver_id = receiver_id
+        self.partner_id = kwargs.get('partner_id')
+        self.location_id = kwargs.get('location_id')
+        self.courier_id = kwargs.get('courier_id')
+        self.sender_id = kwargs.get('sender_id')
+        self.receiver_id = kwargs.get('receiver_id')
 
     def stored_at(self):
         return self.location

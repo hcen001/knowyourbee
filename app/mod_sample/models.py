@@ -1,19 +1,24 @@
-from app.models import Base
+from app.models import Base, TaxonBase
 from app.mod_package.models import Package, Person, Location
 from app import db
 
 from geoalchemy2.types import Geometry
+from sqlalchemy.dialects.postgresql import ENUM
 
-from app.mod_util.utils import GUID
-import uuid
+# from app.mod_util.utils import GUID
+# import uuid
 
-db.GUID = GUID
+# db.GUID = GUID
+
+genders = ('male', 'female')
+castes = ('drone', 'worker', 'queen')
+stages = ('egg', 'pupae', 'larvae', 'nymph', 'adult')
 
 class Sample(Base):
 
     __tablename__       = 'sample'
 
-    sample_id           = db.Column(db.GUID(), default=uuid.uuid1(), nullable=False)
+    sample_id           = db.Column(db.String(64), nullable=False)
 
     # Sample & Package inspection data
     package_id          = db.Column(db.Integer, db.ForeignKey('package.id'), nullable=False)
@@ -23,13 +28,24 @@ class Sample(Base):
     date_sampled        = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     date_received       = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
 
+    sample_quality      = db.Column(db.Boolean, default=True, server_default='t', nullable=False)
+    gender              = db.Column(ENUM(*genders, name='gender_enum'), nullable=False)
+    caste               = db.Column(ENUM(*castes, name='caste_enum'), nullable=False)
+    development_stage   = db.Column(ENUM(*stages, name='dev_stage_enum'), nullable=False)
+    genus_id            = db.Column(db.Integer, db.ForeignKey('genus.id'), nullable=False)
+    species_id          = db.Column(db.Integer, db.ForeignKey('species.id'), nullable=False)
+    subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=False)
+    lineage_id          = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
+    origin_country      = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
+    origin_state        = db.Column(db.Integer, db.ForeignKey('state.id'), nullable=True)
+    origin_city         = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=True)
+
     #Sample data and location
     sender_source_id        = db.Column(db.String(32), nullable=False)
-    origin_country          = db.Column(db.String(128), nullable=True)
-    origin_state            = db.Column(db.String(128), nullable=True)
-    origin_city             = db.Column(db.String(128), nullable=True)
     origin_locality         = db.Column(db.String(128), nullable=True)
     hive                    = db.Column(db.String(64), nullable=True)
+    latitude                = db.Column(db.Float, nullable=True)
+    longitude               = db.Column(db.Float, nullable=True)
     coordinates             = db.Column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
     additional_gps_info     = db.Column(db.String(1024), nullable=True)
     additional_info         = db.Column(db.String(1024), nullable=True)
@@ -90,7 +106,124 @@ class Sample(Base):
     def sample_quality(self):
         return self.sample_quality
 
+    @classmethod
+    def gender_list(cls):
+        _genders = set(genders)
+        data = [(gender, gender) for gender in _genders]
+        return data
+
+    @classmethod
+    def caste_list(cls):
+        _castes = set(castes)
+        data = [(caste, caste) for caste in _castes]
+        return data
+
+    @classmethod
+    def stage_list(cls):
+        _stages = set(stages)
+        data = [(stage, stage) for stage in _stages]
+        return data
+
     def __repr__(self):
         return '<Sample: ID={}>'.format(self.sample_id)
+
+class Genus(TaxonBase):
+
+    __tablename__ = 'genus'
+
+    # genus_id            = db.Column(db.GUID(), default=uuid.uuid4(), nullable=False)
+    # name                = db.Column(db.String(128), nullable=False)
+
+    def __init__(self, name, description):
+
+        self.name = name
+        self.description = description
+
+    def specimens(self):
+        return self._specimens
+
+    @classmethod
+    def select_list(cls):
+        genera = cls.query.filter(cls.active == True)
+        data = [(genus.id, genus.name) for genus in genera]
+        data.insert(0,('',''))
+        return data
+
+    def __repr__(self):
+        return '<Genus: ID={}, name={}>'.format(self.genus_id, self.name)
+
+class Species(TaxonBase):
+
+    __tablename__ = 'species'
+
+    # species_id          = db.Column(db.GUID(), default=uuid.uuid4(), nullable=False)
+
+    def __init__(self, name, description):
+
+        self.name = name
+        self.description = description
+
+    def specimens(self):
+        return self._specimens
+
+    @classmethod
+    def select_list(cls):
+        species = cls.query.filter(cls.active == True)
+        data = [(specie.id, specie.name) for specie in species]
+        data.insert(0,('',''))
+        return data
+
+    def __repr__(self):
+        return '<Species: ID={}, name={}>'.format(self.species_id, self.name)
+
+class Subspecies(TaxonBase):
+
+    __tablename__ = 'subspecies'
+
+    # name                = db.Column(db.String(128), nullable=False)
+    # subspecies_id       = db.Column(db.GUID(), default=uuid.uuid4(), nullable=False)
+
+    def __init__(self, name, description):
+
+        self.name = name
+        self.description = description
+
+    def specimens(self):
+        return self._specimens
+
+    @classmethod
+    def select_list(cls):
+        subspecies = cls.query.filter(cls.active == True)
+        data = [(subspecie.id, subspecie.name) for subspecie in subspecies]
+        data.insert(0,('',''))
+        return data
+
+    def __repr__(self):
+        return '<Subspecies: ID={}, name={}>'.format(self.subspecies_id, self.name)
+
+class Lineage(TaxonBase):
+
+    __tablename__ = 'lineage'
+
+    # name                = db.Column(db.String(128), nullable=False)
+    # lineage_id          = db.Column(db.GUID(), default=uuid.uuid4(), nullable=False)
+
+    def __init__(self, name, description):
+
+        self.name = name
+        self.description = description
+
+    def specimens(self):
+        return self._specimens
+
+    @classmethod
+    def select_list(cls):
+        lineages = cls.query.filter(cls.active == True)
+        data = [(lineage.id, lineage.name) for lineage in lineages]
+        data.insert(0,('',''))
+        return data
+
+    def __repr__(self):
+        return '<Subspecies: ID={}, name={}>'.format(self.lineage_id, self.name)
 
 # from app.mod_specimen.models import Specimen
