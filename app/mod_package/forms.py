@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, DateField, SelectField, RadioField
 from wtforms.validators import DataRequired, InputRequired, Optional
 from app.mod_package.models import Courier, Partner, Location, Person
+from app.mod_util.models import Country
 
 
 class PackageForm(FlaskForm):
@@ -10,6 +11,7 @@ class PackageForm(FlaskForm):
     partners        = Partner.select_list()
     locations       = Location.select_list()
     persons         = Person.select_list()
+    countries       = Country.select_list()
 
     # package metadata definition
     date_sent       = DateField('Date sent', format='%d-%m-%Y', validators=[InputRequired()])
@@ -21,3 +23,7 @@ class PackageForm(FlaskForm):
     receiver_id     = SelectField('Receiver', choices=persons, validators=[InputRequired()])
     tracking_number = StringField('Tracking number', validators=[InputRequired()])
     comments        = TextAreaField('Comments', validators=[Optional()])
+
+    # utiliy
+    pack_country         = SelectField('Country', choices=countries, validators=[Optional()])
+    pack_state           = SelectField('State', choices=[], validators=[Optional()])

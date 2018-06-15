@@ -50,11 +50,11 @@ from app.mod_util.models import Country, State, City
 def make_shell_context():
     from app.mod_auth.models import User, Role, UserRole
     from app.mod_package.models import Package, Person, Partner, Location, Courier
-    from app.mod_sample.models import Sample
-    from app.mod_specimen.models import Specimen, Genus, Species, Subspecies, Lineage
-    from app.mod_util.models import Country, State, City
+    from app.mod_sample.models import Sample, Genus, Species, Subspecies, Lineage
+    from app.mod_specimen.models import Specimen
+    from app.mod_util.models import Country, State, City, PackageIndex
 
     return {'db': db, 'User': User, 'Role': Role, 'UserRole': UserRole, 'Package': Package, \
             'Sample': Sample, 'Specimen': Specimen, 'Genus': Genus, 'Species': Species, 'Subspecies': Subspecies, 'Lineage': Lineage,  \
             'Person': Person, 'Partner': Partner, 'Location': Location, 'Courier': Courier, \
-            'Country': Country, 'State': State, 'City': City}
+            'Country': Country, 'State': State, 'City': City, 'PackageIndex': PackageIndex}
