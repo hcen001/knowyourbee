@@ -18,7 +18,7 @@ class Sample(Base):
 
     __tablename__       = 'sample'
 
-    sample_id           = db.Column(db.String(64), nullable=False)
+    # sample_id           = db.Column(db.String(64), nullable=False)
 
     # Sample & Package inspection data
     package_id          = db.Column(db.Integer, db.ForeignKey('package.id'), nullable=False)
@@ -34,11 +34,12 @@ class Sample(Base):
     development_stage   = db.Column(ENUM(*stages, name='dev_stage_enum'), nullable=False)
     genus_id            = db.Column(db.Integer, db.ForeignKey('genus.id'), nullable=False)
     species_id          = db.Column(db.Integer, db.ForeignKey('species.id'), nullable=False)
-    subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=False)
+    subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=True)
     lineage_id          = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
     origin_country      = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
-    origin_state        = db.Column(db.Integer, db.ForeignKey('state.id'), nullable=True)
-    origin_city         = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=True)
+    origin_state        = db.Column(db.String(128), nullable=True)
+    # origin_state        = db.Column(db.Integer, db.ForeignKey('state.id'), nullable=True)
+    # origin_city         = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=True)
 
     #Sample data and location
     sender_source_id        = db.Column(db.String(32), nullable=False)
@@ -59,10 +60,13 @@ class Sample(Base):
     box                 = db.Column(db.String(32), nullable=True)
 
     #Relationships
-    package             = db.relationship('Package', backref='_samples', foreign_keys=[package_id], lazy=True)
+    # package             = db.relationship('Package', backref='_samples', foreign_keys=[package_id], lazy=True)
     collector           = db.relationship('Person', backref='_collected_samples', foreign_keys=[collector_id], lazy=True)
     processor           = db.relationship('Person', backref='_processed_samples', foreign_keys=[processor_id], lazy=True)
     process_location    = db.relationship('Location', backref='_samples', foreign_keys=[process_location_id], lazy=True)
+
+    package             = db.relationship('Package', back_populates='samples', foreign_keys=[package_id])
+    specimens           = db.relationship('Specimen', back_populates='sample')
 
     def __init__(self, **kwargs):
 
@@ -72,18 +76,29 @@ class Sample(Base):
         self.process_location_id = kwargs.get('process_location')
         self.date_sampled = kwargs.get('sample_date_sampled')
         self.date_received = kwargs.get('sample_date_received')
+        self.sample_quality = True if kwargs.get('sample_quality') == 1 else False
+        self.gender = kwargs.get('gender')
+        self.caste = kwargs.get('caste')
+        self.development_stage = kwargs.get('stage')
+        self.genus_id = kwargs.get('genus_id') or None
+        self.species_id = kwargs.get('species_id') or None
+        self.subspecies_id = kwargs.get('subspecies_id') or None
+        self.lineage_id = kwargs.get('lineage_id') or None
+        self.origin_country = kwargs.get('country_id') or None
+        self.origin_state = kwargs.get('state') or None
+        # self.origin_city = kwargs.get('city_id') or None
         self.sender_source_id = kwargs.get('sender_source_id')
-        self.origin_country = kwargs.get('origin_country')
-        self.origin_state = kwargs.get('origin_state')
-        self.origin_locality = kwargs.get('origin_locality')
-        self.hive = kwargs.get('hive')
-        self.coordinates = kwargs.get('coordinates')
-        self.additional_gps_info = kwargs.get('additional_gps_info')
-        self.additional_info = kwargs.get('additional_info')
-        self.comments = kwargs.get('comments')
-        self.freezer = kwargs.get('freezer')
-        self.shelf = kwargs.get('shelf')
-        self.box = kwargs.get('box')
+        self.origin_locality = kwargs.get('origin_locality') or None
+        self.hive = kwargs.get('hive') or None
+        self.latitude = kwargs.get('latitude') or None
+        self.longitude = kwargs.get('longitude') or None
+        self.coordinates = kwargs.get('coordinates') or None
+        self.additional_gps_info = kwargs.get('additional_gps_info') or None
+        self.additional_info = kwargs.get('additional_info') or None
+        self.comments = kwargs.get('comments') or None
+        self.freezer = kwargs.get('freezer') or None
+        self.shelf = kwargs.get('shelf') or None
+        self.box = kwargs.get('box') or None
 
     def collected_by(self):
         return self.collector

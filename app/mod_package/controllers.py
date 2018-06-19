@@ -9,12 +9,14 @@ from app.mod_package.models import Package, Partner
 from app.mod_package.forms import PackageForm
 from app.mod_sample.forms import SampleForm
 from app.mod_specimen.forms import SpecimenForm
-from app.mod_util.utils import is_safe_url, parse_multi_form, package_id_gen
+from app.mod_util.utils import is_safe_url, parse_multi_form
 from app.mod_util.models import State, City
 
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 import json
+import pprint
 
 ## commenting this exception helps debugging when there are issues with importing
 @login.user_loader
@@ -62,37 +64,42 @@ def cities(id):
 def add():
 
     if request.method == 'POST':
-        # package_form = PackageForm(request.form)
-        # if package_form.validate_on_submit():
-            # print('Validated')
         data = parse_multi_form(request.form)
-        print('data before pre processing: ', data)
-        country = data.get('pack_country') or None
-        state = data.get('pack_state') or None
-        print('state: ', state)
-        data['package_id'] = package_id_gen(country, state)
-        data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%m/%Y')
-        data['date_received'] = datetime.strptime(data['date_received'],'%d/%m/%Y')
-        print('data after pre processing: ', data)
-        # package = Package(**data)
-        # package.add_or_update()
-        # samples = data['samples']
-        # for _, sample in samples.items():
-        #     sample['package_id'] = package.id
-        #     sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%m/%Y')
-        #     sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%m/%Y')
-        #     sample['coordinates'] = None
-        #     sample_db = Sample(**sample)
-        #     sample_db.add_or_update()
-        #     for _, specimen in sample['specimens'].items():
-        #         specimen['sample_id'] = sample_db.id
-        #         specimen['sample_quality'] = True if specimen['sample_quality'] == 1 else False
-        #         specimen_db = Specimen(**specimen)
-        #         specimen_db.add_or_update()
+        pp = pprint.PrettyPrinter(indent=4)
 
+        data['package_id'] = str(data['package_id']).upper()
+        data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y')
+        data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y')
+        pp.pprint(data)
+        package = Package(**data)
+
+        try:
+            package.add_or_update()
+            samples = data['samples']
+            for _, sample in samples.items():
+                sample['package_id'] = package.id
+                sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
+                sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
+                sample_db = Sample(**sample)
+                sample_db.add_or_update()
+                package.samples.append(sample_db)
+                for _, specimen in sample['specimens'].items():
+                    specimen['sample_id'] = sample_db.id
+                    if specimen['date_collected']:
+                        specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y')
+                    else:
+                        specimen['date_collected'] = None
+                    specimen_db = Specimen(**specimen)
+                    specimen_db.add_or_update()
+                    sample_db.specimens.append(specimen_db)
+        except IntegrityError as e:
+            flash('Package with ID {} is already registered in the database.'.format(package.package_id), 'danger')
+            return redirect(url_for('package.index'))
+        else:
+            package.save()
+
+        flash('The package with ID {} was registered successfully.'.format(package.package_id), 'success')
         return redirect(url_for('package.index'))
-        # else:
-            # print('Not validated')
 
     package_form = PackageForm()
     sample_form = SampleForm()
