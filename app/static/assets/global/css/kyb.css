@@ -10,3 +10,15 @@ h3.block {
 
 .form-group {
     margin-bottom: 5px !important; }
+
+.form .form-body {
+    padding: 0 !important;
+}
+
+.mt-repeater-item:nth-child(even) {
+    background-color: #FFFFFF !important;
+}
+
+.mt-repeater-item:nth-child(odd) {
+    background-color: #F2F4F4 !important;
+}

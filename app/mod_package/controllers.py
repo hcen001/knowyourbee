@@ -42,12 +42,12 @@ def packages():
     output = {'data': data}
     return jsonify(output)
 
-@mod_package.route('/details/<id>', methods=['GET'])
+@mod_package.route('/<id>/details', methods=['GET'])
 @login_required
 def details(id):
     package_data = Package.query.get(id)
-    js = render_template('package/details.js')
-    return render_template('package/details.html', user=current_user, title='Details for package with ID {}'.format(package_data.package_id), package=package_data, js=js)
+    js = render_template('package/details.js', package_id=package_data.id)
+    return render_template('package/details.html', title='Details for package with ID {}'.format(package_data.id), user=current_user, package=package_data, js=js)
 
 @mod_package.route('/country/<id>/states', methods=['GET'])
 @login_required
@@ -107,3 +107,54 @@ def add():
     js = render_template('package/add.js')
     package_form = PackageForm(request.form)
     return render_template('package/add.html', user=current_user, title='Add a new package', js=js, form=package_form, sample_form=sample_form, specimen_form=specimen_form)
+
+@mod_package.route('/details/<id>/all_specimens', methods=['GET'])
+@login_required
+def specimens(id):
+    data = Package.specimens_datatable(id)
+    output = {'data': data}
+    return jsonify(output)
+
+@mod_package.route('/<id>/add_vials', methods=['GET', 'POST'])
+@login_required
+def add_vials(id):
+
+    package = Package.query.filter(Package.id == id).first()
+
+    if request.method == 'POST':
+        data = parse_multi_form(request.form)
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(data)
+
+        try:
+            samples = data['samples']
+            for _, sample in samples.items():
+                sample['package_id'] = package.id
+                sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
+                sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
+                sample_db = Sample(**sample)
+                sample_db.add_or_update()
+                package.samples.append(sample_db)
+                for _, specimen in sample['specimens'].items():
+                    specimen['sample_id'] = sample_db.id
+                    if specimen['date_collected']:
+                        specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y')
+                    else:
+                        specimen['date_collected'] = None
+                    specimen_db = Specimen(**specimen)
+                    specimen_db.add_or_update()
+                    sample_db.specimens.append(specimen_db)
+        except Exception as e:
+            flash('An error occured while trying to update package with ID {}.'.format(package.package_id), 'danger')
+            return redirect(url_for('package.details', id=package.id))
+        else:
+            sample_db.save()
+
+        flash('The package with ID {} was updated successfully.'.format(package.package_id), 'success')
+        return redirect(url_for('package.details', id=package.id))
+
+
+    sample_form = SampleForm()
+    specimen_form = SpecimenForm()
+    js = render_template('package/add_vials.js')
+    return render_template('package/add_vials.html', user=current_user, title='Add a new vials to package', package=package, js=js, sample_form=sample_form, specimen_form=specimen_form)

@@ -1,49 +1,5 @@
 updateMenu('#packages');
 
-var initStateDropdown = function(element, country_id) {
-
-    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-
-    $.ajax({
-        url: $SCRIPT_ROOT+"/packages/country/"+country_id+"/states",
-        dataType: "json",
-        success: function(data) {
-            $(element).select2({
-                allowClear: true,
-                placeholder: "Select a state/province",
-                data: data
-            }).trigger('change');
-            $(element).removeAttr("disabled");
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            console.log(jqXHR.responseText);
-            alert('An unexpected error occured. Please try again.');
-        }
-    });
-}
-
-var initCityDropdown = function(element, state_id) {
-
-    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-
-    $.ajax({
-        url: $SCRIPT_ROOT+"/packages/state/"+state_id+"/cities",
-        dataType: "json",
-        success: function(data) {
-            $(element).select2({
-                allowClear: true,
-                placeholder: "Select a city",
-                data: data
-            }).trigger('change');
-            $(element).removeAttr("disabled");
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            console.log(jqXHR.responseText);
-            alert('An unexpected error occured. Please try again.');
-        }
-    });
-}
-
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 var FormWizard = function () {
@@ -123,16 +79,6 @@ var FormWizard = function () {
                 }
             }
         });
-
-        // $("#pack_country").on('select2:select', function(){
-        //     var id = $(this).select2("val");
-        //     $("#pack_state").html('').select2();
-        //     initStateDropdown($("#pack_state"), id);
-        // });
-        // $("#pack_country").on('select2:unselect', function(){
-        //     $("#pack_state").prop("disabled", true);
-        //     $("#pack_state").html('').select2();
-        // });
     }
 
     return {
@@ -361,8 +307,6 @@ var update_datepicker_startDate = function (datepicker, value) {
 };
 
 var copy_specimen_data = function (element, last_specimen) {
-    // $(element).find("input[name*='collection_sample_id']").val(last_specimen["collection_sample_id"]);
-    // $(element).find("input[name*='dna']").val(last_specimen["dna"]);
     $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
     $(element).find("input[name*='freezer']").val(last_specimen["freezer"]);
     $(element).find("input[name*='box']").val(last_specimen["box"]);
@@ -409,7 +353,6 @@ var copy_previous_vial = function(element) {
     var add_specimen_button = $(element).find(".mt-repeater-add");
 
     var vials = repeater['samples'];
-    // console.log(vials);
     var last_vial = vials[vials.length-2];
 
     $(element).find("input[name*='sender_source_id']").val(last_vial['sender_source_id']);
@@ -442,8 +385,6 @@ var copy_previous_vial = function(element) {
     $(element).find("select[name*='process_location']").val(last_vial["process_location"]).trigger("change");
 
     copy_country(element, last_vial["country_id"]);
-    copy_state(element, last_vial["state_id"]);
-    copy_city(element, last_vial["city_id"]);
 
     $(element).find("select[name*='genus_id']").val(last_vial["genus_id"]).trigger("change.select2");
     $(element).find("select[name*='species_id']").val(last_vial["species_id"]).trigger("change.select2");
@@ -461,8 +402,6 @@ var copy_previous_vial = function(element) {
     var last_specimen = last_vial['specimens'][0];
     update_datepicker($(element).find("input[name*='date_collected']"), last_specimen['date_collected']);
 
-    // $(element).find("input[name*='collection_sample_id']").val(last_specimen["collection_sample_id"]);
-    // $(element).find("input[name*='dna']").val(last_specimen["dna"]);
     $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
     $(element).find("div.inner-repeater").find("input[name*='freezer']").val(last_specimen["freezer"]);
     $(element).find("div.inner-repeater").find("input[name*='box']").val(last_specimen["box"]);
@@ -490,37 +429,6 @@ var FormRepeater = function () {
                     create_select2($("select[name*='processor']"), "Select a processor");
                     create_select2($("select[name*='process_location']"), "Process location");
                     create_select2($("select[name*='country_id']"), "Country of origin");
-                    // create_select2($("select[name*='state_id']"), "Select a state");
-                    // create_select2($("select[name*='city_id']"), "Select a city");
-
-
-                    // $("select[name*='country_id']", current_item).on('select2:select', function(e){
-                    //     var id = $(this).select2("val");
-                    //     var element = $(current_item).find("select[name*='state_id']");
-                    //     $(element).html('').select2()
-                    //     initStateDropdown(element, id);
-                    // });
-
-                    // $("select[name*='country_id']", current_item).on('select2:unselect', function(e){
-                    //     var state_element = $(current_item).find("select[name*='state_id']");
-                    //     deactivate_select2(state_element);
-
-                    //     var city_element = $(current_item).find("select[name*='city_id']");
-                    //     deactivate_select2(city_element);
-                    // });
-
-                    // $("select[name*='state_id']", current_item).on('select2:select', function(e){
-                    //     var id = $(this).select2("val");
-                    //     var element = $(current_item).find("select[name*='city_id']");
-                    //     $(element).html('').select2()
-                    //     initCityDropdown(element, id);
-                    // });
-
-                    // $("select[name*='state_id']", current_item).on('select2:unselect', function(){
-                    //     var element = $(current_item).find("select[name*='city_id']");
-                    //     deactivate_select2(element);
-                    // });
-
                     create_select2($("select[name*='genus_id']"), "Select genus");
                     create_select2($("select[name*='species_id']"), "Select species");
                     create_select2($("select[name*='subspecies_id']"), "Select subspecies");
@@ -560,9 +468,6 @@ var FormRepeater = function () {
                     });
 
                     copy_previous_vial($(this));
-
-                    // $(".mt-repeater-item:nth-child(odd)").css('background-color', 'LightGray');
-                    // $(".mt-repeater-item:nth-child(even)").css('background-color', 'white');
                 },
 
                 hide: function (deleteElement) {
@@ -603,35 +508,8 @@ jQuery(document).ready(function() {
 
     create_select2($("#collector"), "Select a collector");
     create_select2($("#processor"), "Select a processor");
-    // create_select2($("#pack_country"), "Select the country of origin");
     create_select2($("#process_location"), "Process location");
     create_select2($("#country_id"), "Country of origin");
-
-    // $("select[name*='country_id']").on('select2:select', function(){
-    //     var id = $(this).select2("val");
-    //     var element = $("select[name*='state_id']:first");
-    //     $(element).html('').select2()
-    //     initStateDropdown(element, id);
-    // });
-
-    // $("select[name*='country_id']:first").on('select2:unselect', function(){
-    //     $("select[name*='state_id']:first").prop("disabled", true).html('').select2();
-    //     $("select[name*='city_id']:first").prop("disabled", true).html('').select2();
-    // });
-
-    // $("select[name*='state_id']").on('select2:select', function(){
-    //     var id = $(this).select2("val");
-    //     var element = $("select[name*='city_id']:first");
-    //     $(element).html('').select2()
-    //     initCityDropdown(element, id);
-    // });
-
-    // $("select[name*='state_id']:first").on('select2:unselect', function(){
-    //     $("select[name*='city_id']:first").prop("disabled", true).html('').select2();
-    // });
-
-    // create_select2($("#state"), "Select a state");
-    // create_select2($("#city"), "Select a city");
     create_select2($("#genus_id"), "Select genus");
     create_select2($("#species_id"), "Select species");
     create_select2($("#subspecies_id"), "Select subspecies");

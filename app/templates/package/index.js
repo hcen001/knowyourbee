@@ -51,7 +51,7 @@ var initTable = function () {
                 "data": "package_id",
                 "render": function(data, type, row, meta){
                     if(type === 'display'){
-                        data = '<a href="{{ url_for('package.index') }}details/'+row['id']+'">' + data + '</a>';
+                        data = '<a href="{{ url_for('package.index') }}'+row['id']+'/details">' + data + '</a>';
                     }
                     return data;
                 }

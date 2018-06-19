@@ -64,6 +64,11 @@ class Sample(Base):
     collector           = db.relationship('Person', backref='_collected_samples', foreign_keys=[collector_id], lazy=True)
     processor           = db.relationship('Person', backref='_processed_samples', foreign_keys=[processor_id], lazy=True)
     process_location    = db.relationship('Location', backref='_samples', foreign_keys=[process_location_id], lazy=True)
+    country             = db.relationship('Country', backref='_samples', foreign_keys=[origin_country], lazy=True)
+    genus               = db.relationship('Genus', backref='_samples', foreign_keys=[genus_id], lazy=True)
+    species             = db.relationship('Species', backref='_samples', foreign_keys=[species_id], lazy=True)
+    subspecies          = db.relationship('Subspecies', backref='_samples', foreign_keys=[subspecies_id], lazy=True)
+    lineage             = db.relationship('Lineage', backref='_samples', foreign_keys=[lineage_id], lazy=True)
 
     package             = db.relationship('Package', back_populates='samples', foreign_keys=[package_id])
     specimens           = db.relationship('Specimen', back_populates='sample')
@@ -140,7 +145,7 @@ class Sample(Base):
         return data
 
     def __repr__(self):
-        return '<Sample: ID={}>'.format(self.sample_id)
+        return '<Sample: ID={}>'.format(self.sender_source_id)
 
 class Genus(TaxonBase):
 

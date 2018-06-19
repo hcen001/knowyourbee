@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 class="page-title"> {{ title }}
+    <h1 class="page-title"> Details for package with ID: <strong>{{ package.package_id }}</strong>
         <small></small>
     </h1>
     <div class="page-bar">
@@ -23,5 +23,219 @@
         </ul>
     </div>
     <!-- END PAGE HEADER-->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert alert-{{ messages[0][0] }}">
+            <button class="close" data-close="alert"></button>
+            <span>{{ messages[0][1] }}</span>
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="portlet light ">
+        <!-- <div class="portlet-title">
+            <div class="caption">
+                <i class="icon-equalizer font-red-sunglo"></i>
+                <span class="caption-subject font-red-sunglo bold uppercase">{{ package.package_id }}</span>
+                <span class="caption-helper">{{ package.partner.full_name }}</span>
+            </div>
+        </div> -->
+        <div class="portlet-body form">
+            <!-- BEGIN FORM-->
+            <form class="form-horizontal" role="form">
+                <div class="form-body">
+                    <!-- <h3 class="form-section">Package details</h3> -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-4"><strong>Date sent:</strong></label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static"> {{ package.date_sent.strftime('%d/%B/%Y') }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-4"><strong>Date received:</strong></label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static"> {{ package.date_received.strftime('%d/%B/%Y') }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-4"><strong>Courier:</strong></label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static"> {{ package.courier.name }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <!--/row-->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-4"><strong>Tracking number:</strong></label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static"> {{ package.traking_number or 'N/A' }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="control-label col-md-2"><strong>Partner:</strong></label>
+                                <div class="col-md-">
+                                    <p class="form-control-static"> {{ package.partner.institution }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <!--/row-->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-4"><strong>Sender:</strong></label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static"> {{ package.sent_by().full_name }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-4"><strong>Received by:</strong></label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static"> {{ package.received_by().full_name }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-4"><strong>Stored at:</strong></label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static"> {{ package.stored_at().name }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <!--/row-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-2"><strong>Package comments:</strong></label>
+                                <div class="col-md-10">
+                                    <p class="form-control-static"> {{ package.comments }} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/row-->
+                </div>
+            </form>
+            <!-- END FORM-->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Begin: life time stats -->
+            <div class="portlet light portlet-fit portlet-datatable ">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-equalizer font-red-sunglo"></i>
+                        <span class="caption-subject font-red-sunglo bold uppercase">Vials in package</span>
+                        <span class="caption-helper">number of vials: {{ package.vials() }}</span>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group">
+                            <a class="btn red btn-outline btn-circle" href="javascript:;" data-toggle="dropdown">
+                                <i class="fa fa-share"></i>
+                                <span class="hidden-xs"> Tools </span>
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right" id="sample_3_tools">
+                                <li>
+                                    <a href="javascript:;" data-action="0" class="tool-action">
+                                        <i class="icon-printer"></i> Print</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-action="1" class="tool-action">
+                                        <i class="icon-check"></i> Copy</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-action="2" class="tool-action">
+                                        <i class="icon-doc"></i> PDF</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-action="3" class="tool-action">
+                                        <i class="icon-paper-clip"></i> Excel</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-action="4" class="tool-action">
+                                        <i class="icon-cloud-upload"></i> CSV</a>
+                                </li>
+                                <li class="divider"> </li>
+                                <li>
+                                    <a href="javascript:;" data-action="5" class="tool-action">
+                                        <i class="icon-refresh"></i> Reload</a>
+                                </li>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body table-both-scroll">
+                    <div class="table-toolbar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{{url_for('package.add_vials', id=package.id)}}" class="btn green"> Add new vials
+                                    <i class="icon-magnifier-add"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="table-container"> -->
+                        <table class="table table-striped table-bordered table-hover" id="specimens_tbl">
+                            <thead>
+                                <tr>
+                                    <th> Collection Specimen ID </th>
+                                    <th> Cooperator name </th>
+                                    <th> Number specimens in received vial </th>
+                                    <th> Date received </th>
+                                    <th> Country </th>
+                                    <th> State/Province </th>
+                                    <th> Latitude </th>
+                                    <th> Longitude </th>
+                                    <th> Genus </th>
+                                    <th> Species </th>
+                                    <th> Subspecies </th>
+                                    <th> Lineage </th>
+                                    <th> Gender </th>
+                                    <th> Freezer </th>
+                                    <th> Box </th>
+                                    <th> DNA ng/µl </th>
+                                    <th> Body part used in DNA extraction </th>
+                                    <th> DNA Storage (Freezer) </th>
+                                    <th> DNA Storage (Box) </th>
+                                    <th> Comments from processor </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    <!-- </div> -->
+                </div>
+            </div>
+            <!-- End: life time stats -->
+        </div>
+    </div>
 
 {% endblock %}

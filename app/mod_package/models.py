@@ -51,9 +51,8 @@ class Package(Base):
     def received_by(self):
         return self.receiver
 
-    # def samples(self):
-        #backref from mod_sample: Sample
-        # return self._samples
+    def vials(self):
+        return len(self.samples)
 
     @classmethod
     def packages_datatable(cls):
@@ -71,6 +70,42 @@ class Package(Base):
             _package['receiver'] = package.receiver.full_name
             packages.append(_package)
         return packages
+
+    @classmethod
+    def specimens_datatable(cls, id):
+        # pass
+        data = cls.query.filter(Package.active == True, Package.id == id)
+        _specimens = []
+        for package in data:
+            vials = package.samples
+            for vial in vials:
+                specimens = vial.specimens
+                number_specimen = 0
+                for specimen in specimens:
+                    _specimen = {}
+                    number_specimen += 1
+                    _specimen['collection_sample_id'] = specimen.collection_sample_id
+                    _specimen['cooperator'] = specimen.sample.collected_by().full_name
+                    _specimen['number_specimens'] = '{}/{}'.format(number_specimen, len(specimens))
+                    _specimen['date_received'] = specimen.sample.date_received.strftime('%d/%B/%Y')
+                    _specimen['country'] = specimen.sample.country.name
+                    _specimen['state'] = specimen.sample.origin_state or 'N/A'
+                    _specimen['latitude'] = specimen.sample.latitude or 'N/A'
+                    _specimen['longitude'] = specimen.sample.longitude or 'N/A'
+                    _specimen['genus'] = specimen.sample.genus.name
+                    _specimen['species'] = specimen.sample.species.name
+                    _specimen['subspecies'] = specimen.sample.subspecies.name
+                    _specimen['lineage'] = specimen.sample.lineage.name
+                    _specimen['gender'] = specimen.sample.gender
+                    _specimen['freezer'] = specimen.sample.freezer or 'N/A'
+                    _specimen['box'] = specimen.sample.box or 'N/A'
+                    _specimen['dna'] = specimen.dna or 'N/A'
+                    _specimen['body_part'] = specimen.body_part or 'N/A'
+                    _specimen['dna_freezer'] = specimen.freezer or 'N/A'
+                    _specimen['dna_box'] = specimen.box or 'N/A'
+                    _specimen['comments'] = specimen.comments or 'None'
+                    _specimens.append(_specimen)
+        return _specimens
 
     def __repr__(self):
         return '<Package: ID={}, sent={}, received={}, partner={}>'.format(self.package_id, self.date_sent, self.date_received, self.partner)
