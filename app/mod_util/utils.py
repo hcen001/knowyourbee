@@ -1,7 +1,7 @@
 from urllib.parse import urlparse, urljoin
 from flask import request, url_for
 
-from app.mod_util.models import PackageIndex, Country, State
+from app.mod_util.models import Country, State
 
 from sqlalchemy.types import TypeDecorator, CHAR
 from sqlalchemy.dialects.postgresql import UUID

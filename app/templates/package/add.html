@@ -74,20 +74,12 @@
                                         <button class="close" data-dismiss="alert"></button> Your form validation is successful! </div>
                                     <div class="tab-pane active" id="tab1">
                                         <div class="row">
-                                            <h3 class="block" align="center">Just for identification purposes</h3>
+                                            <h3 class="block" align="center">Package identification</h3>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-3">{{ form.pack_country.label }}</label>
+                                                    <label class="control-label col-md-3">{{ form.package_id.label }}</label>
                                                     <div class="col-md-9">
-                                                        {{ form.pack_country(class="form-control select2") }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">{{ form.pack_state.label }}</label>
-                                                    <div class="col-md-9">
-                                                        {{ form.pack_state(class="form-control select2", disabled=true) }}
+                                                        {{ form.package_id(class="form-control", placeholder="Package ID") }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -209,7 +201,7 @@
                                     </div>
                                     <!--/tab pane 1-->
                                     <div class="tab-pane" id="tab2">
-                                        <h3 class="block">Provide details of the vials</h3>
+                                        <h3 class="block">Provide details of the vials received in parcel</h3>
                                         <hr>
                                         <div data-repeater-list="samples">
                                             <div data-repeater-item class="mt-repeater-item">
@@ -238,7 +230,6 @@
                                                         </div>
                                                     </div>
                                                     <!--/span-->
-
                                                     <div class="col-md-2">
                                                         <div class="mt-repeater-input mt-checkbox-inline">
                                                             <label class="control-label">{{ sample_form.sample_date_received.label }}</label>
@@ -255,8 +246,6 @@
                                                         </div>
                                                     </div>
                                                     <!--/span-->
-
-
                                                     <div class="col-md-2">
                                                         <div class="mt-repeater-input">
                                                             <label class="control-label">{{ sample_form.collector.label }}</label>
@@ -290,17 +279,18 @@
                                                     <!--/span-->
                                                     <div class="col-md-2">
                                                         <div class="mt-repeater-input">
-                                                            <label class="control-label">{{ sample_form.state_id.label }}</label>
+                                                            <label class="control-label">{{ sample_form.state.label }}</label>
                                                             <br/>
-                                                            {{ sample_form.state_id(class="form-control select2", disabled=true) }} </div>
+                                                            {{ sample_form.state(class="form-control") }} </div>
                                                     </div>
                                                     <!--/span-->
                                                     <div class="col-md-2">
                                                         <div class="mt-repeater-input">
-                                                            <label class="control-label">{{ sample_form.city_id.label }}</label>
+                                                            <label class="control-label">{{ sample_form.locality.label }}</label>
                                                             <br/>
-                                                            {{ sample_form.city_id(class="form-control select2", disabled=true) }} </div>
+                                                            {{ sample_form.locality(class="form-control") }} </div>
                                                     </div>
+                                                    <!--/span-->
                                                     <!--/span-->
                                                     <div class="col-md-2">
                                                         <div class="mt-repeater-input">
@@ -326,14 +316,7 @@
                                                 </div>
                                                 <!--/row-->
                                                 <div class="row">
-                                                    <div class="col-md-2">
-                                                        <div class="mt-repeater-input">
-                                                            <label class="control-label">{{ sample_form.locality.label }}</label>
-                                                            <br/>
-                                                            {{ sample_form.locality(class="form-control") }} </div>
-                                                    </div>
-                                                    <!--/span-->
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <div class="mt-repeater-input">
                                                             <label class="control-label">{{ sample_form.hive.label }}</label>
                                                             <br/>
@@ -341,7 +324,7 @@
                                                     </div>
                                                     <!--/span-->
 
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-6">
                                                         <div class="mt-repeater-input">
                                                             <label class="control-label">{{ sample_form.additional_info.label }}</label>
                                                                 <br/>
@@ -369,19 +352,6 @@
                                                             {{ sample_form.box(class="form-control") }} </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-3">
-                                                        <div class="mt-repeater-input mt-radio-inline">
-                                                            <label class="control-label">{{ sample_form.caste.label }}</label>
-                                                            <br/>
-                                                            {% for subfield in sample_form.caste %}
-                                                            <label class="mt-radio">
-                                                                {{ subfield }} {{subfield.label}}
-                                                                <span></span>
-                                                            </label>
-                                                            {% endfor %}
-                                                        </div>
-                                                    </div>
-                                                    <!--/span-->
                                                 </div>
                                                 <!--/row-->
                                                 <div class="row">
@@ -399,21 +369,24 @@
                                                             {{ sample_form.species_id(class="form-control select2") }} </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-4">
                                                         <div class="mt-repeater-input">
                                                             <label class="control-label">{{ sample_form.subspecies_id.label }}</label>
                                                             <br/>
                                                             {{ sample_form.subspecies_id(class="form-control select2") }} </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="mt-repeater-input">
                                                             <label class="control-label">{{ sample_form.lineage_id.label }}</label>
                                                             <br/>
                                                             {{ sample_form.lineage_id(class="form-control select2") }} </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-3">
+                                                </div>
+                                                <!--/row-->
+                                                <div class="row">
+                                                    <div class="col-md-2">
                                                         <div class="mt-repeater-input mt-radio-inline">
                                                             <label class="control-label">{{ sample_form.gender.label }}</label>
                                                             <br/>
@@ -426,9 +399,6 @@
                                                         </div>
                                                     </div>
                                                     <!--/span-->
-                                                </div>
-                                                <!--/row-->
-                                                <div class="row">
                                                     <div class="col-md-4">
                                                         <div class="mt-repeater-input mt-radio-inline">
                                                             <label class="control-label">{{ sample_form.stage.label }}</label>
@@ -442,7 +412,7 @@
                                                         </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <div class="mt-repeater-input mt-radio-inline">
                                                             <label class="control-label">{{ sample_form.sample_quality.label }}</label>
                                                             <br/>
@@ -455,7 +425,22 @@
                                                         </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
+                                                        <div class="mt-repeater-input mt-radio-inline">
+                                                            <label class="control-label">{{ sample_form.caste.label }}</label>
+                                                            <br/>
+                                                            {% for subfield in sample_form.caste %}
+                                                            <label class="mt-radio">
+                                                                {{ subfield }} {{subfield.label}}
+                                                                <span></span>
+                                                            </label>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-10">
                                                         <div class="mt-repeater-input">
                                                             <label class="control-label">{{ sample_form.comments.label }}</label>
                                                                 <br/>
@@ -476,19 +461,19 @@
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-11">
                                                         <div class="inner-repeater">
-                                                            <div data-repeater-list="specimens">
-                                                                <h3 class="block">Provide the common details of each specimen</h3>
+                                                            <div data-repeater-list="specimens" data-limit="2">
+                                                                <h3 class="block">Provide the details of each specimen per WorldBEE collection vial</h3>
                                                                 <hr>
                                                                 <div data-repeater-item class="mt-repeater-item">
                                                                     <div class="row">
-                                                                        <div class="col-md-1">
+                                                                        <div class="col-md-2" style="background: #00B258;">
                                                                             <div class="mt-repeater-input">
                                                                                 <label class="control-label">{{ specimen_form.collection_sample_id.label }}</label>
                                                                                 <br/>
                                                                                 {{ specimen_form.collection_sample_id(class="form-control") }} </div>
                                                                         </div>
                                                                         <!--/span-->
-                                                                        <div class="col-md-1">
+                                                                        <div class="col-md-2">
                                                                             <div class="mt-repeater-input">
                                                                                 <label class="control-label">{{ specimen_form.dna.label }}</label>
                                                                                 <br/>
@@ -511,7 +496,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <!--/span-->
-                                                                        <div class="col-md-2">
+                                                                        <div class="col-md-3">
                                                                             <div class="mt-repeater-input mt-radio-inline">
                                                                                 <label class="control-label">{{ specimen_form.measurement.label }}</label>
                                                                                 <br/>
@@ -531,27 +516,41 @@
                                                                                 {{ specimen_form.body_part(class="form-control") }} </div>
                                                                         </div>
                                                                         <!--/span-->
-                                                                        <div class="col-md-1">
+                                                                    </div>
+                                                                    <!--/row-->
+                                                                    <div class="row">
+                                                                        <div class="col-md-2">
                                                                             <div class="mt-repeater-input">
                                                                                 <label class="control-label">{{ specimen_form.freezer.label }}</label>
                                                                                 <br/>
                                                                                 {{ specimen_form.freezer(class="form-control") }} </div>
                                                                         </div>
                                                                         <!--/span-->
-                                                                        <div class="col-md-1">
+                                                                        <div class="col-md-2">
                                                                             <div class="mt-repeater-input">
                                                                                 <label class="control-label">{{ specimen_form.box.label }}</label>
                                                                                 <br/>
                                                                                 {{ specimen_form.box(class="form-control") }} </div>
                                                                         </div>
                                                                         <!--/span-->
-                                                                        <div class="col-md-1">
+                                                                        <div class="col-md-6">
+                                                                            <div class="mt-repeater-input">
+                                                                                <label class="control-label">{{ specimen_form.comments.label }}</label>
+                                                                                    <br/>
+                                                                                    {{ specimen_form.comments(class="form-control") }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <!--/span-->
+                                                                        <div class="col-md-2">
                                                                             <div class="mt-repeater-input">
                                                                                 <a href="javascript:;" data-repeater-delete class="btn btn-danger mt-repeater-delete">
                                                                                 <i class="fa fa-close"></i> Delete</a> </div>
                                                                         </div>
                                                                         <!--/span-->
                                                                     </div>
+                                                                    <!--/row-->
+                                                                    <!-- <div class="row">
+                                                                    </div> -->
                                                                     <!--/row-->
                                                                 </div>
                                                                 <!--/inner data repeater item-->

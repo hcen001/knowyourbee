@@ -44,6 +44,8 @@ var initCityDropdown = function(element, state_id) {
     });
 }
 
+var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 var FormWizard = function () {
 
     var handleDatePickers = function () {
@@ -53,7 +55,7 @@ var FormWizard = function () {
                 rtl: App.isRTL(),
                 orientation: "left",
                 autoclose: true,
-                format: "dd/mm/yyyy"
+                format: "dd/MM/yyyy"
             }).on('changeDate', function(ev){
                 if (ev.target.id == "date_sent") {
                     $("#date_received").prop("disabled", false);
@@ -122,15 +124,15 @@ var FormWizard = function () {
             }
         });
 
-        $("#pack_country").on('select2:select', function(){
-            var id = $(this).select2("val");
-            $("#pack_state").html('').select2();
-            initStateDropdown($("#pack_state"), id);
-        });
-        $("#pack_country").on('select2:unselect', function(){
-            $("#pack_state").prop("disabled", true);
-            $("#pack_state").html('').select2();
-        });
+        // $("#pack_country").on('select2:select', function(){
+        //     var id = $(this).select2("val");
+        //     $("#pack_state").html('').select2();
+        //     initStateDropdown($("#pack_state"), id);
+        // });
+        // $("#pack_country").on('select2:unselect', function(){
+        //     $("#pack_state").prop("disabled", true);
+        //     $("#pack_state").html('').select2();
+        // });
     }
 
     return {
@@ -151,7 +153,7 @@ var FormWizard = function () {
                 focusInvalid: false, // do not focus the last invalid input
                 rules: {
                     //package metadata
-                    pack_country: {
+                    package_id: {
                         required: true
                     },
                     date_sent: {
@@ -347,7 +349,8 @@ var create_select2 = function (element, placeholder) {
 
 var update_datepicker = function (datepicker, value) {
     var date = value.split('/');
-    $(datepicker).datepicker('update', new Date(date[2], date[1]-1, date[0]));
+    var month = months.indexOf(date[1]);
+    $(datepicker).datepicker('update', new Date(date[2], month, date[0]));
     $(datepicker).prop("disabled", false);
 };
 
@@ -358,12 +361,13 @@ var update_datepicker_startDate = function (datepicker, value) {
 };
 
 var copy_specimen_data = function (element, last_specimen) {
-    $(element).find("input[name*='collection_sample_id']").val(last_specimen["collection_sample_id"]);
-    $(element).find("input[name*='dna']").val(last_specimen["dna"]);
+    // $(element).find("input[name*='collection_sample_id']").val(last_specimen["collection_sample_id"]);
+    // $(element).find("input[name*='dna']").val(last_specimen["dna"]);
     $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
     $(element).find("input[name*='freezer']").val(last_specimen["freezer"]);
     $(element).find("input[name*='box']").val(last_specimen["box"]);
     $(element).find("input[value='"+last_specimen["measurement"]+"']").prop('checked', true);
+    $(element).find("textarea[name*='comments']").val(last_specimen["comments"]);
 };
 
 var copy_previous_specimen = function(element) {
@@ -415,6 +419,7 @@ var copy_previous_vial = function(element) {
     $(element).find("input[name*='locality']").val(last_vial['locality']);
     $(element).find("input[name*='hive']").val(last_vial['hive']);
     $(element).find("input[name*='additional_info']").val(last_vial['additional_info']);
+    $(element).find("input[name*='state']").val(last_vial['state']);
 
     $(element).find("input[name*='freezer']").filter(function(){
         return !this.name.match(/specimens/);
@@ -455,7 +460,14 @@ var copy_previous_vial = function(element) {
 
     var last_specimen = last_vial['specimens'][0];
     update_datepicker($(element).find("input[name*='date_collected']"), last_specimen['date_collected']);
-    copy_specimen_data(element, last_specimen);
+
+    // $(element).find("input[name*='collection_sample_id']").val(last_specimen["collection_sample_id"]);
+    // $(element).find("input[name*='dna']").val(last_specimen["dna"]);
+    $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
+    $(element).find("div.inner-repeater").find("input[name*='freezer']").val(last_specimen["freezer"]);
+    $(element).find("div.inner-repeater").find("input[name*='box']").val(last_specimen["box"]);
+    $(element).find("div.inner-repeater").find("textarea[name*='comments']").val(last_specimen["comments"]);
+    $(element).find("input[value='"+last_specimen["measurement"]+"']").prop('checked', true);
 
 };
 
@@ -476,38 +488,38 @@ var FormRepeater = function () {
 
                     create_select2($("select[name*='collector']"), "Select a collector");
                     create_select2($("select[name*='processor']"), "Select a processor");
-                    create_select2($("select[name*='process_location']"), "Select a process location");
-                    create_select2($("select[name*='country_id']"), "Select the country of origin");
-                    create_select2($("select[name*='state_id']"), "Select a state");
-                    create_select2($("select[name*='city_id']"), "Select a city");
+                    create_select2($("select[name*='process_location']"), "Process location");
+                    create_select2($("select[name*='country_id']"), "Country of origin");
+                    // create_select2($("select[name*='state_id']"), "Select a state");
+                    // create_select2($("select[name*='city_id']"), "Select a city");
 
 
-                    $("select[name*='country_id']", current_item).on('select2:select', function(e){
-                        var id = $(this).select2("val");
-                        var element = $(current_item).find("select[name*='state_id']");
-                        $(element).html('').select2()
-                        initStateDropdown(element, id);
-                    });
+                    // $("select[name*='country_id']", current_item).on('select2:select', function(e){
+                    //     var id = $(this).select2("val");
+                    //     var element = $(current_item).find("select[name*='state_id']");
+                    //     $(element).html('').select2()
+                    //     initStateDropdown(element, id);
+                    // });
 
-                    $("select[name*='country_id']", current_item).on('select2:unselect', function(e){
-                        var state_element = $(current_item).find("select[name*='state_id']");
-                        deactivate_select2(state_element);
+                    // $("select[name*='country_id']", current_item).on('select2:unselect', function(e){
+                    //     var state_element = $(current_item).find("select[name*='state_id']");
+                    //     deactivate_select2(state_element);
 
-                        var city_element = $(current_item).find("select[name*='city_id']");
-                        deactivate_select2(city_element);
-                    });
+                    //     var city_element = $(current_item).find("select[name*='city_id']");
+                    //     deactivate_select2(city_element);
+                    // });
 
-                    $("select[name*='state_id']", current_item).on('select2:select', function(e){
-                        var id = $(this).select2("val");
-                        var element = $(current_item).find("select[name*='city_id']");
-                        $(element).html('').select2()
-                        initCityDropdown(element, id);
-                    });
+                    // $("select[name*='state_id']", current_item).on('select2:select', function(e){
+                    //     var id = $(this).select2("val");
+                    //     var element = $(current_item).find("select[name*='city_id']");
+                    //     $(element).html('').select2()
+                    //     initCityDropdown(element, id);
+                    // });
 
-                    $("select[name*='state_id']", current_item).on('select2:unselect', function(){
-                        var element = $(current_item).find("select[name*='city_id']");
-                        deactivate_select2(element);
-                    });
+                    // $("select[name*='state_id']", current_item).on('select2:unselect', function(){
+                    //     var element = $(current_item).find("select[name*='city_id']");
+                    //     deactivate_select2(element);
+                    // });
 
                     create_select2($("select[name*='genus_id']"), "Select genus");
                     create_select2($("select[name*='species_id']"), "Select species");
@@ -518,7 +530,7 @@ var FormRepeater = function () {
                         rtl: App.isRTL(),
                         orientation: "left",
                         autoclose: true,
-                        format: "dd/mm/yyyy"
+                        format: "dd/MM/yyyy"
                     }).on('changeDate', function(ev){
                         var sample_date = $(ev.target).closest("div.col-md-2").next("div.col-md-2").find("input[name*='sample_date_received']");
                         $(sample_date).val("");
@@ -529,7 +541,7 @@ var FormRepeater = function () {
                         rtl: App.isRTL(),
                         orientation: "left",
                         autoclose: true,
-                        format: "dd/mm/yyyy"
+                        format: "dd/MM/yyyy"
                     }).on('changeDate', function(ev){
                         var dna_collection_date = $(ev.target).closest("div.mt-repeater-item").find("input[name*='date_collected']");
                         $(dna_collection_date).val("");
@@ -544,10 +556,13 @@ var FormRepeater = function () {
                         rtl: App.isRTL(),
                         orientation: "left",
                         autoclose: true,
-                        format: "dd/mm/yyyy"
+                        format: "dd/MM/yyyy"
                     });
 
                     copy_previous_vial($(this));
+
+                    // $(".mt-repeater-item:nth-child(odd)").css('background-color', 'LightGray');
+                    // $(".mt-repeater-item:nth-child(even)").css('background-color', 'white');
                 },
 
                 hide: function (deleteElement) {
@@ -559,16 +574,14 @@ var FormRepeater = function () {
                         selector: '.inner-repeater',
                         show: function () {
                             $(this).slideDown();
-
                             $(this).find("input[name*='date_collected']").datepicker({
                                 rtl: App.isRTL(),
                                 orientation: "left",
                                 autoclose: true,
-                                format: "dd/mm/yyyy"
+                                format: "dd/MM/yyyy"
                             });
 
                             copy_previous_specimen($(this));
-
                         },
 
                         hide: function (deleteElement) {
@@ -590,35 +603,35 @@ jQuery(document).ready(function() {
 
     create_select2($("#collector"), "Select a collector");
     create_select2($("#processor"), "Select a processor");
-    create_select2($("#pack_country"), "Select the country of origin");
-    create_select2($("#process_location"), "Select a process location");
-    create_select2($("#country_id"), "Select the country of origin");
+    // create_select2($("#pack_country"), "Select the country of origin");
+    create_select2($("#process_location"), "Process location");
+    create_select2($("#country_id"), "Country of origin");
 
-    $("select[name*='country_id']").on('select2:select', function(){
-        var id = $(this).select2("val");
-        var element = $("select[name*='state_id']:first");
-        $(element).html('').select2()
-        initStateDropdown(element, id);
-    });
+    // $("select[name*='country_id']").on('select2:select', function(){
+    //     var id = $(this).select2("val");
+    //     var element = $("select[name*='state_id']:first");
+    //     $(element).html('').select2()
+    //     initStateDropdown(element, id);
+    // });
 
-    $("select[name*='country_id']:first").on('select2:unselect', function(){
-        $("select[name*='state_id']:first").prop("disabled", true).html('').select2();
-        $("select[name*='city_id']:first").prop("disabled", true).html('').select2();
-    });
+    // $("select[name*='country_id']:first").on('select2:unselect', function(){
+    //     $("select[name*='state_id']:first").prop("disabled", true).html('').select2();
+    //     $("select[name*='city_id']:first").prop("disabled", true).html('').select2();
+    // });
 
-    $("select[name*='state_id']").on('select2:select', function(){
-        var id = $(this).select2("val");
-        var element = $("select[name*='city_id']:first");
-        $(element).html('').select2()
-        initCityDropdown(element, id);
-    });
+    // $("select[name*='state_id']").on('select2:select', function(){
+    //     var id = $(this).select2("val");
+    //     var element = $("select[name*='city_id']:first");
+    //     $(element).html('').select2()
+    //     initCityDropdown(element, id);
+    // });
 
-    $("select[name*='state_id']:first").on('select2:unselect', function(){
-        $("select[name*='city_id']:first").prop("disabled", true).html('').select2();
-    });
+    // $("select[name*='state_id']:first").on('select2:unselect', function(){
+    //     $("select[name*='city_id']:first").prop("disabled", true).html('').select2();
+    // });
 
-    create_select2($("#state"), "Select a state");
-    create_select2($("#city"), "Select a city");
+    // create_select2($("#state"), "Select a state");
+    // create_select2($("#city"), "Select a city");
     create_select2($("#genus_id"), "Select genus");
     create_select2($("#species_id"), "Select species");
     create_select2($("#subspecies_id"), "Select subspecies");
@@ -628,7 +641,7 @@ jQuery(document).ready(function() {
         rtl: App.isRTL(),
         orientation: "left",
         autoclose: true,
-        format: "dd/mm/yyyy"
+        format: "dd/MM/yyyy"
     }).on('changeDate', function(ev){
         if (ev.target.name.includes("sample_date_sampled")) {
             var sample_date = $(ev.target).closest("div.col-md-2").next("div.col-md-2").find("input[name*='sample_date_received']");

@@ -1,31 +1,34 @@
 from app import db
 
-class PackageIndex(db.Model):
+# class PackageIndex(db.Model):
 
-    __tablename__       = 'package_index'
+#     __tablename__       = 'package_index'
 
-    id               = db.Column(db.Integer, primary_key=True)
-    prefix           = db.Column(db.String(64), nullable=False)
-    next_suffix      = db.Column(db.Integer, nullable=False)
+#     id               = db.Column(db.Integer, primary_key=True)
+#     prefix           = db.Column(db.String(64), nullable=False)
+#     next_suffix      = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, prefix):
+#     def __init__(self, prefix):
 
-        self.prefix = prefix
+#         self.prefix = prefix
 
-    def add_or_increase(self):
+#     def add_or_increase(self):
 
-        index = self.query.filter(PackageIndex.prefix == self.prefix).first()
+#         index = self.query.filter(PackageIndex.prefix == self.prefix).first()
 
-        if index is None:
-            self.next_suffix = 1
-            db.session.add(self)
-        else:
-            index.next_suffix += 1
-            db.session.add(index)
+#         if index is None:
+#             self.next_suffix = 1
+#             db.session.add(self)
+#         else:
+#             index.next_suffix += 1
+#             db.session.add(index)
 
-        db.session.commit()
+#         db.session.commit()
 
-        return index if index is not None else self
+#         return index if index is not None else self
+
+#     def __repr__(self):
+#         return '<PackageIndex: Prefix={}, Next suffix={}>'.format(self.prefix, self.next_suffix)
 
 
 class Country(db.Model):

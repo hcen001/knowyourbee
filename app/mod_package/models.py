@@ -1,16 +1,13 @@
 from app.models import Base, PersonBase
 from app import db
 
-# from app.mod_util.utils import GUID
-# import uuid
-
-# db.GUID = GUID
+import json
 
 class Package(Base):
 
     __tablename__       = 'package'
 
-    package_id          = db.Column('package_id', db.String(64), default='SOUTH AFRICA', nullable=False)
+    package_id          = db.Column('package_id', db.String(64), default='SOUTH AFRICA', unique=True, nullable=False)
     date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=False)
     date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
     tracking_number     = db.Column('tracking_number', db.String(64))
@@ -29,13 +26,15 @@ class Package(Base):
     sender              = db.relationship('Person', backref='_sent_packages', foreign_keys=[sender_id], lazy=True)
     receiver            = db.relationship('Person', backref='_received_packages', foreign_keys=[receiver_id], lazy=True)
 
+    samples             = db.relationship('Sample', back_populates='package')
+
     def __init__(self, **kwargs):
 
         self.package_id = kwargs.get('package_id')
         self.date_sent = kwargs.get('date_sent')
         self.date_received = kwargs.get('date_received')
-        self.tracking_number = kwargs.get('tracking_number')
-        self.comments = kwargs.get('comments')
+        self.tracking_number = kwargs.get('tracking_number') or None
+        self.comments = kwargs.get('comments') or None
 
         self.partner_id = kwargs.get('partner_id')
         self.location_id = kwargs.get('location_id')
@@ -52,9 +51,9 @@ class Package(Base):
     def received_by(self):
         return self.receiver
 
-    def samples(self):
+    # def samples(self):
         #backref from mod_sample: Sample
-        return self._samples
+        # return self._samples
 
     @classmethod
     def packages_datatable(cls):
@@ -75,6 +74,9 @@ class Package(Base):
 
     def __repr__(self):
         return '<Package: ID={}, sent={}, received={}, partner={}>'.format(self.package_id, self.date_sent, self.date_received, self.partner)
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 class Person(PersonBase):
 

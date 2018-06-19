@@ -1,4 +1,7 @@
 from app import db
+from sqlalchemy.exc import IntegrityError
+
+import json
 
 # Define a base model for other database tables to inherit
 class Base(db.Model):
@@ -15,8 +18,19 @@ class Base(db.Model):
         if deactivate:
             self.active = False
 
-        db.session.add(self)
+        try:
+            db.session.add(self)
+            db.session.flush()
+        except IntegrityError as e:
+            raise
+        # else:
+        #     db.session.commit()
+
+    def save(self):
         db.session.commit()
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 class PersonBase(Base):
 

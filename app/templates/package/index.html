@@ -19,6 +19,15 @@
     </div>
     <!-- END PAGE HEADER-->
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert alert-{{ messages[0][0] }}">
+            <button class="close" data-close="alert"></button>
+            <span>{{ messages[0][1] }}</span>
+        </div>
+        {% endif %}
+    {% endwith %}
+
     <div class="row">
         <div class="col-md-12">
             <!-- Begin: life time stats -->

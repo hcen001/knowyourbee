@@ -24,8 +24,8 @@ class SampleForm(FlaskForm):
     # sample data
     sender_source_id        = StringField('Sender\'s Source ID', validators=[InputRequired()])
     country                 = SelectField('Country of origin', choices=countries, validators=[InputRequired()])
-    state                   = SelectField('State or Province', choices=[], validators=[InputRequired()])
-    city                    = SelectField('City', choices=[], validators=[InputRequired()])
+    # state                   = SelectField('State or Province', choices=[], validators=[InputRequired()])
+    # city                    = SelectField('City', choices=[], validators=[InputRequired()])
     locality                = StringField('Locality', validators=[Optional()])
     hive                    = StringField('Hive', validators=[Optional()])
     latitude                = StringField('Latitude', validators=[Optional()])
@@ -44,8 +44,9 @@ class SampleForm(FlaskForm):
     box                     = StringField('Box', validators=[Optional()])
 
     country_id              = SelectField('Country of origin', choices=countries, validators=[InputRequired()])
-    state_id                = SelectField('State/Province', choices=[], validators=[Optional()])
-    city_id                 = SelectField('City', choices=[], validators=[Optional()])
+    # state_id                = SelectField('State/Province', choices=[], validators=[Optional()])
+    # city_id                 = SelectField('City', choices=[], validators=[Optional()])
+    state                   = StringField('State/Province', validators=[Optional()])
     genus_id                = SelectField('Genus', choices=genera, validators=[InputRequired()])
     species_id              = SelectField('Species', choices=species, validators=[InputRequired()])
     subspecies_id           = SelectField('Subspecies', choices=subspecies, validators=[InputRequired()])

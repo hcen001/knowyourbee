@@ -11,9 +11,10 @@ class PackageForm(FlaskForm):
     partners        = Partner.select_list()
     locations       = Location.select_list()
     persons         = Person.select_list()
-    countries       = Country.select_list()
+    # countries       = Country.select_list()
 
     # package metadata definition
+    package_id      = StringField('Package ID', validators=[InputRequired()])
     date_sent       = DateField('Date sent', format='%d-%m-%Y', validators=[InputRequired()])
     date_received   = DateField('Date received', format='%d-%m-%Y', validators=[InputRequired()])
     courier_id      = SelectField('Courier', choices=couriers, validators=[InputRequired()])
@@ -25,5 +26,5 @@ class PackageForm(FlaskForm):
     comments        = TextAreaField('Comments', validators=[Optional()])
 
     # utiliy
-    pack_country         = SelectField('Country', choices=countries, validators=[Optional()])
-    pack_state           = SelectField('State', choices=[], validators=[Optional()])
+    # pack_country         = SelectField('Country', choices=countries, validators=[Optional()])
+    # pack_state           = SelectField('State', choices=[], validators=[Optional()])
