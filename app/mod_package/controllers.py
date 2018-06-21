@@ -9,7 +9,7 @@ from app.mod_package.models import Package, Partner
 from app.mod_package.forms import PackageForm
 from app.mod_sample.forms import SampleForm
 from app.mod_specimen.forms import SpecimenForm
-from app.mod_util.utils import is_safe_url, parse_multi_form
+from app.mod_util.utils import is_safe_url, parse_multi_form, parse_l
 from app.mod_util.models import State, City
 
 from datetime import datetime
@@ -71,6 +71,7 @@ def add():
         data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y')
         data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y')
         pp.pprint(data)
+
         package = Package(**data)
 
         try:
@@ -80,6 +81,8 @@ def add():
                 sample['package_id'] = package.id
                 sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
                 sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
+                sample['latitude'] = parse_l(sample['latitude'])
+                sample['longitude'] = parse_l(sample['longitude'])
                 sample_db = Sample(**sample)
                 sample_db.add_or_update()
                 package.samples.append(sample_db)
@@ -126,12 +129,16 @@ def add_vials(id):
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(data)
 
+        # print("decimal degrees: ", parse_l(data['samples'][0]['latitude']))
+
         try:
             samples = data['samples']
             for _, sample in samples.items():
                 sample['package_id'] = package.id
                 sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
                 sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
+                sample['latitude'] = parse_l(sample['latitude'])
+                sample['longitude'] = parse_l(sample['longitude'])
                 sample_db = Sample(**sample)
                 sample_db.add_or_update()
                 package.samples.append(sample_db)

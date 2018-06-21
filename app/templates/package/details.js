@@ -31,10 +31,10 @@ var initSpecimensTable = function () {
         // setup buttons extension: http://datatables.net/extensions/buttons/
         buttons: [
             { extend: 'print', className: 'btn dark btn-outline' },
-            { extend: 'copy', className: 'btn red btn-outline' },
-            { extend: 'pdf', className: 'btn green btn-outline' },
-            { extend: 'excel', className: 'btn yellow btn-outline ' },
-            { extend: 'csv', className: 'btn purple btn-outline ' },
+            { extend: 'copyHtml5', className: 'btn red btn-outline' },
+            { extend: 'pdfHtml5', className: 'btn green btn-outline' },
+            { extend: 'excelHtml5', className: 'btn yellow btn-outline ' },
+            { extend: 'csvHtml5', className: 'btn purple btn-outline ' },
             { extend: 'colvis', className: 'btn dark btn-outline', text: 'Columns'}
         ],
 
@@ -69,7 +69,7 @@ var initSpecimensTable = function () {
             {"data": "number_specimens"},
             {"data": "date_received"},
             {"data": "country"},
-            {"data": "state"},
+            // {"data": "state"},
             {"data": "latitude"},
             {"data": "longitude"},
             {"data": "genus"},
@@ -86,17 +86,18 @@ var initSpecimensTable = function () {
             {"data": "comments"}
         ],
 
-        // "dom": "fltip",
+        "dom": "Brfti",
 
         // "dom": "<'row'<'col-md-6'l><'col-md-6'f>r><'table-scrollable't><'row'<'col-md-6'i><'col-md-6'p>>", // horizobtal scrollable datatable
 
         // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
         // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
         // So when dropdowns used the scrollable div should be removed.
-        // "dom": "<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>"
+        // "dom": "<'row'<'col-md-6'B><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>"
     });
 };
 
 jQuery(document).ready(function() {
     initSpecimensTable();
+    $("#specimens_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");
 });

@@ -62,7 +62,6 @@ var copy_previous_vial = function(element) {
     $(element).find("input[name*='locality']").val(last_vial['locality']);
     $(element).find("input[name*='hive']").val(last_vial['hive']);
     $(element).find("input[name*='additional_info']").val(last_vial['additional_info']);
-    $(element).find("input[name*='state']").val(last_vial['state']);
 
     $(element).find("input[name*='freezer']").filter(function(){
         return !this.name.match(/specimens/);
@@ -85,8 +84,6 @@ var copy_previous_vial = function(element) {
     $(element).find("select[name*='process_location']").val(last_vial["process_location"]).trigger("change");
 
     copy_country(element, last_vial["country_id"]);
-    // copy_state(element, last_vial["state_id"]);
-    // copy_city(element, last_vial["city_id"]);
 
     $(element).find("select[name*='genus_id']").val(last_vial["genus_id"]).trigger("change.select2");
     $(element).find("select[name*='species_id']").val(last_vial["species_id"]).trigger("change.select2");
@@ -107,7 +104,6 @@ var copy_previous_vial = function(element) {
     $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
     $(element).find("div.inner-repeater").find("input[name*='freezer']").val(last_specimen["freezer"]);
     $(element).find("div.inner-repeater").find("input[name*='box']").val(last_specimen["box"]);
-    $(element).find("div.inner-repeater").find("textarea[name*='comments']").val(last_specimen["comments"]);
     $(element).find("input[value='"+last_specimen["measurement"]+"']").prop('checked', true);
 
 };
@@ -153,6 +149,60 @@ var FormRepeater = function () {
                         $(dna_collection_date).val("");
                         $(dna_collection_date).prop("disabled", false);
                         $(dna_collection_date).datepicker("setStartDate", ev.target.value)
+                    });
+
+                    $("input[name*='latitude']").inputmask({
+                        "mask": "([-]8[7])|([-]90)\˚ [t]7\' [t]7.[7]7\" N|S",
+                        "greedy": false,
+                        "autoUnmask": true,
+                        "skipOptionalCharacter": "-",
+                        "definitions": {
+                            "t": {
+                                validator: "[0-5]"
+                            },
+                            "8": {
+                                validator: "[0-8]"
+                            },
+                            "7": {
+                                validator: "[0-9]"
+                            },
+                            "N": {
+                                validator: "n|N",
+                                casing: "upper"
+                            },
+                            "S": {
+                                validator: "s|S",
+                                casing: "upper"
+                            }
+                        }
+                    });
+                    $("input[name*='longitude']").inputmask({
+                        "mask": "[-](1r7|77)\˚ [t]7\' [t]7.[7]7\" E|W",
+                        "autoUnmask": true,
+                        "greedy": false,
+                        "skipOptionalCharacter": "-",
+                        "definitions": {
+                            "r": {
+                                validator: "[0-7]"
+                            },
+                            "t": {
+                                validator: "[0-5]"
+                            },
+                            "7": {
+                                validator: "[0-9]"
+                            },
+                            "d": {
+                                validator: "^-?(180|1[0-7][0-9]|[0-9]?[0-9])"
+                            },
+                            "E": {
+                                validator: "e|E",
+                                casing: "upper"
+                            },
+                            "W": {
+                                validator: "w|W",
+                                casing: "upper"
+                            }
+                        }
                     });
 
                     $(this).find("input[name*='sample_date_received']").prop("disabled", true);
@@ -234,5 +284,59 @@ jQuery(document).ready(function() {
 
     $("input[name*='sample_date_received']").prop("disabled", true);
     $("input[name*='date_collected']").prop("disabled", true);
+
+    $("input[name*='latitude']").inputmask({
+        "mask": "([-]8[7])|([-]90)\˚ [t]7\' [t]7.[7]7\" N|S",
+        "greedy": false,
+        "autoUnmask": true,
+        "skipOptionalCharacter": "-",
+        "definitions": {
+            "t": {
+                validator: "[0-5]"
+            },
+            "8": {
+                validator: "[0-8]"
+            },
+            "7": {
+                validator: "[0-9]"
+            },
+            "N": {
+                validator: "n|N",
+                casing: "upper"
+            },
+            "S": {
+                validator: "s|S",
+                casing: "upper"
+            }
+        }
+    });
+    $("input[name*='longitude']").inputmask({
+        "mask": "[-](1r7|77)\˚ [t]7\' [t]7.[7]7\" E|W",
+        "autoUnmask": true,
+        "greedy": false,
+        "skipOptionalCharacter": "-",
+        "definitions": {
+            "r": {
+                validator: "[0-7]"
+            },
+            "t": {
+                validator: "[0-5]"
+            },
+            "7": {
+                validator: "[0-9]"
+            },
+            "d": {
+                validator: "^-?(180|1[0-7][0-9]|[0-9]?[0-9])"
+            },
+            "E": {
+                validator: "e|E",
+                casing: "upper"
+            },
+            "W": {
+                validator: "w|W",
+                casing: "upper"
+            }
+        }
+    });
 
 });

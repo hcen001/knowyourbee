@@ -1,18 +1,16 @@
-"""initial setup
+"""initial migration
 
-Revision ID: 9a308c717b3e
+Revision ID: 56f2abfe4814
 Revises: 
-Create Date: 2018-05-31 14:24:10.288390
+Create Date: 2018-06-20 20:19:40.633364
 
 """
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-from geoalchemy2.types import Geometry
-
 # revision identifiers, used by Alembic.
-revision = '9a308c717b3e'
+revision = '56f2abfe4814'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -77,12 +75,6 @@ def upgrade():
     sa.Column('description', sa.String(length=512), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('package_index',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('prefix', sa.String(length=64), nullable=False),
-    sa.Column('next_suffix', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('partner',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date_created', sa.DateTime(), nullable=True),
@@ -105,6 +97,7 @@ def upgrade():
     sa.Column('lname', sa.String(length=128), server_default='Last name', nullable=False),
     sa.Column('email', sa.String(length=128), server_default='someone@xample.org', nullable=False),
     sa.Column('phone', sa.String(length=128), server_default='N/A', nullable=False),
+    sa.Column('role', postgresql.ARRAY(sa.CHAR()), server_default='{P}', nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
     )
@@ -170,7 +163,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['partner_id'], ['partner.id'], ),
     sa.ForeignKeyConstraint(['receiver_id'], ['person.id'], ),
     sa.ForeignKeyConstraint(['sender_id'], ['person.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('package_id')
     )
     op.create_table('state',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -202,7 +196,6 @@ def upgrade():
     sa.Column('date_created', sa.DateTime(), nullable=True),
     sa.Column('date_updated', sa.DateTime(), nullable=True),
     sa.Column('active', sa.Boolean(), server_default='t', nullable=True),
-    sa.Column('sample_id', sa.String(length=64), nullable=False),
     sa.Column('package_id', sa.Integer(), nullable=False),
     sa.Column('collector_id', sa.Integer(), nullable=False),
     sa.Column('processor_id', sa.Integer(), nullable=False),
@@ -214,29 +207,23 @@ def upgrade():
     sa.Column('development_stage', postgresql.ENUM('egg', 'pupae', 'larvae', 'nymph', 'adult', name='dev_stage_enum'), nullable=False),
     sa.Column('genus_id', sa.Integer(), nullable=False),
     sa.Column('species_id', sa.Integer(), nullable=False),
-    sa.Column('subspecies_id', sa.Integer(), nullable=False),
+    sa.Column('subspecies_id', sa.Integer(), nullable=True),
     sa.Column('lineage_id', sa.Integer(), nullable=False),
     sa.Column('origin_country', sa.Integer(), nullable=True),
-    sa.Column('origin_state', sa.Integer(), nullable=True),
-    sa.Column('origin_city', sa.Integer(), nullable=True),
     sa.Column('sender_source_id', sa.String(length=32), nullable=False),
     sa.Column('origin_locality', sa.String(length=128), nullable=True),
     sa.Column('hive', sa.String(length=64), nullable=True),
     sa.Column('latitude', sa.Float(), nullable=True),
     sa.Column('longitude', sa.Float(), nullable=True),
-    sa.Column('coordinates', Geometry(geometry_type='POINT', srid=4326), nullable=True),
     sa.Column('additional_gps_info', sa.String(length=1024), nullable=True),
     sa.Column('additional_info', sa.String(length=1024), nullable=True),
-    sa.Column('comments', sa.String(length=1024), nullable=True),
     sa.Column('freezer', sa.String(length=32), nullable=True),
     sa.Column('shelf', sa.String(length=32), nullable=True),
     sa.Column('box', sa.String(length=32), nullable=True),
     sa.ForeignKeyConstraint(['collector_id'], ['person.id'], ),
     sa.ForeignKeyConstraint(['genus_id'], ['genus.id'], ),
     sa.ForeignKeyConstraint(['lineage_id'], ['lineage.id'], ),
-    sa.ForeignKeyConstraint(['origin_city'], ['city.id'], ),
     sa.ForeignKeyConstraint(['origin_country'], ['country.id'], ),
-    sa.ForeignKeyConstraint(['origin_state'], ['state.id'], ),
     sa.ForeignKeyConstraint(['package_id'], ['package.id'], ),
     sa.ForeignKeyConstraint(['process_location_id'], ['location.id'], ),
     sa.ForeignKeyConstraint(['processor_id'], ['person.id'], ),
@@ -250,6 +237,13 @@ def upgrade():
     sa.Column('date_updated', sa.DateTime(), nullable=True),
     sa.Column('active', sa.Boolean(), server_default='t', nullable=True),
     sa.Column('collection_sample_id', sa.String(length=32), server_default='122', nullable=False),
+    sa.Column('dna', sa.Float(), nullable=True),
+    sa.Column('date_collected', sa.DateTime(), nullable=True),
+    sa.Column('measurement', postgresql.ENUM('qubit', 'nanodrop', name='measurement_enum'), nullable=True),
+    sa.Column('body_part', sa.String(length=128), nullable=True),
+    sa.Column('freezer', sa.String(length=32), nullable=True),
+    sa.Column('box', sa.String(length=32), nullable=True),
+    sa.Column('comments', sa.String(length=1024), nullable=True),
     sa.Column('sample_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['sample_id'], ['sample.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -271,7 +265,6 @@ def downgrade():
     op.drop_table('role')
     op.drop_table('person')
     op.drop_table('partner')
-    op.drop_table('package_index')
     op.drop_table('location')
     op.drop_table('lineage')
     op.drop_table('genus')

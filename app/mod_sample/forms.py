@@ -9,7 +9,8 @@ from app.mod_sample.models import Sample, Genus, Species, Subspecies, Lineage
 class SampleForm(FlaskForm):
 
     locations       = Location.select_list()
-    persons         = Person.select_list()
+    collectors      = Person.select_list(['C'])
+    processors      = Person.select_list(['P'])
     countries       = Country.select_list()
 
     genera          = Genus.select_list()
@@ -32,9 +33,9 @@ class SampleForm(FlaskForm):
     longitude               = StringField('Longitude', validators=[Optional()])
     additional_gps_info     = StringField('Additional GPS info', validators=[Optional()])
     additional_info         = StringField('Additional info', validators=[Optional()])
-    comments                = TextAreaField('Comments', validators=[Optional()])
-    collector               = SelectField('Collected by', choices=persons, validators=[InputRequired()])
-    processor               = SelectField('Processed by', choices=persons, validators=[InputRequired()])
+    # comments                = TextAreaField('Comments', validators=[Optional()])
+    collector               = SelectField('Collected by', choices=collectors, validators=[InputRequired()])
+    processor               = SelectField('Processed by', choices=processors, validators=[InputRequired()])
     process_location        = SelectField('Processed at', choices=locations, validators=[InputRequired()])
     sample_date_sampled     = DateField('Date sampled', format='%d-%m-%Y', validators=[InputRequired()])
     sample_date_received    = DateField('Date received', format='%d-%m-%Y', validators=[InputRequired()])
@@ -46,7 +47,7 @@ class SampleForm(FlaskForm):
     country_id              = SelectField('Country of origin', choices=countries, validators=[InputRequired()])
     # state_id                = SelectField('State/Province', choices=[], validators=[Optional()])
     # city_id                 = SelectField('City', choices=[], validators=[Optional()])
-    state                   = StringField('State/Province', validators=[Optional()])
+    # state                   = StringField('State/Province', validators=[Optional()])
     genus_id                = SelectField('Genus', choices=genera, validators=[InputRequired()])
     species_id              = SelectField('Species', choices=species, validators=[InputRequired()])
     subspecies_id           = SelectField('Subspecies', choices=subspecies, validators=[InputRequired()])

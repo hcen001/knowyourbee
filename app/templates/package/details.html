@@ -154,43 +154,6 @@
                         <span class="caption-subject font-red-sunglo bold uppercase">Vials in package</span>
                         <span class="caption-helper">number of vials: {{ package.vials() }}</span>
                     </div>
-                    <div class="actions">
-                        <div class="btn-group">
-                            <a class="btn red btn-outline btn-circle" href="javascript:;" data-toggle="dropdown">
-                                <i class="fa fa-share"></i>
-                                <span class="hidden-xs"> Tools </span>
-                                <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right" id="sample_3_tools">
-                                <li>
-                                    <a href="javascript:;" data-action="0" class="tool-action">
-                                        <i class="icon-printer"></i> Print</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" data-action="1" class="tool-action">
-                                        <i class="icon-check"></i> Copy</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" data-action="2" class="tool-action">
-                                        <i class="icon-doc"></i> PDF</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" data-action="3" class="tool-action">
-                                        <i class="icon-paper-clip"></i> Excel</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" data-action="4" class="tool-action">
-                                        <i class="icon-cloud-upload"></i> CSV</a>
-                                </li>
-                                <li class="divider"> </li>
-                                <li>
-                                    <a href="javascript:;" data-action="5" class="tool-action">
-                                        <i class="icon-refresh"></i> Reload</a>
-                                </li>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
                 <div class="portlet-body table-both-scroll">
                     <div class="table-toolbar">
@@ -199,6 +162,9 @@
                                 <a href="{{url_for('package.add_vials', id=package.id)}}" class="btn green"> Add new vials
                                     <i class="icon-magnifier-add"></i>
                                 </a>
+                            </div>
+                            <div class="col-md-6">
+
                             </div>
                         </div>
                     </div>
@@ -211,7 +177,7 @@
                                     <th> Number specimens in received vial </th>
                                     <th> Date received </th>
                                     <th> Country </th>
-                                    <th> State/Province </th>
+                                    <!-- <th> State/Province </th> -->
                                     <th> Latitude </th>
                                     <th> Longitude </th>
                                     <th> Genus </th>

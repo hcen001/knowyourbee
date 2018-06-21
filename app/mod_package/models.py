@@ -1,6 +1,8 @@
 from app.models import Base, PersonBase
 from app import db
 
+from sqlalchemy.dialects.postgresql import ARRAY, Any
+
 import json
 
 class Package(Base):
@@ -89,7 +91,7 @@ class Package(Base):
                     _specimen['number_specimens'] = '{}/{}'.format(number_specimen, len(specimens))
                     _specimen['date_received'] = specimen.sample.date_received.strftime('%d/%B/%Y')
                     _specimen['country'] = specimen.sample.country.name
-                    _specimen['state'] = specimen.sample.origin_state or 'N/A'
+                    # _specimen['state'] = specimen.sample.origin_state or 'N/A'
                     _specimen['latitude'] = specimen.sample.latitude or 'N/A'
                     _specimen['longitude'] = specimen.sample.longitude or 'N/A'
                     _specimen['genus'] = specimen.sample.genus.name
@@ -117,11 +119,14 @@ class Person(PersonBase):
 
     __tablename__ = 'person'
 
-    def __init__(self, fname, lname, email, phone):
+    role            = db.Column(ARRAY(db.String(4)), default='{P}', server_default='{P}', nullable=False)
+
+    def __init__(self, fname, lname, email, phone, role):
         self.fname = fname
         self.lname = lname
         self.email = email
         self.phone = phone
+        self.role = role
 
     def sent_packages(self):
         return self._sent_packages
@@ -136,8 +141,8 @@ class Person(PersonBase):
         return self._collected_samples
 
     @classmethod
-    def select_list(cls):
-        persons = cls.query.filter(cls.active == True)
+    def select_list(cls, roles):
+        persons = cls.query.filter(cls.active == True, cls.role.contains(roles)).all()
         data = [(person.id, person.full_name) for person in persons]
         data.insert(0,('',''))
         return data

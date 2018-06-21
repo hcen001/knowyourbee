@@ -2,7 +2,7 @@ from app.models import Base, TaxonBase
 from app.mod_package.models import Package, Person, Location
 from app import db
 
-from geoalchemy2.types import Geometry
+# from geoalchemy2.types import Geometry
 from sqlalchemy.dialects.postgresql import ENUM
 
 # from app.mod_util.utils import GUID
@@ -37,7 +37,7 @@ class Sample(Base):
     subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=True)
     lineage_id          = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
     origin_country      = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
-    origin_state        = db.Column(db.String(128), nullable=True)
+    # origin_state        = db.Column(db.String(128), nullable=True)
     # origin_state        = db.Column(db.Integer, db.ForeignKey('state.id'), nullable=True)
     # origin_city         = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=True)
 
@@ -47,10 +47,10 @@ class Sample(Base):
     hive                    = db.Column(db.String(64), nullable=True)
     latitude                = db.Column(db.Float, nullable=True)
     longitude               = db.Column(db.Float, nullable=True)
-    coordinates             = db.Column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
+    # coordinates             = db.Column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
     additional_gps_info     = db.Column(db.String(1024), nullable=True)
     additional_info         = db.Column(db.String(1024), nullable=True)
-    comments                = db.Column(db.String(1024), nullable=True)
+    # comments                = db.Column(db.String(1024), nullable=True)
 
     #Preliminary identification sent by collaborator
 
@@ -90,17 +90,17 @@ class Sample(Base):
         self.subspecies_id = kwargs.get('subspecies_id') or None
         self.lineage_id = kwargs.get('lineage_id') or None
         self.origin_country = kwargs.get('country_id') or None
-        self.origin_state = kwargs.get('state') or None
+        # self.origin_state = kwargs.get('state') or None
         # self.origin_city = kwargs.get('city_id') or None
         self.sender_source_id = kwargs.get('sender_source_id')
         self.origin_locality = kwargs.get('origin_locality') or None
         self.hive = kwargs.get('hive') or None
         self.latitude = kwargs.get('latitude') or None
         self.longitude = kwargs.get('longitude') or None
-        self.coordinates = kwargs.get('coordinates') or None
+        # self.coordinates = kwargs.get('coordinates') or None
         self.additional_gps_info = kwargs.get('additional_gps_info') or None
         self.additional_info = kwargs.get('additional_info') or None
-        self.comments = kwargs.get('comments') or None
+        # self.comments = kwargs.get('comments') or None
         self.freezer = kwargs.get('freezer') or None
         self.shelf = kwargs.get('shelf') or None
         self.box = kwargs.get('box') or None

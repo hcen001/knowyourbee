@@ -10,8 +10,8 @@ class PackageForm(FlaskForm):
     couriers        = Courier.select_list()
     partners        = Partner.select_list()
     locations       = Location.select_list()
-    persons         = Person.select_list()
-    # countries       = Country.select_list()
+    senders         = Person.select_list(['S'])
+    receivers       = Person.select_list(['R'])
 
     # package metadata definition
     package_id      = StringField('Package ID', validators=[InputRequired()])
@@ -20,8 +20,8 @@ class PackageForm(FlaskForm):
     courier_id      = SelectField('Courier', choices=couriers, validators=[InputRequired()])
     partner_id      = SelectField('Partner', choices=partners, validators=[InputRequired()])
     location_id     = SelectField('Stored at', choices=locations, validators=[InputRequired()])
-    sender_id       = SelectField('Sender', choices=persons, validators=[InputRequired()])
-    receiver_id     = SelectField('Receiver', choices=persons, validators=[InputRequired()])
+    sender_id       = SelectField('Sender', choices=senders, validators=[InputRequired()])
+    receiver_id     = SelectField('Receiver', choices=receivers, validators=[InputRequired()])
     tracking_number = StringField('Tracking number', validators=[InputRequired()])
     comments        = TextAreaField('Comments', validators=[Optional()])
 

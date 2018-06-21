@@ -62,7 +62,8 @@ var initTable = function () {
             {"data": "process_location"},
             {"data": "sender"},
             {"data": "receiver"}
-        ]
+        ],
+        "dom": 'flrtipB'
     });
 
     // handle datatable custom tools
@@ -73,3 +74,4 @@ var initTable = function () {
 }
 
 initTable();
+$("#packages_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");
