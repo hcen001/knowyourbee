@@ -32,7 +32,12 @@ var initSpecimensTable = function () {
         buttons: [
             { extend: 'print', className: 'btn dark btn-outline' },
             { extend: 'copyHtml5', className: 'btn red btn-outline' },
-            { extend: 'pdfHtml5', className: 'btn green btn-outline' },
+            {
+                extend: 'pdfHtml5',
+                className: 'btn green btn-outline',
+                orientation: 'landscape',
+                pageSize: 'letter'
+            },
             { extend: 'excelHtml5', className: 'btn yellow btn-outline ' },
             { extend: 'csvHtml5', className: 'btn purple btn-outline ' },
             { extend: 'colvis', className: 'btn dark btn-outline', text: 'Columns'}

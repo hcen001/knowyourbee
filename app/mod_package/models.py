@@ -64,8 +64,8 @@ class Package(Base):
             _package = {}
             _package['id'] = package.id
             _package['package_id'] = package.package_id
-            _package['date_sent'] = package.date_sent
-            _package['date_received'] = package.date_received
+            _package['date_sent'] = package.date_sent.strftime('%d/%B/%Y')
+            _package['date_received'] = package.date_received.strftime('%d/%B/%Y')
             _package['partner_name'] = package.partner.full_name
             _package['process_location'] = package.location.name
             _package['sender'] = package.sender.full_name
@@ -121,12 +121,13 @@ class Person(PersonBase):
 
     role            = db.Column(ARRAY(db.String(4)), default='{P}', server_default='{P}', nullable=False)
 
-    def __init__(self, fname, lname, email, phone, role):
-        self.fname = fname
-        self.lname = lname
-        self.email = email
-        self.phone = phone
-        self.role = role
+    def __init__(self, **kwargs):
+
+        self.fname = kwargs.get('first_name')
+        self.lname = kwargs.get('last_name')
+        self.email = kwargs.get('email')
+        self.phone = kwargs.get('phone')
+        self.role = kwargs.get('role')
 
     def sent_packages(self):
         return self._sent_packages
@@ -146,6 +147,25 @@ class Person(PersonBase):
         data = [(person.id, person.full_name) for person in persons]
         data.insert(0,('',''))
         return data
+
+    @classmethod
+    def collaborators(cls):
+        _persons = cls.query.filter(cls.active == True)
+
+        persons = []
+
+        for person in _persons:
+            _person = {}
+            _person['id'] = person.id
+            _person['name'] = person.full_name
+            _person['email'] = person.email
+            _person['phone'] = person.phone
+            _person['role'] = person.role
+            _person['active'] = person.active
+            persons.append(_person)
+
+        return persons
+
 
     def __repr__(self):
         return '<Person: name={}, email={}, phone={}>'.format(self.full_name, self.email, self.phone)
