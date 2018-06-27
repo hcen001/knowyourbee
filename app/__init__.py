@@ -16,7 +16,9 @@ app.config.from_envvar('APP_CONFIG_FILE')
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, session_options={"expire_on_commit": True})
+db.sessionmaker(autoFlush=True)
+db.session.connection(execution_options={'isolation_level': "READ COMMITTED"})
 migrate = Migrate(app, db)
 
 # Load Login manager

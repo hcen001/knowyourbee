@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1 class="page-title"> {{ title }}
-        <small>Configure persons in charge of sending, receiving, and processing packages...</small>
+        <small>Configure couriers...</small>
     </h1>
     <div class="page-bar">
         <ul class="page-breadcrumb">
@@ -12,8 +12,8 @@
                 <i class="fa fa-angle-right"></i>
             </li>
             <li>
-                <i class="icon-share"></i>
-                <a href="{{ url_for('config.admin_collaborators') }}">Collaborators</a>
+                <i class="icon-plane"></i>
+                <a href="{{ url_for('config.admin_couriers') }}">Couriers</a>
             </li>
         </ul>
     </div>
@@ -35,7 +35,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="icon-folder font-green"></i>
-                        <span class="caption-subject font-green sbold uppercase">List of Collaborators</span>
+                        <span class="caption-subject font-green sbold uppercase">List of Couriers</span>
                     </div>
                     <div class="actions">
                         <div class="btn-group">
@@ -79,7 +79,7 @@
                     <div class="table-toolbar">
                         <div class="row">
                             <div class="col-md-6">
-                                <a data-toggle="modal" href="#new_collaborator" class="btn green"> Add new collaborator
+                                <a data-toggle="modal" href="#new_courier" class="btn green"> Add new courier
                                     <i class="icon-magnifier-add"></i>
                                 </a>
                             </div>
@@ -89,15 +89,13 @@
                         </div>
                     </div>
                     <div class="table-container">
-                        <table class="table table-striped table-bordered table-hover" id="collaborators_tbl">
+                        <table class="table table-striped table-bordered table-hover" id="couriers_tbl">
                             <thead>
                                 <tr>
                                     <th> Name </th>
-                                    <th> Email </th>
-                                    <th> Phone </th>
-                                    <th> Roles </th>
+                                    <th> Description </th>
                                     <th> Actions </th>
-                                    <th> Date added </th>
+                                    <th> Added date </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,52 +108,29 @@
         </div>
     </div>
 
-    <div class="modal fade" id="new_collaborator" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal fade" id="new_courier" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Add a new collaborator</h4>
+                    <h4 class="modal-title">Add a new courier</h4>
                 </div>
                 <div class="modal-body">
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
-                        <form action="{{ url_for('config.admin_collaborators') }}" class="form-horizontal" method="POST">
+                        <form action="{{ url_for('config.admin_couriers') }}" class="form-horizontal" method="POST">
                             {{ form.csrf_token }}
                             <div class="form-body">
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label">{{ form.first_name.label }}</label>
+                                    <label class="col-md-3 control-label">{{ form.name.label }}</label>
                                     <div class="col-md-9">
-                                        {{ form.first_name(class_="form-control", placeholder="First name") }}
+                                        {{ form.name(class_="form-control", placeholder="Courier name") }}
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label">{{ form.last_name.label }}</label>
+                                    <label class="col-md-3 control-label">{{ form.description.label }}</label>
                                     <div class="col-md-9">
-                                        {{ form.last_name(class_="form-control", placeholder="Last name") }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label">{{ form.email.label }}</label>
-                                    <div class="col-md-9">
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-envelope"></i>
-                                            </span>
-                                            {{ form.email(class_="form-control", placeholder="Email address") }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label">{{ form.phone.label }}</label>
-                                    <div class="col-md-9">
-                                        {{ form.phone(class_="form-control", placeholder="Phone") }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label">Role(s)</label>
-                                    <div class="col-md-9">
-                                        {{ form.roles(class_="select2") }}
+                                        {{ form.description(class_="form-control", placeholder="Description") }}
                                     </div>
                                 </div>
                             </div>
@@ -186,9 +161,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Collaborator reactivation</h4>
+                    <h4 class="modal-title">Partner reactivation</h4>
                 </div>
-                <div class="modal-body"> Do you really want to reactivate this collaborator? </div>
+                <div class="modal-body"> Do you really want to reactivate this courier? </div>
                 <div class="modal-footer">
                     <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                     <button id="reactivateBtn" type="button" class="btn green" data-dismiss="modal">Reactivate</button>
@@ -204,9 +179,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Collaborator deactivation</h4>
+                    <h4 class="modal-title">Partner deactivation</h4>
                 </div>
-                <div class="modal-body"> Do you really want to deactivate this collaborator? </div>
+                <div class="modal-body"> Do you really want to deactivate this courier? </div>
                 <div class="modal-footer">
                     <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                     <button id="deactivateBtn" type="button" class="btn green" data-dismiss="modal">Deactivate</button>

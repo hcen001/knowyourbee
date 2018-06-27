@@ -70,6 +70,7 @@ class Package(Base):
             _package['process_location'] = package.location.name
             _package['sender'] = package.sender.full_name
             _package['receiver'] = package.receiver.full_name
+            _package['added_date'] = package.date_created
             packages.append(_package)
         return packages
 
@@ -90,14 +91,14 @@ class Package(Base):
                     _specimen['cooperator'] = specimen.sample.collected_by().full_name
                     _specimen['number_specimens'] = '{}/{}'.format(number_specimen, len(specimens))
                     _specimen['date_received'] = specimen.sample.date_received.strftime('%d/%B/%Y')
-                    _specimen['country'] = specimen.sample.country.name
+                    _specimen['country'] = specimen.sample.country.name if specimen.sample.country else 'N/A'
                     # _specimen['state'] = specimen.sample.origin_state or 'N/A'
                     _specimen['latitude'] = specimen.sample.latitude or 'N/A'
                     _specimen['longitude'] = specimen.sample.longitude or 'N/A'
-                    _specimen['genus'] = specimen.sample.genus.name
-                    _specimen['species'] = specimen.sample.species.name
-                    _specimen['subspecies'] = specimen.sample.subspecies.name
-                    _specimen['lineage'] = specimen.sample.lineage.name
+                    _specimen['genus'] = specimen.sample.genus.name if specimen.sample.genus else 'N/A'
+                    _specimen['species'] = specimen.sample.species.name if specimen.sample.species else 'N/A'
+                    _specimen['subspecies'] = specimen.sample.subspecies.name if specimen.sample.subspecies else 'N/A'
+                    _specimen['lineage'] = specimen.sample.lineage.name if specimen.sample.lineage else 'N/A'
                     _specimen['gender'] = specimen.sample.gender
                     _specimen['freezer'] = specimen.sample.freezer or 'N/A'
                     _specimen['box'] = specimen.sample.box or 'N/A'
@@ -150,7 +151,7 @@ class Person(PersonBase):
 
     @classmethod
     def collaborators(cls):
-        _persons = cls.query.filter(cls.active == True)
+        _persons = cls.query.all()
 
         persons = []
 
@@ -162,6 +163,7 @@ class Person(PersonBase):
             _person['phone'] = person.phone
             _person['role'] = person.role
             _person['active'] = person.active
+            _person['added_date'] = person.date_created
             persons.append(_person)
 
         return persons
@@ -190,6 +192,25 @@ class Partner(PersonBase):
         data.insert(0,('',''))
         return data
 
+    @classmethod
+    def list(cls):
+        _partners = cls.query.all()
+
+        partners = []
+
+        for partner in _partners:
+            _partner = {}
+            _partner['id'] = partner.id
+            _partner['name'] = partner.full_name
+            _partner['email'] = partner.email
+            _partner['phone'] = partner.phone
+            _partner['institution'] = partner.institution
+            _partner['active'] = partner.active
+            _partner['added_date'] = partner.date_created
+            partners.append(_partner)
+
+        return partners
+
     def packages(self):
         return self._packages
 
@@ -215,10 +236,27 @@ class Location(Base):
 
     @classmethod
     def select_list(cls):
-        locations = cls.query.filter(cls.active == True)
+        locations = db.session.query(Location).filter(Location.active == True)
         data = [(location.id, location.name) for location in locations]
         data.insert(0,('',''))
         return data
+
+    @classmethod
+    def list(cls):
+        _locations = db.session.query(cls).all()
+
+        locations = []
+
+        for location in _locations:
+            _location = {}
+            _location['id'] = location.id
+            _location['name'] = location.name
+            _location['description'] = location.description
+            _location['active'] = location.active
+            _location['added_date'] = location.date_created
+            locations.append(_location)
+
+        return locations
 
     def __repr__(self):
         return '<Location: name={}>'.format(self.name)
@@ -244,6 +282,23 @@ class Courier(Base):
         data = [(courier.id, courier.name) for courier in couriers]
         data.insert(0,('',''))
         return data
+
+    @classmethod
+    def list(cls):
+        _couriers = db.session.query(cls).all()
+
+        couriers = []
+
+        for courier in _couriers:
+            _courier = {}
+            _courier['id'] = courier.id
+            _courier['name'] = courier.name
+            _courier['description'] = courier.description
+            _courier['active'] = courier.active
+            _courier['added_date'] = courier.date_created
+            couriers.append(_courier)
+
+        return couriers
 
     def __repr__(self):
         return '<Courier: name={}>'.format(self.name)

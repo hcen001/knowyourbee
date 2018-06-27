@@ -34,7 +34,7 @@ var initTable = function () {
         responsive: true,
 
         "order": [
-            [2, 'desc']
+            [7, 'desc']
         ],
 
         "lengthMenu": [
@@ -61,7 +61,8 @@ var initTable = function () {
             {"data": "partner_name"},
             {"data": "process_location"},
             {"data": "sender"},
-            {"data": "receiver"}
+            {"data": "receiver"},
+            {"data": "added_date", "visible": false, "searchable": false}
         ],
         "dom": 'flrtipB'
     });

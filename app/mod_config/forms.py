@@ -29,3 +29,21 @@ class CollaboratorForm(FlaskForm):
     email               = EmailField('Email', validators=[InputRequired(), Email()])
     phone               = StringField('Phone', validators=[InputRequired()])
     roles               = Select2MultipleField('Roles', choices=collab_roles, validators=[InputRequired()])
+
+class PartnerForm(FlaskForm):
+
+    first_name          = StringField('First name', validators=[InputRequired()])
+    last_name           = StringField('Last name', validators=[InputRequired()])
+    email               = EmailField('Email', validators=[InputRequired(), Email()])
+    institution         = StringField('Institution', validators=[InputRequired()])
+    phone               = StringField('Phone', validators=[InputRequired()])
+
+class LocationForm(FlaskForm):
+
+    name                = StringField('Name', validators=[InputRequired()])
+    description         = TextAreaField('Description', validators=[InputRequired()])
+
+class CourierForm(FlaskForm):
+
+    name                = StringField('Name', validators=[InputRequired()])
+    description         = TextAreaField('Description', validators=[InputRequired()])

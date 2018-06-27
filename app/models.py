@@ -13,9 +13,12 @@ class Base(db.Model):
     date_updated = db.Column('date_updated', db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     active       = db.Column('active', db.Boolean, default=True, server_default='t')
 
-    def add_or_update(self, deactivate=False):
+    def add_or_update(self, deactivate=None):
 
-        if deactivate:
+        if deactivate is not None and deactivate == True:
+            self.active = True
+
+        if deactivate is not None and deactivate == False:
             self.active = False
 
         try:
@@ -23,11 +26,10 @@ class Base(db.Model):
             db.session.flush()
         except IntegrityError as e:
             raise
-        # else:
-        #     db.session.commit()
 
     def save(self):
         db.session.commit()
+        db.session.expire_all()
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
