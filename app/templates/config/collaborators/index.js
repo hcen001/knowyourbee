@@ -85,7 +85,8 @@ var initTable = function () {
                 }
             },
             {"data": "added_date", "visible": false, "searchable": false}
-        ]
+        ],
+        "dom": 'flrtipB'
     });
 
     // handle datatable custom tools
@@ -133,14 +134,6 @@ var initTable = function () {
 
 }
 
-$(".select2, .select2-multiple").select2({
-    placeholder: "Select the collaborator role(s)",
-    allowCleart: true,
-    width: null,
-    placeholder: "Select role(s)"
-});
-
-// $("#roles").multiSelect();
-// $("#roles").attr("name", "roles[]");
-
 initTable();
+
+$("#collaborators_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");

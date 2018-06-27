@@ -68,7 +68,8 @@ var initTable = function () {
                 }
             },
             {"data": "added_date", "visible": false, "searchable": false}
-        ]
+        ],
+        "dom": 'flrtipB'
     });
 
     // handle datatable custom tools
@@ -117,3 +118,5 @@ var initTable = function () {
 };
 
 initTable();
+
+$("#partners_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");
