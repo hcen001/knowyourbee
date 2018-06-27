@@ -56,7 +56,11 @@ var initTable = function () {
 
         "columns": [
             {"data": "name", "width": "20%"},
-            {"data": "email", "width": "10%"},
+            {"data": "email", "width": "10%",
+                render: function(data, type, row, meta){
+                    return '<a href="mailto:'+data+'">'+data+'</a>'
+                }
+            },
             {"data": "phone", "width": "10%"},
             {"data": "role", "width": "20%",
                 render: function(data, type, row, meta) {

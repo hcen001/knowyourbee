@@ -55,8 +55,12 @@ var initTable = function () {
         "ajax": $SCRIPT_ROOT+'/config/partners/list',
 
         "columns": [
-            {"data": "name", "width": "20%"},
-            {"data": "email", "width": "10%"},
+            {"data": "name", "width": "15%"},
+            {"data": "email", "width": "10%",
+                render: function(data, type, row, meta){
+                    return '<a href="mailto:'+data+'">'+data+'</a>'
+                }
+            },
             {"data": "phone", "width": "10%"},
             {"data": "institution"},
             {"data": "active", "width": "15%",
