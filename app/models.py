@@ -27,6 +27,9 @@ class Base(db.Model):
         except IntegrityError as e:
             raise
 
+    def update(self, data):
+        self.query.update(data)
+
     def save(self):
         db.session.commit()
         db.session.expire_all()

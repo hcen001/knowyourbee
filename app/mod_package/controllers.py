@@ -65,12 +65,12 @@ def add():
 
     if request.method == 'POST':
         data = parse_multi_form(request.form)
-        pp = pprint.PrettyPrinter(indent=4)
+        # pp = pprint.PrettyPrinter(indent=4)
 
         data['package_id'] = str(data['package_id']).upper()
         data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y')
         data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y')
-        pp.pprint(data)
+        # pp.pprint(data)
 
         package = Package(**data)
 
@@ -165,3 +165,46 @@ def add_vials(id):
     specimen_form = SpecimenForm()
     js = render_template('package/add_vials.js')
     return render_template('package/add_vials.html', user=current_user, title='Add a new vials to package', package=package, js=js, sample_form=sample_form, specimen_form=specimen_form)
+
+@mod_package.route('/<id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+
+    package_data = Package.query.get(id)
+
+    if request.method == "GET":
+        form_data = {}
+        form_data['package_id'] = package_data.package_id
+        form_data['date_sent'] = package_data.date_sent
+        form_data['date_received'] = package_data.date_received
+        form_data['courier_id'] = package_data.courier_id
+        form_data['tracking_number'] = package_data.tracking_number
+        form_data['partner_id'] = package_data.partner_id
+        form_data['location_id'] = package_data.location_id
+        form_data['sender_id'] = package_data.sender_id
+        form_data['receiver_id'] = package_data.receiver_id
+        form_data['comments'] = package_data.comments
+        form = PackageForm(data = form_data)
+
+    if request.method == "POST":
+        # form = PackageForm(request.form)
+
+        data = request.form.to_dict()
+        data['package_id'] = str(data['package_id']).upper()
+        data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y')
+        data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y')
+
+        try:
+            package_data.update(data)
+            package_data.add_or_update()
+        except Exception as e:
+            flash('There was an unexpected error when trying to update package with ID {}.'.format(e), 'danger')
+        else:
+            package_data.save()
+            flash('The package with ID {} was updated successfully.'.format(package_data.package_id), 'success')
+
+        return redirect(url_for('package.details', id=id))
+
+
+    js = render_template('package/edit.js')
+    return render_template('package/edit.html', title='Edit information for package with ID {}'.format(package_data.id), form=form, user=current_user, package=package_data, js=js)

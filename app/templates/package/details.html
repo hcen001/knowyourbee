@@ -81,7 +81,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4"><strong>Tracking number:</strong></label>
                                 <div class="col-md-8">
-                                    <p class="form-control-static"> {{ package.traking_number or 'N/A' }} </p>
+                                    <p class="form-control-static"> {{ package.tracking_number or 'N/A' }} </p>
                                 </div>
                             </div>
                         </div>
@@ -158,9 +158,12 @@
                 <div class="portlet-body table-both-scroll">
                     <div class="table-toolbar">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 clearfix">
                                 <a href="{{url_for('package.add_vials', id=package.id)}}" class="btn green"> Add new vials
                                     <i class="icon-magnifier-add"></i>
+                                </a>
+                                <a href="{{url_for('package.edit', id=package.id)}}" class="btn blue"> Edit package information
+                                    <i class="icon-options-vertical"></i>
                                 </a>
                             </div>
                             <div class="col-md-6">

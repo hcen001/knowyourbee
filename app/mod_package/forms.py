@@ -22,7 +22,7 @@ class PackageForm(FlaskForm):
     location_id     = SelectField('Stored at', choices=locations, validators=[InputRequired()])
     sender_id       = SelectField('Sender', choices=senders, validators=[InputRequired()])
     receiver_id     = SelectField('Receiver', choices=receivers, validators=[InputRequired()])
-    tracking_number = StringField('Tracking number', validators=[InputRequired()])
+    tracking_number = StringField('Tracking number', validators=[Optional()])
     comments        = TextAreaField('Comments', validators=[Optional()])
 
     # utiliy
