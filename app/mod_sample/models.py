@@ -118,7 +118,7 @@ class Sample(Base):
         return self.process_location
 
     def specimens_in_vial(self):
-        return self._specimens
+        return len(self.specimens)
 
     def number_of_specimens_in_vial(self):
         return len(self.specimens_in_vial())

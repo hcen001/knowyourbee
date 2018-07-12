@@ -4,6 +4,8 @@ from app import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+import json
+
 # Define a User model
 class User(PersonBase):
 
@@ -64,6 +66,24 @@ class User(PersonBase):
         """Return the email address to satisfy Flask-Login's requirements."""
         """Requires use of Python 3"""
         return str(self.id)
+
+    @classmethod
+    def list(cls):
+
+        _users = cls.query.all()
+        users = []
+
+        for _user in _users:
+            user = {}
+            user['name'] = _user.full_name
+            user['email'] = _user.email
+            user['active'] = _user.active
+            user['role'] = [role.name for role in _user.roles]
+            user['authenticated'] = _user.authenticated
+            user['added_date'] = _user.date_created
+            users.append(user)
+
+        return users
 
     def __repr__(self):
         return '<User: email={}, name={}>'.format(self.email, self.full_name)
@@ -137,6 +157,17 @@ class Role(Base):
 
     def is_admin_role(self):
         return self.can_admin
+
+    @classmethod
+    def list(cls):
+        roles = []
+        _roles = cls.query.all()
+
+        for role in _roles:
+            roles.append((role.id, role.name))
+
+        return roles
+
 
 class UserRole(Base):
 

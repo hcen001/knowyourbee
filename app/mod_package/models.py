@@ -110,6 +110,22 @@ class Package(Base):
                     _specimens.append(_specimen)
         return _specimens
 
+    @classmethod
+    def stats(cls):
+        packages = cls.query.filter(cls.active == True)
+        _stats = {}
+        _stats['packages'] = packages.count()
+        vials = 0
+        specimens = 0
+        for package in packages:
+            vials += package.vials()
+            for vial in package.samples:
+                specimens += vial.specimens_in_vial()
+        _stats['vials'] = vials
+        _stats['specimens'] = specimens
+
+        return _stats
+
     def __repr__(self):
         return '<Package: ID={}, sent={}, received={}, partner={}>'.format(self.package_id, self.date_sent, self.date_received, self.partner)
 
@@ -152,6 +168,8 @@ class Person(PersonBase):
     @classmethod
     def collaborators(cls):
         _persons = cls.query.all()
+
+        # print('*************COLLABORATORS*************', _persons[0].role)
 
         persons = []
 

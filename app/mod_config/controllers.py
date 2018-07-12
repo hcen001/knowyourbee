@@ -4,6 +4,8 @@ from flask_login import login_required, current_user
 from app.mod_auth.models import AccountRequest
 from app.mod_config.forms import CollaboratorForm, PartnerForm, LocationForm, CourierForm
 from app.mod_package.models import Person, Partner, Location, Courier
+from app.mod_auth.models import User
+from app.mod_auth.forms import NewUserForm
 from app.mod_util.utils import parse_multi_form
 
 import json
@@ -289,3 +291,21 @@ def admin_couriers():
         return jsonify({})
 
     return render_template('config/couriers/index.html', form=add_courier_form, user=current_user, title='Couriers', js=js)
+
+@mod_config.route('/users/update_status', methods=['POST'])
+@mod_config.route('/users/list', methods=['GET'])
+@mod_config.route('/users', methods=['GET', 'POST'])
+@login_required
+def admin_users():
+
+    add_user_form = NewUserForm()
+    js = render_template('config/users/index.js')
+
+    endpoint = request.path.split('/')[-1]
+
+    if endpoint == 'list' and request.method == 'GET':
+        data = User.list()
+        output = {'data': data}
+        return jsonify(output)
+
+    return render_template('config/users/index.html', form=add_user_form, user=current_user, title='Users', js=js)

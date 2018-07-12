@@ -1,4 +1,4 @@
-updateMenu('#accreq');
+updateMenu('#admin', '#accreq');
 
 var initTable = function () {
 
@@ -87,7 +87,7 @@ var initTable = function () {
                 window.location.href=$SCRIPT_ROOT+'/config/accreq';
            //}
         });
-        
+
     };
 
     $('#approveModel').on('shown.bs.modal', function (event) {

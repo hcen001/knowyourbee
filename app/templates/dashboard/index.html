@@ -13,4 +13,144 @@
         </ul>
     </div>
     <!-- END PAGE HEADER-->
+
+    <h1>Data summary</h1>
+
+    <!-- BEGIN DASHBOARD STATS 1-->
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 blue" href="{{ url_for('package.index') }}">
+                <div class="visual">
+                    <i class="fa fa-archive"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-counter="counterup" data-value="{{ stats['packages'] }}">0</span>
+                    </div>
+                    <div class="desc"> Registered packages </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 red" href="#">
+                <div class="visual">
+                    <i class="fa fa-chart-bar"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-counter="counterup" data-value="{{ stats['vials'] }}">0</span></div>
+                    <div class="desc"> Registered vials </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 green" href="#">
+                <div class="visual">
+                    <i class="fa fa-database"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-counter="counterup" data-value="{{ stats['specimens'] }}">0</span>
+                    </div>
+                    <div class="desc"> Collected Specimens </div>
+                </div>
+            </a>
+        </div>
+        <!-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 purple" href="#">
+                <div class="visual">
+                    <i class="fa fa-globe"></i>
+                </div>
+                <div class="details">
+                    <div class="number"> +
+                        <span data-counter="counterup" data-value="89"></span>% </div>
+                    <div class="desc"> Brand Popularity </div>
+                </div>
+            </a>
+        </div> -->
+    </div>
+    <div class="clearfix"></div>
+    <!-- END DASHBOARD STATS 1-->
+
+    <h1>Quick links</h1>
+
+    <!-- QUICK LINKS -->
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 green" href="{{ url_for('package.add') }}">
+                <div class="visual">
+                    <i class="fa fa-plus"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span>Register packages</span>
+                    </div>
+                    <div class="desc"> Register packages, vials, and specimens </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- QUICK LINKS -->
+
+    <h1>Configuration</h1>
+
+    <!-- QUICK LINKS -->
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 blue-steel" href="{{ url_for('config.admin_collaborators') }}">
+                <div class="visual">
+                    <i class="fa fa-user "></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span>Collaborators</span>
+                    </div>
+                    <div class="desc"> Manage collaborators </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 blue-madison" href="{{ url_for('config.admin_partners') }}">
+                <div class="visual">
+                    <i class="fa fa-hands-helping "></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span>Partners</span>
+                    </div>
+                    <div class="desc"> Manage partners </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 green" href="{{ url_for('config.admin_locations') }}">
+                <div class="visual">
+                    <i class="fa fa-globe-americas"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span>Locations</span>
+                    </div>
+                    <div class="desc"> Manage locations </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-v2 blue-hoki" href="{{ url_for('config.admin_couriers') }}">
+                <div class="visual">
+                    <i class="fa fa-globe"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span>Courier</span></div>
+                    <div class="desc"> Manage couriers </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- QUICK LINKS -->
+
+
 {% endblock %}

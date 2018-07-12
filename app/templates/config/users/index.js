@@ -1,4 +1,4 @@
-updateMenu('#admin', '#couriers');
+updateMenu('#admin', '#users');
 
 // Set the "bootstrap" theme as the default theme for all Select2
 // widgets.
@@ -10,7 +10,7 @@ var initTable = function () {
 
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
-    var table = $('#couriers_tbl');
+    var table = $('#users_tbl');
 
     var oTable = table.dataTable({
 
@@ -42,7 +42,7 @@ var initTable = function () {
         responsive: true,
 
         "order": [
-            [3, 'desc']
+            [5, 'desc']
         ],
 
         "lengthMenu": [
@@ -52,17 +52,36 @@ var initTable = function () {
         // set the initial value
         "pageLength": 15,
 
-        "ajax": $SCRIPT_ROOT+'/config/couriers/list',
+        "ajax": $SCRIPT_ROOT+'/config/users/list',
 
         "columns": [
             {"data": "name", "width": "10%"},
-            {"data": "description"},
-            {"data": "active", "width": "15%",
+            {"data": "email", "width": "10%",
+                render: function(data, type, row, meta){
+                    return '<a href="mailto:'+data+'">'+data+'</a>'
+                }
+            },
+            {"data": "role", "width": "20%",
+                render: function(data, type, row, meta) {
+                    var roles = '';
+                    roles += '<span class="label label-info" >'+data+'</span>   ';
+                    return roles;
+                }
+            },
+            {"data": "authenticated", "width": "10%",
                 render: function(data, type, row, meta){
                     if (data) {
-                        return '<a class="btn red btn-outline sbold" data-courier-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
+                        return '<a class="btn red btn-outline sbold" data-user-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Log out </a>';
                     };
-                    return '<a class="btn green btn-outline sbold" data-courier-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
+                    return '<span class="label label-info" >Not authenticated</span>';
+                }
+            },
+            {"data": "active", "width": "10%",
+                render: function(data, type, row, meta){
+                    if (data) {
+                        return '<a class="btn red btn-outline sbold" data-user-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
+                    };
+                    return '<a class="btn green btn-outline sbold" data-user-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
                 }
             },
             {"data": "added_date", "visible": false, "searchable": false}
@@ -76,46 +95,51 @@ var initTable = function () {
         oTable.DataTable().button(action).trigger();
     });
 
-    function updatePartner(courier_id, action){
+    function updateUser(user_id, action){
 
         $.ajax({
-            url: $SCRIPT_ROOT+'/config/couriers/update_status',
+            url: $SCRIPT_ROOT+'/config/users/update_status',
             type: 'POST',
             dataType: "json",
             contentType:"application/json",
-            data: JSON.stringify({"partner_id": courier_id, "action": action}),
+            data: JSON.stringify({"user_id": user_id, "action": action}),
         })
         .done(function(result) {
-            window.location.href=$SCRIPT_ROOT+'/config/couriers';
+            window.location.href=$SCRIPT_ROOT+'/config/users';
         });
 
     };
 
     $('#deactivate').on('shown.bs.modal', function (event) {
         btn = $(event.relatedTarget);
-        $('#deactivateBtn').data('courier_id', btn.data('courier-id'));
+        $('#deactivateBtn').data('user_id', btn.data('user-id'));
         $('#deactivateBtn').data('action', 'deactivate');
     });
 
     $('#deactivateBtn').on('click', function(event) {
         event.preventDefault();
-        updateCourier($(this).data('courier_id'), $(this).data('action'));
+        updateUser($(this).data('user_id'), $(this).data('action'));
     });
 
     $('#reactivate').on('shown.bs.modal', function (event) {
         btn = $(event.relatedTarget);
-        $('#reactivateBtn').data('courier_id', btn.data('courier-id'));
+        $('#reactivateBtn').data('user_id', btn.data('user-id'));
         $('#reactivateBtn').data('action', 'reactivate');
     });
 
     $('#reactivateBtn').on('click', function(event) {
         event.preventDefault();
-        updateCourier($(this).data('courier_id'), $(this).data('action'));
+        updateUser($(this).data('user_id'), $(this).data('action'));
     });
 
-};
+}
 
 initTable();
 
-$("#couriers_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");
+$(".select2, .select2-multiple").select2({
+    placeholder: "Select the user role(s)",
+    allowCleart: true,
+    width: null
+});
 
+$("#users_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");

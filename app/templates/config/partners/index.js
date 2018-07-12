@@ -1,4 +1,4 @@
-updateMenu('#partners');
+updateMenu('#admin', '#partners');
 
 // Set the "bootstrap" theme as the default theme for all Select2
 // widgets.

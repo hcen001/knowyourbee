@@ -1,4 +1,4 @@
-updateMenu('#collaborators');
+updateMenu('#admin', '#collaborators');
 
 // Set the "bootstrap" theme as the default theme for all Select2
 // widgets.
@@ -66,18 +66,23 @@ var initTable = function () {
                 render: function(data, type, row, meta) {
                     var roles = '';
                     if (data.indexOf('S') >= 0) {
-                        roles += 'Sender, '
+                        // roles += 'Sender, '
+                        roles += '<span class="label label-info" >Sender</span>         ';
                     }
                     if (data.indexOf('C') >= 0) {
-                        roles += 'Collector, '
+                        // roles += 'Collector, '
+                        roles += '<span class="label label-default" >Collector</span>         ';
                     }
                     if (data.indexOf('P') >= 0) {
-                        roles += 'Processor, '
+                        // roles += 'Processor, '
+                        roles += '<span class="label label-primary" >Processor</span>         ';
                     }
                     if (data.indexOf('R') >= 0) {
-                        roles += 'Receiver, '
+                        // roles += 'Receiver, '
+                        roles += '<span class="label label-success" >Receiver</span>         ';
                     }
-                    return roles.replace(/,\s*$/, "");
+                    return roles;
+                    // return roles.replace(/,\s*$/, "");
                 }
             },
             {"data": "active", "width": "10%",
@@ -139,5 +144,11 @@ var initTable = function () {
 }
 
 initTable();
+
+$(".select2, .select2-multiple").select2({
+    placeholder: "Select the collaborator role(s)",
+    allowCleart: true,
+    width: null
+});
 
 $("#collaborators_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");
