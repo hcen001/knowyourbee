@@ -2,6 +2,17 @@ updateMenu('#packages');
 
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+$(".button-cancel").click(function(e){
+    e.preventDefault();
+    var choice = confirm("Are you sure you want to cancel? You will lose all data that has not been saved");
+    if (choice) {
+        window.location.href = $SCRIPT_ROOT+"/packages";
+    }
+    return false;
+});
+
 var FormWizard = function () {
 
     var handleDatePickers = function () {

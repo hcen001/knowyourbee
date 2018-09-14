@@ -1,5 +1,14 @@
 updateMenu('#packages');
 
+$(".button-cancel").click(function(e){
+    e.preventDefault();
+    var choice = confirm("Are you sure you want to cancel? You will lose all data that has not been saved");
+    if (choice) {
+        window.history.go(-1);
+    }
+    return false;
+});
+
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 var create_select2 = function (element, placeholder) {
