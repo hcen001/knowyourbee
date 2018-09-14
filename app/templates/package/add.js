@@ -181,7 +181,47 @@ var FormWizard = function () {
             });
 
             var displayConfirm = function() {
+                var tables = ["vials", "specimens"];
+                var items = $('#submit_form').repeaterVal();
                 $('#tab3 .form-control-static', form).each(function(){
+                    var table = $(this).attr("data-display");
+                    if ( tables.includes(table) ) {
+                        var tbl = $(this).find("table > tbody");
+                        if (table == "vials") {
+                            items['samples'].forEach(function(element){
+                                var tr = $('<tr></tr>');
+                                tr.append('<td>'+element.sender_source_id+'</td>');
+                                tr.append('<td>'+element.sample_date_sampled+'</td>');
+                                tr.append('<td>'+element.sample_date_received+'</td>');
+                                tr.append('<td>'+element.specimens.length+'</td>');
+                                tbl.append(tr);
+                            });
+                        };
+                        if (table == "specimens") {
+                            items['samples'].forEach(function(element){
+                                element['specimens'].forEach(function(specimen){
+                                    var tr = $('<tr></tr>');
+                                    tr.append('<td>'+element.sender_source_id+'</td>');
+                                    tr.append('<td>'+specimen.collection_sample_id+'</td>');
+                                    tr.append('<td>'+specimen.dna+'</td>');
+                                    tr.append('<td>'+specimen.date_collected+'</td>');
+                                    tbl.append(tr);
+                                });
+                            });
+                        };
+                    };
+                    if ($(this).attr("data-display") == "number_vials") {
+                        $(this).html(items["samples"].length);
+                        return;
+                    };
+                    if ($(this).attr("data-display") == "number_specimens") {
+                        var total_specimens = 0;
+                        items['samples'].forEach(function(element){
+                            total_specimens = total_specimens + element['specimens'].length;
+                        });
+                        $(this).html(total_specimens);
+                        return;
+                    };
                     var input = $('[name="'+$(this).attr("data-display")+'"]', form);
                     // console.log(input);
                     if (input.is(":radio")) {
@@ -190,7 +230,8 @@ var FormWizard = function () {
                     if (input.is(":text") || input.is("textarea")) {
                         $(this).html(input.val());
                     } else if (input.is("select")) {
-                        $(this).html(input.find('option:selected').text());
+                        var selected_status = $('#'+$(this).attr("data-display")).select2('data');
+                        $(this).html(selected_status[0].text);
                     } else if (input.is(":radio") && input.is(":checked")) {
                         $(this).html(input.attr("data-title"));
                     }
