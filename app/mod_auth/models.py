@@ -1,7 +1,6 @@
 from app.models import Base, PersonBase
-from app import db
+from app import db, login
 
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import json
@@ -75,6 +74,7 @@ class User(PersonBase):
 
         for _user in _users:
             user = {}
+            user['id'] = _user.id
             user['name'] = _user.full_name
             user['email'] = _user.email
             user['active'] = _user.active
@@ -131,6 +131,10 @@ class AccountRequest(PersonBase):
 
     def __repr__(self):
         return '<Account request: email={}, name={}>'.format(self.email, self.full_name())
+
+@login.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 class Role(Base):
 

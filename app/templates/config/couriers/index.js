@@ -59,15 +59,27 @@ var initTable = function () {
             {"data": "description"},
             {"data": "active", "width": "15%",
                 render: function(data, type, row, meta){
+                    var a = '<a class="btn blue btn-outline sbold btn-delete"> Edit </a>';
                     if (data) {
-                        return '<a class="btn red btn-outline sbold" data-courier-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
+                        return a+'<a class="btn red btn-outline sbold" data-courier-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
                     };
-                    return '<a class="btn green btn-outline sbold" data-courier-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
+                    return a+'<a class="btn green btn-outline sbold" data-courier-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
                 }
             },
             {"data": "added_date", "visible": false, "searchable": false}
         ],
         "dom": 'flrtipB'
+    });
+
+    $('#couriers_tbl tbody').on('click', '.btn-delete', function (){
+       var $row = $(this).closest('tr');
+       var data =  $('#couriers_tbl').DataTable().row($row).data();
+
+       $("#courier_id").val(data["id"]);
+       $("#name").val(data["name"]);
+       $("#description").val(data["description"]);
+       $("#add_courier").attr("action", $SCRIPT_ROOT+'/config/couriers/update');
+       $("#new_courier").modal('show');
     });
 
     // handle datatable custom tools
@@ -116,6 +128,13 @@ var initTable = function () {
 };
 
 initTable();
+
+$('#new_courier').on('hidden.bs.modal', function () {
+    $("#name").val("");
+    $("#description").val("");
+    $("#courier_id").val("");
+    $("#add_courier").attr("action", $SCRIPT_ROOT+'/config/couriers');
+});
 
 $("#couriers_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");
 

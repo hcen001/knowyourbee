@@ -65,15 +65,30 @@ var initTable = function () {
             {"data": "institution"},
             {"data": "active", "width": "15%",
                 render: function(data, type, row, meta){
+                    var a = '<a class="btn blue btn-outline sbold btn-delete"> Edit </a>';
                     if (data) {
-                        return '<a class="btn red btn-outline sbold" data-partner-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
+                        return a+'<a class="btn red btn-outline sbold" data-partner-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
                     };
-                    return '<a class="btn green btn-outline sbold" data-partner-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
+                    return a+'<a class="btn green btn-outline sbold" data-partner-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
                 }
             },
             {"data": "added_date", "visible": false, "searchable": false}
         ],
         "dom": 'flrtipB'
+    });
+
+    $('#partners_tbl tbody').on('click', '.btn-delete', function (){
+       var $row = $(this).closest('tr');
+       var data =  $('#partners_tbl').DataTable().row($row).data();
+       var name = data['name'].split(" ");
+       $("#partner_id").val(data["id"]);
+       $("#first_name").val(name[0]);
+       $("#last_name").val(name[1]);
+       $("#email").val(data["email"]);
+       $("#phone").val(data["phone"]);
+       $("#institution").val(data["institution"]);
+       $("#add_partner").attr("action", $SCRIPT_ROOT+'/config/partners/update');
+       $("#new_partner").modal('show');
     });
 
     // handle datatable custom tools
@@ -122,5 +137,15 @@ var initTable = function () {
 };
 
 initTable();
+
+$('#new_partner').on('hidden.bs.modal', function () {
+    $("#first_name").val("");
+    $("#last_name").val("");
+    $("#email").val("");
+    $("#phone").val("");
+    $("#partner_id").val("");
+    $("#institution").val("");
+    $("#add_partner").attr("action", $SCRIPT_ROOT+'/config/partners');
+});
 
 $("#partners_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");

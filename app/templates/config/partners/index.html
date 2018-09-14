@@ -42,7 +42,7 @@
                     <div class="table-toolbar">
                         <div class="row">
                             <div class="col-md-6">
-                                <a data-toggle="modal" href="#new_collaborator" class="btn green"> Add new partner
+                                <a data-toggle="modal" href="#new_partner" class="btn green"> Add new partner
                                     <i class="icon-magnifier-add"></i>
                                 </a>
                             </div>
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="new_collaborator" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal fade" id="new_partner" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -83,7 +83,8 @@
                 <div class="modal-body">
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
-                        <form action="{{ url_for('config.admin_partners') }}" class="form-horizontal" method="POST">
+                        <form id="add_partner" action="{{ url_for('config.admin_partners') }}" class="form-horizontal" method="POST">
+                            <input id="partner_id" type="hidden" name="partner_id">
                             {{ form.csrf_token }}
                             <div class="form-body">
                                 <div class="form-group">

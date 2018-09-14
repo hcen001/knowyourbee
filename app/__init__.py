@@ -16,15 +16,21 @@ app.config.from_envvar('APP_CONFIG_FILE')
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-db = SQLAlchemy(app, session_options={"expire_on_commit": True})
-db.sessionmaker(autoFlush=True)
-db.session.connection(execution_options={'isolation_level': "READ COMMITTED"})
+db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # Load Login manager
 from flask_login import LoginManager
 login = LoginManager(app)
 login.login_view = 'auth.login'
+
+## commenting this exception helps debugging when there are issues with importing
+@login.user_loader
+def load_user(id):
+    try:
+        return User.query.filter(User.id == int(id)).first()
+    except User.DoesNotExist:
+        return None
 
 # Register blueprint(s)
 from app.mod_auth.controllers import mod_auth as auth_module

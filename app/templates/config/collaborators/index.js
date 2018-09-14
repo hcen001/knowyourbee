@@ -85,17 +85,33 @@ var initTable = function () {
                     // return roles.replace(/,\s*$/, "");
                 }
             },
-            {"data": "active", "width": "10%",
+            {"data": "active", "width": "20%",
                 render: function(data, type, row, meta){
+                    var a = '<a class="btn blue btn-outline sbold btn-delete"> Edit </a>';
                     if (data) {
-                        return '<a class="btn red btn-outline sbold" data-collaborator-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
+                        var id = row['id'];
+                        return a+'<a class="btn red btn-outline sbold" data-collaborator-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
                     };
-                    return '<a class="btn green btn-outline sbold" data-collaborator-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
+                    return a+'<a class="btn green btn-outline sbold" data-collaborator-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
                 }
             },
             {"data": "added_date", "visible": false, "searchable": false}
         ],
         "dom": 'flrtipB'
+    });
+
+    $('#collaborators_tbl tbody').on('click', '.btn-delete', function (){
+       var $row = $(this).closest('tr');
+       var data =  $('#collaborators_tbl').DataTable().row($row).data();
+       var name = data['name'].split(" ");
+       $("#collaborator_id").val(data["id"]);
+       $("#first_name").val(name[0]);
+       $("#last_name").val(name[1]);
+       $("#email").val(data["email"]);
+       $("#phone").val(data["phone"]);
+       $("#roles").val(data["role"]).trigger("change");
+       $("#add_collaborator").attr("action", $SCRIPT_ROOT+'/config/collaborators/update');
+       $("#new_collaborator").modal('show');
     });
 
     // handle datatable custom tools
@@ -145,9 +161,19 @@ var initTable = function () {
 
 initTable();
 
+$('#new_collaborator').on('hidden.bs.modal', function () {
+    $("#first_name").val("");
+    $("#last_name").val("");
+    $("#email").val("");
+    $("#phone").val("");
+    $("#collaborator_id").val("");
+    $("#roles").val("").trigger("change");
+    $("#add_collaborator").attr("action", $SCRIPT_ROOT+'/config/collaborators');
+});
+
 $(".select2, .select2-multiple").select2({
     placeholder: "Select the collaborator role(s)",
-    allowCleart: true,
+    allowClear: true,
     width: null
 });
 

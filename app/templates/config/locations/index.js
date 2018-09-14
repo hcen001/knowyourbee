@@ -59,15 +59,27 @@ var initTable = function () {
             {"data": "description"},
             {"data": "active", "width": "15%",
                 render: function(data, type, row, meta){
+                    var a = '<a class="btn blue btn-outline sbold btn-delete"> Edit </a>';
                     if (data) {
-                        return '<a class="btn red btn-outline sbold" data-location-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
+                        return a+'<a class="btn red btn-outline sbold" data-location-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Deactivate </a>';
                     };
-                    return '<a class="btn green btn-outline sbold" data-location-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
+                    return a+'<a class="btn green btn-outline sbold" data-location-id="'+row['id']+'" data-toggle="modal" href="#reactivate"> Reactivate </a>';
                 }
             },
             {"data": "added_date", "visible": false, "searchable": false}
         ],
         "dom": 'flrtipB'
+    });
+
+    $('#locations_tbl tbody').on('click', '.btn-delete', function (){
+       var $row = $(this).closest('tr');
+       var data =  $('#locations_tbl').DataTable().row($row).data();
+
+       $("#location_id").val(data["id"]);
+       $("#name").val(data["name"]);
+       $("#description").val(data["description"]);
+       $("#add_location").attr("action", $SCRIPT_ROOT+'/config/locations/update');
+       $("#new_location").modal('show');
     });
 
     // handle datatable custom tools
@@ -117,5 +129,12 @@ var initTable = function () {
 }
 
 initTable();
+
+$('#new_location').on('hidden.bs.modal', function () {
+    $("#name").val("");
+    $("#description").val("");
+    $("#location_id").val("");
+    $("#add_location").attr("action", $SCRIPT_ROOT+'/config/locations');
+});
 
 $("#locations_tbl_wrapper > .dt-buttons").appendTo("div.table-toolbar > .row > .col-md-6:last");

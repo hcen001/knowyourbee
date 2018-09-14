@@ -6,14 +6,6 @@ from app.mod_auth.models import User
 from app.mod_package.models import Package, Partner
 from app.mod_util.utils import is_safe_url
 
-## commenting this exception helps debugging when there are issues with importing
-@login.user_loader
-def load_user(id):
-    # try:
-    return User.query.filter(User.id == int(id)).first()
-    # except User.DoesNotExist:
-        # return None
-
 # Define the blueprint
 mod_specimen = Blueprint('specimen', __name__)
 

@@ -32,7 +32,6 @@ class Base(db.Model):
 
     def save(self):
         db.session.commit()
-        db.session.expire_all()
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)

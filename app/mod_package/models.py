@@ -1,6 +1,8 @@
 from app.models import Base, PersonBase
 from app import db
 
+from app.mod_util.utils import dd_to_dms
+
 from sqlalchemy.dialects.postgresql import ARRAY, Any
 
 import json
@@ -93,8 +95,8 @@ class Package(Base):
                     _specimen['date_received'] = specimen.sample.date_received.strftime('%d/%B/%Y')
                     _specimen['country'] = specimen.sample.country.name if specimen.sample.country else 'N/A'
                     # _specimen['state'] = specimen.sample.origin_state or 'N/A'
-                    _specimen['latitude'] = specimen.sample.latitude or 'N/A'
-                    _specimen['longitude'] = specimen.sample.longitude or 'N/A'
+                    _specimen['latitude'] = dd_to_dms(specimen.sample.latitude, 'lat') or 'N/A'
+                    _specimen['longitude'] = dd_to_dms(specimen.sample.longitude, 'lon') or 'N/A'
                     _specimen['genus'] = specimen.sample.genus.name if specimen.sample.genus else 'N/A'
                     _specimen['species'] = specimen.sample.species.name if specimen.sample.species else 'N/A'
                     _specimen['subspecies'] = specimen.sample.subspecies.name if specimen.sample.subspecies else 'N/A'

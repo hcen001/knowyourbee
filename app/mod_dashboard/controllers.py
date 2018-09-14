@@ -1,15 +1,7 @@
 from flask import Blueprint, redirect, url_for, abort, render_template, render_template_string
-from app import login
 from app.mod_auth.models import User
 from app.mod_package.models import Package
 from flask_login import login_required, current_user
-
-@login.user_loader
-def load_user(id):
-    try:
-        return User.query.filter(User.id == int(id)).first()
-    except User.DoesNotExist:
-        return None
 
 # Define the blueprint
 entry_point = Blueprint('dashboard', __name__)

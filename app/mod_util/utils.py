@@ -53,3 +53,16 @@ def parse_multi_form(form):
                     sub_data[k] = v
 
     return data
+
+def dd_to_dms(dd, coord):
+    is_positive = dd >= 0
+    dd = abs(dd)
+    minutes, seconds = divmod(dd*3600,60)
+    degrees, minutes = divmod(minutes,60)
+    degrees = degrees if is_positive else -degrees
+    if coord == 'lat':
+        direction = 'N' if degrees >= 0 else 'S'
+    elif coord == 'lon':
+        direction = 'E' if degrees >= 0 else 'W'
+    return '{}\xb0 {:0.2f}\' {:0.2f}\'\' {}'.format(degrees,minutes,seconds,direction)
+    # return (degrees,minutes,seconds)

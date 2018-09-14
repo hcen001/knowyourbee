@@ -4,8 +4,6 @@ from wtforms.fields.html5 import EmailField
 from wtforms import widgets
 from wtforms.validators import DataRequired, InputRequired, Optional, Email
 
-collab_roles = [('S','Sender'),('C','Collector'),('R','Receiver'),('P','Processor')]
-
 class Select2MultipleField(SelectMultipleField):
 
     def pre_validate(self, form):
@@ -27,8 +25,12 @@ class CollaboratorForm(FlaskForm):
     first_name          = StringField('First name', validators=[InputRequired()])
     last_name           = StringField('Last name', validators=[InputRequired()])
     email               = EmailField('Email', validators=[InputRequired(), Email()])
-    phone               = StringField('Phone', validators=[InputRequired()])
-    roles               = Select2MultipleField('Roles', choices=collab_roles, validators=[InputRequired()])
+    phone               = StringField('Phone', validators=[Optional()])
+    roles               = Select2MultipleField('Roles', validators=[InputRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(CollaboratorForm, self).__init__(*args, **kwargs)
+        self.roles.choices  = [('S','Sender'),('C','Collector'),('R','Receiver'),('P','Processor')]
 
 class PartnerForm(FlaskForm):
 

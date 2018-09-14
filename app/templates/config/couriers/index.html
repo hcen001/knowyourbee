@@ -81,8 +81,9 @@
                 <div class="modal-body">
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
-                        <form action="{{ url_for('config.admin_couriers') }}" class="form-horizontal" method="POST">
+                        <form id="add_courier" action="{{ url_for('config.admin_couriers') }}" class="form-horizontal" method="POST">
                             {{ form.csrf_token }}
+                            <input id="courier_id" type="hidden" name="courier_id">
                             <div class="form-body">
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">{{ form.name.label }}</label>

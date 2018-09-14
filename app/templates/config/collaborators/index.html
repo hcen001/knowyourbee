@@ -83,7 +83,8 @@
                 <div class="modal-body">
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
-                        <form action="{{ url_for('config.admin_collaborators') }}" class="form-horizontal" method="POST">
+                        <form id="add_collaborator" action="{{ url_for('config.admin_collaborators') }}" class="form-horizontal" method="POST">
+                            <input id="collaborator_id" type="hidden" name="collaborator_id">
                             {{ form.csrf_token }}
                             <div class="form-body">
                                 <div class="form-group">

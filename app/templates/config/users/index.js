@@ -71,7 +71,7 @@ var initTable = function () {
             {"data": "authenticated", "width": "10%",
                 render: function(data, type, row, meta){
                     if (data) {
-                        return '<a class="btn red btn-outline sbold" data-user-id="'+row['id']+'" data-toggle="modal" href="#deactivate"> Log out </a>';
+                        return '<a class="btn red btn-outline sbold" data-user-id="'+row['id']+'" data-toggle="modal" href="#logout"> Log out </a>';
                     };
                     return '<span class="label label-info" >Not authenticated</span>';
                 }
@@ -128,6 +128,17 @@ var initTable = function () {
     });
 
     $('#reactivateBtn').on('click', function(event) {
+        event.preventDefault();
+        updateUser($(this).data('user_id'), $(this).data('action'));
+    });
+
+    $('#logout').on('shown.bs.modal', function (event) {
+        btn = $(event.relatedTarget);
+        $('#logoutBtn').data('user_id', btn.data('user-id'));
+        $('#logoutBtn').data('action', 'logout');
+    });
+
+    $('#logoutBtn').on('click', function(event) {
         event.preventDefault();
         updateUser($(this).data('user_id'), $(this).data('action'));
     });

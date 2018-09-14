@@ -143,9 +143,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Collaborator reactivation</h4>
+                    <h4 class="modal-title">User reactivation</h4>
                 </div>
-                <div class="modal-body"> Do you really want to reactivate this collaborator? </div>
+                <div class="modal-body"> Do you really want to reactivate this user? </div>
                 <div class="modal-footer">
                     <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                     <button id="reactivateBtn" type="button" class="btn green" data-dismiss="modal">Reactivate</button>
@@ -156,17 +156,35 @@
         <!-- /.modal-dialog -->
     </div>
 
-        <div class="modal fade" id="deactivate" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal fade" id="deactivate" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Collaborator deactivation</h4>
+                    <h4 class="modal-title">User deactivation</h4>
                 </div>
-                <div class="modal-body"> Do you really want to deactivate this collaborator? </div>
+                <div class="modal-body"> Do you really want to deactivate this user? </div>
                 <div class="modal-footer">
                     <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                     <button id="deactivateBtn" type="button" class="btn green" data-dismiss="modal">Deactivate</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="logout" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">User logout</h4>
+                </div>
+                <div class="modal-body"> Do you really want to logout this user? </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+                    <button id="logoutBtn" type="button" class="btn green" data-dismiss="modal">Logout</button>
                 </div>
             </div>
             <!-- /.modal-content -->

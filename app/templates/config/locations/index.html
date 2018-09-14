@@ -42,7 +42,7 @@
                     <div class="table-toolbar">
                         <div class="row">
                             <div class="col-md-6">
-                                <a data-toggle="modal" href="#new_collaborator" class="btn green"> Add new location
+                                <a data-toggle="modal" href="#new_location" class="btn green"> Add new location
                                     <i class="icon-magnifier-add"></i>
                                 </a>
                             </div>
@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="new_collaborator" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal fade" id="new_location" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -81,7 +81,8 @@
                 <div class="modal-body">
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
-                        <form action="{{ url_for('config.admin_locations') }}" class="form-horizontal" method="POST">
+                        <form id="add_location" action="{{ url_for('config.admin_locations') }}" class="form-horizontal" method="POST">
+                            <input id="location_id" type="hidden" name="location_id">
                             {{ form.csrf_token }}
                             <div class="form-body">
                                 <div class="form-group">
