@@ -23,9 +23,9 @@ class SampleForm(FlaskForm):
     sample_date_sampled     = DateField('Date sampled', format='%d-%m-%Y', validators=[InputRequired()])
     sample_date_received    = DateField('Date received', format='%d-%m-%Y', validators=[InputRequired()])
 
-    freezer                 = StringField('Freezer', validators=[Optional()])
-    shelf                   = StringField('Shelf', validators=[Optional()])
-    box                     = StringField('Box', validators=[Optional()])
+    # freezer                 = StringField('Freezer', validators=[Optional()])
+    # shelf                   = StringField('Shelf', validators=[Optional()])
+    # box                     = StringField('Box', validators=[Optional()])
 
     genus_id                = SelectField('Genus', validators=[InputRequired()])
     species_id              = SelectField('Species', validators=[InputRequired()])

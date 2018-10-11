@@ -6,7 +6,7 @@ from app.mod_util.models import Country, State
 from sqlalchemy.types import TypeDecorator, CHAR
 
 def parse_l(value):
-    degrees, minutes, seconds, _ = value.split(" ")
+    degrees, minutes, seconds = value.split(" ")
 
     degrees = degrees[:-1]
     minutes = minutes[:-1]

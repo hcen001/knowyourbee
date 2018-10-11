@@ -12,17 +12,17 @@ class Package(Base):
     __tablename__       = 'package'
 
     package_id          = db.Column('package_id', db.String(64), default='SOUTH AFRICA', unique=True, nullable=False)
-    date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    date_sent           = db.Column('date_sent', db.DateTime, default=db.func.current_timestamp(), nullable=True)
     date_received       = db.Column('date_received', db.DateTime, default=db.func.current_timestamp(), nullable=True)
-    tracking_number     = db.Column('tracking_number', db.String(64))
+    tracking_number     = db.Column('tracking_number', db.String(64), nullable=True)
     # sender_source_id    = db.Column('sender_source_id', db.String(64), nullable=True)
     comments            = db.Column('comments', db.String(512), nullable=True)
 
-    partner_id          = db.Column('partner_id', db.Integer, db.ForeignKey('partner.id'), nullable=False)
-    location_id         = db.Column('location_id', db.Integer, db.ForeignKey('location.id'), nullable=False)
-    courier_id          = db.Column('courier_id', db.Integer, db.ForeignKey('courier.id'), nullable=False)
-    sender_id           = db.Column('sender_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
-    receiver_id         = db.Column('receiver_id', db.Integer, db.ForeignKey('person.id'), nullable=False)
+    partner_id          = db.Column('partner_id', db.Integer, db.ForeignKey('partner.id'), nullable=True)
+    location_id         = db.Column('location_id', db.Integer, db.ForeignKey('location.id'), nullable=True)
+    courier_id          = db.Column('courier_id', db.Integer, db.ForeignKey('courier.id'), nullable=True)
+    sender_id           = db.Column('sender_id', db.Integer, db.ForeignKey('person.id'), nullable=True)
+    receiver_id         = db.Column('receiver_id', db.Integer, db.ForeignKey('person.id'), nullable=True)
 
     partner             = db.relationship('Partner', backref='_packages', foreign_keys=[partner_id], lazy=True)
     location            = db.relationship('Location', backref='_packages', foreign_keys=[location_id], lazy=True)
@@ -35,16 +35,16 @@ class Package(Base):
     def __init__(self, **kwargs):
 
         self.package_id = kwargs.get('package_id')
-        self.date_sent = kwargs.get('date_sent')
-        self.date_received = kwargs.get('date_received')
+        self.date_sent = kwargs.get('date_sent') or None
+        self.date_received = kwargs.get('date_received') or None
         self.tracking_number = kwargs.get('tracking_number') or None
         self.comments = kwargs.get('comments') or None
 
-        self.partner_id = kwargs.get('partner_id')
-        self.location_id = kwargs.get('location_id')
-        self.courier_id = kwargs.get('courier_id')
-        self.sender_id = kwargs.get('sender_id')
-        self.receiver_id = kwargs.get('receiver_id')
+        self.partner_id = kwargs.get('partner_id') or None
+        self.location_id = kwargs.get('location_id') or None
+        self.courier_id = kwargs.get('courier_id') or None
+        self.sender_id = kwargs.get('sender_id') or None
+        self.receiver_id = kwargs.get('receiver_id') or None
 
     def stored_at(self):
         return self.location
@@ -66,12 +66,12 @@ class Package(Base):
             _package = {}
             _package['id'] = package.id
             _package['package_id'] = package.package_id
-            _package['date_sent'] = package.date_sent.strftime('%d/%B/%Y')
-            _package['date_received'] = package.date_received.strftime('%d/%B/%Y')
-            _package['partner_name'] = package.partner.full_name
-            _package['process_location'] = package.location.name
-            _package['sender'] = package.sender.full_name
-            _package['receiver'] = package.receiver.full_name
+            _package['date_sent'] = package.date_sent.strftime('%d/%B/%Y') if package.date_sent else 'N/A'
+            _package['date_received'] = package.date_received.strftime('%d/%B/%Y') if package.date_received else 'N/A'
+            _package['partner_name'] = package.partner.full_name if package.partner else 'N/A'
+            _package['process_location'] = package.location.name if package.location else 'N/A'
+            _package['sender'] = package.sender.full_name if package.sender else 'N/A'
+            _package['receiver'] = package.receiver.full_name if package.receiver else 'N/A'
             _package['added_date'] = package.date_created
             packages.append(_package)
         return packages
@@ -102,12 +102,12 @@ class Package(Base):
                     _specimen['subspecies'] = specimen.sample.subspecies.name if specimen.sample.subspecies else 'N/A'
                     _specimen['lineage'] = specimen.sample.lineage.name if specimen.sample.lineage else 'N/A'
                     _specimen['gender'] = specimen.sample.gender
-                    _specimen['freezer'] = specimen.sample.freezer or 'N/A'
-                    _specimen['box'] = specimen.sample.box or 'N/A'
+                    _specimen['freezer'] = specimen.specimen_freezer or 'N/A'
+                    _specimen['box'] = specimen.specimen_box or 'N/A'
                     _specimen['dna'] = specimen.dna or 'N/A'
                     _specimen['body_part'] = specimen.body_part or 'N/A'
-                    _specimen['dna_freezer'] = specimen.freezer or 'N/A'
-                    _specimen['dna_box'] = specimen.box or 'N/A'
+                    _specimen['dna_freezer'] = specimen.dna_freezer or 'N/A'
+                    _specimen['dna_box'] = specimen.dna_box or 'N/A'
                     _specimen['comments'] = specimen.comments or 'None'
                     _specimens.append(_specimen)
         return _specimens

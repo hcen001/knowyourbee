@@ -57,50 +57,59 @@ def add():
 
     if request.method == 'POST':
         data = parse_multi_form(request.form)
-        pp = pprint.PrettyPrinter(indent=4)
+        # pp = pprint.PrettyPrinter(indent=4)
 
         data['package_id'] = str(data['package_id']).upper()
-        data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y')
-        data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y')
-        pp.pprint(data)
+        data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y') if data['date_sent'] is not '' else None
+        data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y') if data['date_received'] is not '' else None
+
+        data = {k: None if v is '' else v for k, v in data.items()}
+        # pp.pprint(data)
+        # samples = data['samples']
+        # for _, sample in samples.items():
+        #     sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
+        #     sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
+        #     sample['latitude'] = parse_l(sample['latitude'])
+        #     sample['longitude'] = parse_l(sample['longitude'])
+        #     pp.pprint(sample)
+        #     for _, specimen in sample['specimens'].items():
+        #         if specimen['date_collected']:
+        #             specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y')
+        #         else:
+        #             specimen['date_collected'] = None
+        #         pp.pprint(specimen)
 
         package = Package(**data)
 
-        samples = data['samples']
+        try:
+            package.add_or_update()
+            samples = data['samples']
+            for _, sample in samples.items():
+                sample['package_id'] = package.id
+                sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
+                sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
+                sample['latitude'] = parse_l(sample['latitude'])
+                sample['longitude'] = parse_l(sample['longitude'])
+                sample_db = Sample(**sample)
+                sample_db.add_or_update()
+                package.samples.append(sample_db)
+                for _, specimen in sample['specimens'].items():
+                    specimen['sample_id'] = sample_db.id
+                    if specimen['date_collected']:
+                        specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y')
+                    else:
+                        specimen['date_collected'] = None
+                    specimen_db = Specimen(**specimen)
+                    specimen_db.add_or_update()
+                    sample_db.specimens.append(specimen_db)
+        except IntegrityError as e:
+            flash('Package with ID {} is already registered in the database.'.format(package.package_id), 'danger')
+            return redirect(url_for('package.index'))
+        else:
+            package.save()
 
-        for _, sample in samples.items():
-            print("LATITUDE: ", parse_l(sample['latitude']))
-            print("LONGITUDE: ",parse_l(sample['longitude']))
-
-        # try:
-        #     package.add_or_update()
-        #     samples = data['samples']
-        #     for _, sample in samples.items():
-        #         sample['package_id'] = package.id
-        #         sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
-        #         sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
-        #         sample['latitude'] = parse_l(sample['latitude'])
-        #         sample['longitude'] = parse_l(sample['longitude'])
-        #         sample_db = Sample(**sample)
-        #         sample_db.add_or_update()
-        #         package.samples.append(sample_db)
-        #         for _, specimen in sample['specimens'].items():
-        #             specimen['sample_id'] = sample_db.id
-        #             if specimen['date_collected']:
-        #                 specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y')
-        #             else:
-        #                 specimen['date_collected'] = None
-        #             specimen_db = Specimen(**specimen)
-        #             specimen_db.add_or_update()
-        #             sample_db.specimens.append(specimen_db)
-        # except IntegrityError as e:
-        #     flash('Package with ID {} is already registered in the database.'.format(package.package_id), 'danger')
-        #     return redirect(url_for('package.index'))
-        # else:
-        #     package.save()
-
-        # flash('The package with ID {} was registered successfully.'.format(package.package_id), 'success')
-        # return redirect(url_for('package.index'))
+        flash('The package with ID {} was registered successfully.'.format(package.package_id), 'success')
+        return redirect(url_for('package.index'))
 
     sample_form = SampleForm(formdata=None)
     specimen_form = SpecimenForm(formdata=None)
@@ -125,8 +134,6 @@ def add_vials(id):
         data = parse_multi_form(request.form)
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(data)
-
-        # print("decimal degrees: ", parse_l(data['samples'][0]['latitude']))
 
         try:
             samples = data['samples']
@@ -175,7 +182,7 @@ def edit(id):
         form_data['date_received'] = package_data.date_received
         form_data['courier_id'] = package_data.courier_id
         form_data['tracking_number'] = package_data.tracking_number
-        form_data['partner_id'] = package_data.partner_id
+        form_data['partner_id'] = package_data.partner_id or None
         form_data['location_id'] = package_data.location_id
         form_data['sender_id'] = package_data.sender_id
         form_data['receiver_id'] = package_data.receiver_id
@@ -189,8 +196,10 @@ def edit(id):
 
         data = request.form.to_dict()
         data['package_id'] = str(data['package_id']).upper()
-        data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y')
-        data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y')
+        data['date_sent'] = datetime.strptime(data['date_sent'],'%d/%B/%Y') if data['date_sent'] is not '' else None
+        data['date_received'] = datetime.strptime(data['date_received'],'%d/%B/%Y') if data['date_received'] is not '' else None
+
+        data = {k: None if v is '' else v for k, v in data.items()}
 
         try:
             package_data.update(data)

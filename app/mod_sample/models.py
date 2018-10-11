@@ -34,12 +34,9 @@ class Sample(Base):
     development_stage   = db.Column(ENUM(*stages, name='dev_stage_enum'), nullable=False)
     genus_id            = db.Column(db.Integer, db.ForeignKey('genus.id'), nullable=False)
     species_id          = db.Column(db.Integer, db.ForeignKey('species.id'), nullable=False)
-    subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=True)
+    subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=False)
     lineage_id          = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
     origin_country      = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
-    # origin_state        = db.Column(db.String(128), nullable=True)
-    # origin_state        = db.Column(db.Integer, db.ForeignKey('state.id'), nullable=True)
-    # origin_city         = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=True)
 
     #Sample data and location
     sender_source_id        = db.Column(db.String(32), nullable=False)
@@ -47,20 +44,12 @@ class Sample(Base):
     hive                    = db.Column(db.String(64), nullable=True)
     latitude                = db.Column(db.Float, nullable=True)
     longitude               = db.Column(db.Float, nullable=True)
-    # coordinates             = db.Column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
     additional_gps_info     = db.Column(db.String(1024), nullable=True)
     additional_info         = db.Column(db.String(1024), nullable=True)
-    # comments                = db.Column(db.String(1024), nullable=True)
 
     #Preliminary identification sent by collaborator
 
-    #Sample storage location
-    freezer             = db.Column(db.String(32), nullable=True)
-    shelf               = db.Column(db.String(32), nullable=True)
-    box                 = db.Column(db.String(32), nullable=True)
-
     #Relationships
-    # package             = db.relationship('Package', backref='_samples', foreign_keys=[package_id], lazy=True)
     collector           = db.relationship('Person', backref='_collected_samples', foreign_keys=[collector_id], lazy=True)
     processor           = db.relationship('Person', backref='_processed_samples', foreign_keys=[processor_id], lazy=True)
     process_location    = db.relationship('Location', backref='_samples', foreign_keys=[process_location_id], lazy=True)
@@ -85,25 +74,18 @@ class Sample(Base):
         self.gender = kwargs.get('gender')
         self.caste = kwargs.get('caste')
         self.development_stage = kwargs.get('stage')
-        self.genus_id = kwargs.get('genus_id') or None
-        self.species_id = kwargs.get('species_id') or None
-        self.subspecies_id = kwargs.get('subspecies_id') or None
-        self.lineage_id = kwargs.get('lineage_id') or None
+        self.genus_id = kwargs.get('genus_id')
+        self.species_id = kwargs.get('species_id')
+        self.subspecies_id = kwargs.get('subspecies_id')
+        self.lineage_id = kwargs.get('lineage_id')
         self.origin_country = kwargs.get('country_id') or None
-        # self.origin_state = kwargs.get('state') or None
-        # self.origin_city = kwargs.get('city_id') or None
         self.sender_source_id = kwargs.get('sender_source_id')
         self.origin_locality = kwargs.get('origin_locality') or None
         self.hive = kwargs.get('hive') or None
         self.latitude = kwargs.get('latitude') or None
         self.longitude = kwargs.get('longitude') or None
-        # self.coordinates = kwargs.get('coordinates') or None
         self.additional_gps_info = kwargs.get('additional_gps_info') or None
         self.additional_info = kwargs.get('additional_info') or None
-        # self.comments = kwargs.get('comments') or None
-        self.freezer = kwargs.get('freezer') or None
-        self.shelf = kwargs.get('shelf') or None
-        self.box = kwargs.get('box') or None
 
     def collected_by(self):
         return self.collector

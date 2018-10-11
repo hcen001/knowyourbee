@@ -15,13 +15,13 @@ class PackageForm(FlaskForm):
 
     # package metadata definition
     package_id      = StringField('Package ID', validators=[InputRequired()])
-    date_sent       = DateField('Date sent', format='%d-%m-%Y', validators=[InputRequired()])
-    date_received   = DateField('Date received', format='%d-%m-%Y', validators=[InputRequired()])
-    courier_id      = SelectField('Courier', validators=[InputRequired()])
-    partner_id      = SelectField('Partner', validators=[InputRequired()])
-    location_id     = SelectField('Stored at', validators=[InputRequired()])
-    sender_id       = SelectField('Sender', validators=[InputRequired()])
-    receiver_id     = SelectField('Receiver', validators=[InputRequired()])
+    date_sent       = DateField('Date sent', format='%d-%m-%Y', validators=[Optional()])
+    date_received   = DateField('Date received', format='%d-%m-%Y', validators=[Optional()])
+    courier_id      = SelectField('Courier', validators=[Optional()])
+    partner_id      = SelectField('Partner', validators=[Optional()])
+    location_id     = SelectField('Stored at', validators=[Optional()])
+    sender_id       = SelectField('Sender', validators=[Optional()])
+    receiver_id     = SelectField('Receiver', validators=[Optional()])
     tracking_number = StringField('Tracking number', validators=[Optional()])
     comments        = TextAreaField('Comments', validators=[Optional()])
 

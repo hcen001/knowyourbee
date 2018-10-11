@@ -9,10 +9,12 @@ class SpecimenForm(FlaskForm):
     # specimen data
 
     collection_sample_id    = StringField('WorldBEE Specimen ID', validators=[InputRequired()])
-    dna                     = StringField('DNA ng/µl', validators=[InputRequired()])
-    date_collected          = DateField('Date measured', format='%d-%m-%Y', validators=[InputRequired()])
-    measurement             = RadioField('Measurement', choices=measurements, validators=[InputRequired()])
-    body_part               = StringField('Body part used in DNA extraction', validators=[InputRequired()])
-    freezer                 = StringField('Freezer', validators=[InputRequired()])
-    box                     = StringField('Box', validators=[InputRequired()])
+    dna                     = StringField('DNA ng/µl', validators=[Optional()])
+    date_collected          = DateField('Date measured', format='%d-%m-%Y', validators=[Optional()])
+    measurement             = RadioField('Measurement', choices=measurements, validators=[Optional()])
+    body_part               = StringField('Body part used in DNA extraction', validators=[Optional()])
+    specimen_freezer        = StringField('Specimen Freezer', validators=[InputRequired()])
+    specimen_box            = StringField('Specimen Box', validators=[InputRequired()])
+    dna_freezer             = StringField('DNA Freezer', validators=[Optional()])
+    dna_box                 = StringField('DNA Box', validators=[Optional()])
     comments                = TextAreaField('Comments', validators=[Optional()])

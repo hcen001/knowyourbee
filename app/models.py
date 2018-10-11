@@ -2,6 +2,7 @@ from app import db
 from sqlalchemy.exc import IntegrityError
 
 import json
+import datetime
 
 # Define a base model for other database tables to inherit
 class Base(db.Model):
@@ -10,7 +11,7 @@ class Base(db.Model):
 
     id           = db.Column(db.Integer, primary_key=True)
     date_created = db.Column('date_created', db.DateTime, default=db.func.current_timestamp())
-    date_updated = db.Column('date_updated', db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    date_updated = db.Column('date_updated', db.DateTime, default=db.func.current_timestamp(), onupdate=datetime.datetime.now)
     active       = db.Column('active', db.Boolean, default=True, server_default='t')
 
     def add_or_update(self, deactivate=None):
