@@ -410,9 +410,7 @@ var copy_previous_vial = function(element) {
     //     return !this.name.match(/specimens/);
     // }).val(last_vial['box']);
 
-    $(element).find("input[value='"+last_vial["caste"]+"']").prop('checked', true);
     $(element).find("input[value='"+last_vial["gender"]+"']").prop('checked', true);
-    $(element).find("input[value='"+last_vial["stage"]+"']").prop('checked', true);
     $(element).find("input[value='"+last_vial["sample_quality"]+"']").prop('checked', true);
 
     $(element).find("select[name*='collector']").val(last_vial["collector"]).trigger("change.select2");
@@ -425,6 +423,8 @@ var copy_previous_vial = function(element) {
     $(element).find("select[name*='species_id']").val(last_vial["species_id"]).trigger("change.select2");
     $(element).find("select[name*='subspecies_id']").val(last_vial["subspecies_id"]).trigger("change.select2");
     $(element).find("select[name*='lineage_id']").val(last_vial["lineage_id"]).trigger("change.select2");
+    $(element).find("select[name*='caste_id']").val(last_vial["caste_id"]).trigger("change.select2");
+    $(element).find("select[name*='development_stage_id']").val(last_vial["development_stage_id"]).trigger("change.select2");
 
     var start_date = $(element).prev().find("input[name*='date_received']").datepicker('getStartDate');
     update_datepicker_startDate($(element).find("input[name*='date_received']"), start_date);
@@ -470,6 +470,8 @@ var FormRepeater = function () {
                     create_select2($("select[name*='species_id']"), "Select species");
                     create_select2($("select[name*='subspecies_id']"), "Select subspecies");
                     create_select2($("select[name*='lineage_id']"), "Select lineage");
+                    create_select2($("select[name*='caste_id']"), "Select caste");
+                    create_select2($("select[name*='development_stage_id']"), "Select dev stage");
 
                     $("input[name*='sample_date_sampled']").datepicker({
                         rtl: App.isRTL(),
@@ -591,6 +593,8 @@ jQuery(document).ready(function() {
     create_select2($("#species_id"), "Select species");
     create_select2($("#subspecies_id"), "Select subspecies");
     create_select2($("#lineage_id"), "Select lineage");
+    create_select2($("#caste_id"), "Select caste");
+    create_select2($("#development_stage_id"), "Select dev stage");
 
     $('#sample_date_sampled, #sample_date_received, #date_collected').datepicker({
         rtl: App.isRTL(),

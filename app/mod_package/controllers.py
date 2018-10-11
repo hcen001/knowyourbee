@@ -95,14 +95,12 @@ def add():
                 package.samples.append(sample_db)
                 for _, specimen in sample['specimens'].items():
                     specimen['sample_id'] = sample_db.id
-                    if specimen['date_collected']:
-                        specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y')
-                    else:
-                        specimen['date_collected'] = None
+                    specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y') if specimen['date_collected'] is not '' else None
                     specimen_db = Specimen(**specimen)
                     specimen_db.add_or_update()
                     sample_db.specimens.append(specimen_db)
         except IntegrityError as e:
+            print(e)
             flash('Package with ID {} is already registered in the database.'.format(package.package_id), 'danger')
             return redirect(url_for('package.index'))
         else:

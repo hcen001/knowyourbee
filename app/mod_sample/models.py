@@ -11,8 +11,8 @@ from sqlalchemy.dialects.postgresql import ENUM
 # db.GUID = GUID
 
 genders = ('male', 'female')
-castes = ('drone', 'worker', 'queen')
-stages = ('egg', 'pupae', 'larvae', 'nymph', 'adult')
+# castes = ('drone', 'worker', 'queen')
+# stages = ('egg', 'pupae', 'larvae', 'nymph', 'adult')
 
 class Sample(Base):
 
@@ -21,22 +21,22 @@ class Sample(Base):
     # sample_id           = db.Column(db.String(64), nullable=False)
 
     # Sample & Package inspection data
-    package_id          = db.Column(db.Integer, db.ForeignKey('package.id'), nullable=False)
-    collector_id        = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
-    processor_id        = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
-    process_location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
-    date_sampled        = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
-    date_received       = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    package_id              = db.Column(db.Integer, db.ForeignKey('package.id'), nullable=False)
+    collector_id            = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
+    processor_id            = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
+    process_location_id     = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
+    date_sampled            = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=True)
+    date_received           = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=True)
 
-    sample_quality      = db.Column(db.Boolean, default=True, server_default='t', nullable=False)
-    gender              = db.Column(ENUM(*genders, name='gender_enum'), nullable=False)
-    caste               = db.Column(ENUM(*castes, name='caste_enum'), nullable=False)
-    development_stage   = db.Column(ENUM(*stages, name='dev_stage_enum'), nullable=False)
-    genus_id            = db.Column(db.Integer, db.ForeignKey('genus.id'), nullable=False)
-    species_id          = db.Column(db.Integer, db.ForeignKey('species.id'), nullable=False)
-    subspecies_id       = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=False)
-    lineage_id          = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
-    origin_country      = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
+    sample_quality          = db.Column(db.Boolean, default=True, server_default='t', nullable=False)
+    gender                  = db.Column(ENUM(*genders, name='gender_enum'), nullable=False)
+    caste_id                = db.Column(db.Integer, db.ForeignKey('caste.id'), nullable=False)
+    development_stage_id    = db.Column(db.Integer, db.ForeignKey('stage.id'), nullable=False)
+    genus_id                = db.Column(db.Integer, db.ForeignKey('genus.id'), nullable=False)
+    species_id              = db.Column(db.Integer, db.ForeignKey('species.id'), nullable=False)
+    subspecies_id           = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=False)
+    lineage_id              = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
+    origin_country          = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
 
     #Sample data and location
     sender_source_id        = db.Column(db.String(32), nullable=False)
@@ -58,6 +58,8 @@ class Sample(Base):
     species             = db.relationship('Species', backref='_samples', foreign_keys=[species_id], lazy=True)
     subspecies          = db.relationship('Subspecies', backref='_samples', foreign_keys=[subspecies_id], lazy=True)
     lineage             = db.relationship('Lineage', backref='_samples', foreign_keys=[lineage_id], lazy=True)
+    stage               = db.relationship('Stage', backref='_samples', foreign_keys=[development_stage_id], lazy=True)
+    caste               = db.relationship('Caste', backref='_samples', foreign_keys=[caste_id], lazy=True)
 
     package             = db.relationship('Package', back_populates='samples', foreign_keys=[package_id])
     specimens           = db.relationship('Specimen', back_populates='sample')
@@ -72,8 +74,8 @@ class Sample(Base):
         self.date_received = kwargs.get('sample_date_received')
         self.sample_quality = True if kwargs.get('sample_quality') == 1 else False
         self.gender = kwargs.get('gender')
-        self.caste = kwargs.get('caste')
-        self.development_stage = kwargs.get('stage')
+        self.caste_id = kwargs.get('caste_id')
+        self.development_stage_id = kwargs.get('development_stage_id')
         self.genus_id = kwargs.get('genus_id')
         self.species_id = kwargs.get('species_id')
         self.subspecies_id = kwargs.get('subspecies_id')
@@ -226,6 +228,44 @@ class Lineage(TaxonBase):
         return data
 
     def __repr__(self):
-        return '<Subspecies: ID={}, name={}>'.format(self.lineage_id, self.name)
+        return '<Lineage: ID={}, name={}>'.format(self.lineage_id, self.name)
+
+class Caste(TaxonBase):
+
+    __tablename__ = 'caste'
+
+    def __init__(self, name, description):
+
+        self.name = name
+        self.description = description
+
+    @classmethod
+    def select_list(cls):
+        castes = cls.query.filter(cls.active == True)
+        data = [(caste.id, caste.name) for caste in castes]
+        data.insert(0,('',''))
+        return data
+
+    def __repr__(self):
+        return '<Caste: ID={}, name={}>'.format(self.lineage_id, self.name)
+
+class Stage(TaxonBase):
+
+    __tablename__ = 'stage'
+
+    def __init__(self, name, description):
+
+        self.name = name
+        self.description = description
+
+    @classmethod
+    def select_list(cls):
+        stages = cls.query.filter(cls.active == True)
+        data = [(stage.id, stage.name) for stage in stages]
+        data.insert(0,('',''))
+        return data
+
+    def __repr__(self):
+        return '<Stage: ID={}, name={}>'.format(self.lineage_id, self.name)
 
 # from app.mod_specimen.models import Specimen

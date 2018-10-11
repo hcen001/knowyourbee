@@ -366,33 +366,23 @@
                                                             {{ sample_form.lineage_id(class="form-control select2") }} </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-3">
-                                                        <div class="mt-repeater-input mt-radio-inline">
-                                                            <label class="control-label">{{ sample_form.stage.label }}</label>
+                                                    <div class="col-md-2">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.development_stage_id.label }}</label>
                                                             <br/>
-                                                            {% for subfield in sample_form.stage %}
-                                                            <label class="mt-radio">
-                                                                {{ subfield }} {{subfield.label}}
-                                                                <span></span>
-                                                            </label>
-                                                            {% endfor %}
+                                                            {{ sample_form.development_stage_id(class="form-control select2") }}
                                                         </div>
                                                     </div>
                                                     <!--/span-->
                                                     <div class="col-md-2">
-                                                        <div class="mt-repeater-input mt-radio-inline">
-                                                            <label class="control-label">{{ sample_form.caste.label }}</label>
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.caste_id.label }}</label>
                                                             <br/>
-                                                            {% for subfield in sample_form.caste %}
-                                                            <label class="mt-radio">
-                                                                {{ subfield }} {{subfield.label}}
-                                                                <span></span>
-                                                            </label>
-                                                            {% endfor %}
+                                                            {{ sample_form.caste_id(class="form-control select2") }}
                                                         </div>
                                                     </div>
                                                     <!--/span-->
-                                                    <div class="col-md-1">
+                                                    <div class="col-md-2">
                                                         <div class="mt-repeater-input mt-radio-inline">
                                                             <label class="control-label">{{ sample_form.sample_quality.label }}</label>
                                                             <br/>

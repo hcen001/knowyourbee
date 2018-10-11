@@ -4,7 +4,7 @@ from wtforms.validators import InputRequired, Optional
 from app.mod_package.models import Location, Person
 from app.mod_util.models import Country
 
-from app.mod_sample.models import Sample, Genus, Species, Subspecies, Lineage
+from app.mod_sample.models import Sample, Genus, Species, Subspecies, Lineage, Caste, Stage
 
 class SampleForm(FlaskForm):
 
@@ -20,8 +20,8 @@ class SampleForm(FlaskForm):
     collector               = SelectField('Collected by', validators=[InputRequired()])
     processor               = SelectField('Processed by', validators=[InputRequired()])
     process_location        = SelectField('Processed at', validators=[InputRequired()])
-    sample_date_sampled     = DateField('Date sampled', format='%d-%m-%Y', validators=[InputRequired()])
-    sample_date_received    = DateField('Date received', format='%d-%m-%Y', validators=[InputRequired()])
+    sample_date_sampled     = DateField('Date sampled', format='%d-%m-%Y', validators=[Optional()])
+    sample_date_received    = DateField('Date received', format='%d-%m-%Y', validators=[Optional()])
 
     # freezer                 = StringField('Freezer', validators=[Optional()])
     # shelf                   = StringField('Shelf', validators=[Optional()])
@@ -33,19 +33,19 @@ class SampleForm(FlaskForm):
     lineage_id              = SelectField('Lineage', validators=[InputRequired()])
     sample_quality          = RadioField('95% Ethanol', choices=[(1, 'Yes'),(0, 'No')], validators=[InputRequired()])
     gender                  = RadioField('Gender', validators=[InputRequired()])
-    caste                   = RadioField('Caste', validators=[InputRequired()])
-    stage                   = RadioField('Development stage', validators=[InputRequired()])
+    caste_id                = SelectField('Caste', validators=[InputRequired()])
+    development_stage_id    = SelectField('Development stage', validators=[InputRequired()])
 
     def __init__(self, *args, **kwargs):
         super(SampleForm, self).__init__(*args, **kwargs)
-        self.country_id.choices         = Country.select_list()
-        self.collector.choices          = Person.select_list(['C'])
-        self.processor.choices          = Person.select_list(['P'])
-        self.process_location.choices   = Location.select_list()
-        self.genus_id.choices           = Genus.select_list()
-        self.species_id.choices         = Species.select_list()
-        self.subspecies_id.choices      = Subspecies.select_list()
-        self.lineage_id.choices         = Lineage.select_list()
-        self.gender.choices             = Sample.gender_list()
-        self.caste.choices              = Sample.caste_list()
-        self.stage.choices              = Sample.stage_list()
+        self.country_id.choices             = Country.select_list()
+        self.collector.choices              = Person.select_list(['C'])
+        self.processor.choices              = Person.select_list(['P'])
+        self.process_location.choices       = Location.select_list()
+        self.genus_id.choices               = Genus.select_list()
+        self.species_id.choices             = Species.select_list()
+        self.subspecies_id.choices          = Subspecies.select_list()
+        self.lineage_id.choices             = Lineage.select_list()
+        self.gender.choices                 = Sample.gender_list()
+        self.caste_id.choices               = Caste.select_list()
+        self.development_stage_id.choices   = Stage.select_list()
