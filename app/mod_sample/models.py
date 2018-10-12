@@ -2,18 +2,6 @@ from app.models import Base, TaxonBase
 from app.mod_package.models import Package, Person, Location
 from app import db
 
-# from geoalchemy2.types import Geometry
-from sqlalchemy.dialects.postgresql import ENUM
-
-# from app.mod_util.utils import GUID
-# import uuid
-
-# db.GUID = GUID
-
-genders = ('male', 'female')
-# castes = ('drone', 'worker', 'queen')
-# stages = ('egg', 'pupae', 'larvae', 'nymph', 'adult')
-
 class Sample(Base):
 
     __tablename__       = 'sample'

@@ -2,10 +2,6 @@ from app.models import Base, TaxonBase
 from app.mod_sample.models import Sample
 from app import db
 
-from sqlalchemy.dialects.postgresql import ENUM
-
-measurements = ('qubit', 'nanodrop')
-
 class Specimen(Base):
 
     __tablename__ = 'specimen'
