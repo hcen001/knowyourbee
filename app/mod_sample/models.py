@@ -2,6 +2,10 @@ from app.models import Base, TaxonBase
 from app.mod_package.models import Package, Person, Location
 from app import db
 
+from sqlalchemy.dialects.postgresql import ENUM
+
+genders = ('male', 'female')
+
 class Sample(Base):
 
     __tablename__       = 'sample'
