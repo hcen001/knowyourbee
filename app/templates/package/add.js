@@ -27,7 +27,13 @@ var FormWizard = function () {
                 if (ev.target.id == "date_sent") {
                     $("#date_received").prop("disabled", false);
                     $("#date_received").datepicker("setStartDate", ev.target.value)
-                }
+                    $("#date_received").val("");
+                    $("#sample_date_received").datepicker("setStartDate", ev.target.value)
+                    $("#sample_date_received").val("");
+                };
+                if (ev.target.id == "date_received") {
+                    $("#sample_date_received").datepicker("setDate", ev.target.value)
+                };
                 $(this).valid();
             });
         }
@@ -373,12 +379,14 @@ var copy_previous_specimen = function(element) {
     var repeater = $(element.offsetParent()).repeaterVal();
     var samples = repeater["samples"];
     var specimens = samples[samples.length-1]["specimens"];
-    var last_specimen = specimens[specimens.length-2];
+    if (specimens.length > 1) {
+        var last_specimen = specimens[specimens.length-2];
 
-    update_datepicker($(element).find("input[name*='date_collected']"), last_specimen["date_collected"]);
-    var start_date = $(element).closest("div.mt-repeater-item").prev("div.mt-repeater-item").find("input[name*='date_collected']").datepicker('getStartDate');
-    update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
-    copy_specimen_data(element, last_specimen);
+        update_datepicker($(element).find("input[name*='date_collected']"), last_specimen["date_collected"]);
+        var start_date = $(element).closest("div.mt-repeater-item").prev("div.mt-repeater-item").find("input[name*='date_collected']").datepicker('getStartDate');
+        update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
+        copy_specimen_data(element, last_specimen);
+    };
 };
 
 var copy_country = function(element, id) {
@@ -390,60 +398,69 @@ var copy_previous_vial = function(element) {
     var add_specimen_button = $(element).find(".mt-repeater-add");
 
     var vials = repeater['samples'];
-    var last_vial = vials[vials.length-2];
+    if (vials.length > 1) {
+        var last_vial = vials[vials.length-2];
 
-    $(element).find("input[name*='sender_source_id']").val(last_vial['sender_source_id']);
-    $(element).find("input[name*='latitude']").val(last_vial['latitude']);
-    $(element).find("input[name*='longitude']").val(last_vial['longitude']);
-    $(element).find("input[name*='additional_gps_info']").val(last_vial['additional_gps_info']);
-    $(element).find("input[name*='locality']").val(last_vial['locality']);
-    $(element).find("input[name*='hive']").val(last_vial['hive']);
-    $(element).find("input[name*='additional_info']").val(last_vial['additional_info']);
+        $(element).find("input[name*='sender_source_id']").val(last_vial['sender_source_id']);
+        $(element).find("input[name*='latitude']").val(last_vial['latitude']);
+        $(element).find("input[name*='longitude']").val(last_vial['longitude']);
+        $(element).find("input[name*='additional_gps_info']").val(last_vial['additional_gps_info']);
+        $(element).find("input[name*='locality']").val(last_vial['locality']);
+        $(element).find("input[name*='hive']").val(last_vial['hive']);
+        $(element).find("input[name*='additional_info']").val(last_vial['additional_info']);
+        $(element).find("input[name*='specimens_in_received_vial']").val(last_vial['specimens_in_received_vial']);
 
-    // $(element).find("input[name*='freezer']").filter(function(){
-    //     return !this.name.match(/specimens/);
-    // }).val(last_vial['freezer']);
-    // $(element).find("input[name*='shelf']").filter(function(){
-    //     return !this.name.match(/specimens/);
-    // }).val(last_vial['shelf']);
-    // $(element).find("input[name*='box']").filter(function(){
-    //     return !this.name.match(/specimens/);
-    // }).val(last_vial['box']);
+        // $(element).find("input[name*='freezer']").filter(function(){
+        //     return !this.name.match(/specimens/);
+        // }).val(last_vial['freezer']);
+        // $(element).find("input[name*='shelf']").filter(function(){
+        //     return !this.name.match(/specimens/);
+        // }).val(last_vial['shelf']);
+        // $(element).find("input[name*='box']").filter(function(){
+        //     return !this.name.match(/specimens/);
+        // }).val(last_vial['box']);
 
-    $(element).find("input[value='"+last_vial["gender"]+"']").prop('checked', true);
-    $(element).find("input[value='"+last_vial["sample_quality"]+"']").prop('checked', true);
+        $(element).find("input[value='"+last_vial["gender"]+"']").prop('checked', true);
+        $(element).find("input[value='"+last_vial["sample_quality"]+"']").prop('checked', true);
 
-    $(element).find("select[name*='collector']").val(last_vial["collector"]).trigger("change.select2");
-    $(element).find("select[name*='processor']").val(last_vial["processor"]).trigger("change.select2");
-    $(element).find("select[name*='process_location']").val(last_vial["process_location"]).trigger("change");
+        $(element).find("select[name*='collector']").val(last_vial["collector"]).trigger("change.select2");
+        $(element).find("select[name*='processor']").val(last_vial["processor"]).trigger("change.select2");
+        $(element).find("select[name*='process_location']").val(last_vial["process_location"]).trigger("change");
 
-    copy_country(element, last_vial["country_id"]);
+        copy_country(element, last_vial["country_id"]);
 
-    $(element).find("select[name*='genus_id']").val(last_vial["genus_id"]).trigger("change.select2");
-    $(element).find("select[name*='species_id']").val(last_vial["species_id"]).trigger("change.select2");
-    $(element).find("select[name*='subspecies_id']").val(last_vial["subspecies_id"]).trigger("change.select2");
-    $(element).find("select[name*='lineage_id']").val(last_vial["lineage_id"]).trigger("change.select2");
-    $(element).find("select[name*='caste_id']").val(last_vial["caste_id"]).trigger("change.select2");
-    $(element).find("select[name*='development_stage_id']").val(last_vial["development_stage_id"]).trigger("change.select2");
+        $(element).find("select[name*='genus_id']").val(last_vial["genus_id"]).trigger("change.select2");
+        $(element).find("select[name*='species_id']").val(last_vial["species_id"]).trigger("change.select2");
+        $(element).find("select[name*='subspecies_id']").val(last_vial["subspecies_id"]).trigger("change.select2");
+        $(element).find("select[name*='lineage_id']").val(last_vial["lineage_id"]).trigger("change.select2");
+        $(element).find("select[name*='caste_id']").val(last_vial["caste_id"]).trigger("change.select2");
+        $(element).find("select[name*='development_stage_id']").val(last_vial["development_stage_id"]).trigger("change.select2");
 
-    var start_date = $(element).prev().find("input[name*='date_received']").datepicker('getStartDate');
-    update_datepicker_startDate($(element).find("input[name*='date_received']"), start_date);
+        var start_date = $(element).prev().find("input[name*='sample_date_received']").datepicker('getStartDate');
+        // update_datepicker_startDate($(element).find("input[name*='date_received']"), start_date);
 
-    update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
-    $(element).find("input[name*='date_collected']").prop("disabled", false);
-    update_datepicker($(element).find("input[name*='date_received']"), last_vial["sample_date_received"]);
-    update_datepicker($(element).find("input[name*='date_sampled']"), last_vial["sample_date_sampled"]);
+        update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
+        // $(element).find("input[name*='date_collected']").prop("disabled", false);
+        update_datepicker($(element).find("input[name*='sample_date_received']"), last_vial["sample_date_received"]);
+        update_datepicker($(element).find("input[name*='sample_date_sampled']"), last_vial["sample_date_sampled"]);
 
-    var last_specimen = last_vial['specimens'][0];
-    update_datepicker($(element).find("input[name*='date_collected']"), last_specimen['date_collected']);
 
-    $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
-    $(element).find("div.inner-repeater").find("input[name*='specimen_freezer']").val(last_specimen["specimen_freezer"]);
-    $(element).find("div.inner-repeater").find("input[name*='specimen_box']").val(last_specimen["specimen_box"]);
-    $(element).find("div.inner-repeater").find("input[name*='dna_freezer']").val(last_specimen["dna_freezer"]);
-    $(element).find("div.inner-repeater").find("input[name*='dna_box']").val(last_specimen["dna_box"]);
-    $(element).find("div.inner-repeater").find("textarea[name*='comments']").val(last_specimen["comments"]);
-    $(element).find("input[value='"+last_specimen["measurement"]+"']").prop('checked', true);
+        if (last_vial['specimens'] === undefined) {
+            return;
+        }
+
+        var last_specimen = last_vial['specimens'][0];
+
+        update_datepicker($(element).find("input[name*='date_collected']"), last_specimen['date_collected']);
+
+        $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
+        $(element).find("div.inner-repeater").find("input[name*='specimen_freezer']").val(last_specimen["specimen_freezer"]);
+        $(element).find("div.inner-repeater").find("input[name*='specimen_box']").val(last_specimen["specimen_box"]);
+        $(element).find("div.inner-repeater").find("input[name*='dna_freezer']").val(last_specimen["dna_freezer"]);
+        $(element).find("div.inner-repeater").find("input[name*='dna_box']").val(last_specimen["dna_box"]);
+        $(element).find("div.inner-repeater").find("textarea[name*='comments']").val(last_specimen["comments"]);
+        $(element).find("input[value='"+last_specimen["measurement"]+"']").prop('checked', true);
+    };
 
 };
 
@@ -479,10 +496,10 @@ var FormRepeater = function () {
                         autoclose: true,
                         format: "dd/MM/yyyy"
                     }).on('changeDate', function(ev){
-                        var sample_date = $(ev.target).closest("div.col-md-2").next("div.col-md-2").find("input[name*='sample_date_received']");
-                        $(sample_date).val("");
-                        $(sample_date).prop("disabled", false);
-                        $(sample_date).datepicker("setStartDate", ev.target.value)
+                        // var sample_date = $(ev.target).closest("div.col-md-2").next("div.col-md-2").find("input[name*='sample_date_received']");
+                        // $(sample_date).val("");
+                        // $(sample_date).prop("disabled", false);
+                        // $(sample_date).datepicker("setStartDate", ev.target.value)
                     });
                     $("input[name*='sample_date_received']").datepicker({
                         rtl: App.isRTL(),
@@ -536,8 +553,8 @@ var FormRepeater = function () {
                         }
                     });
 
-                    $(this).find("input[name*='sample_date_received']").prop("disabled", true);
-                    $(this).find("input[name*='date_collected']").prop("disabled", true);
+                    // $(this).find("input[name*='sample_date_received']").prop("disabled", true);
+                    // $(this).find("input[name*='date_collected']").prop("disabled", true);
 
                     $("input[name*='collected']").datepicker({
                         rtl: App.isRTL(),
@@ -602,12 +619,12 @@ jQuery(document).ready(function() {
         autoclose: true,
         format: "dd/MM/yyyy"
     }).on('changeDate', function(ev){
-        if (ev.target.name.includes("sample_date_sampled")) {
-            var sample_date = $(ev.target).closest("div.col-md-2").next("div.col-md-2").find("input[name*='sample_date_received']");
-            $(sample_date).val("");
-            $(sample_date).prop("disabled", false);
-            $(sample_date).datepicker("setStartDate", ev.target.value);
-        }
+        // if (ev.target.name.includes("sample_date_sampled")) {
+            // var sample_date = $(ev.target).closest("div.col-md-2").next("div.col-md-2").find("input[name*='sample_date_received']");
+            // $(sample_date).val("");
+        //     $(sample_date).prop("disabled", false);
+        //     $(sample_date).datepicker("setStartDate", ev.target.value);
+        // }
         if (ev.target.name.includes("sample_date_received")) {
             var dna_collection_date = $(ev.target).closest("div.mt-repeater-item").find("input[name*='date_collected']");
             $(dna_collection_date).val("");
@@ -616,8 +633,8 @@ jQuery(document).ready(function() {
         }
     });
 
-    $("input[name*='sample_date_received']").prop("disabled", true);
-    $("input[name*='date_collected']").prop("disabled", true);
+    // $("input[name*='sample_date_received']").prop("disabled", true);
+    // $("input[name*='date_collected']").prop("disabled", true);
 
     $("input[name*='latitude']").inputmask({
         "mask": "([-]8[7])|([-]90)\˚ [t]7\' [t]7.[7]7\"",

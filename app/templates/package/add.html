@@ -92,7 +92,7 @@
                                                     <label class="control-label col-md-3">{{ form.date_sent.label }}</label>
                                                     <div class="col-md-9">
                                                         <div class="input-group date date-picker" data-date-format="dd-mm-yy">
-                                                            {{ form.date_sent(class="form-control") }}
+                                                            {{ form.date_sent(class="form-control", autocomplete="off") }}
                                                             <span class="input-group-btn">
                                                                 <button class="btn default" type="button">
                                                                     <i class="fa fa-calendar"></i>
@@ -109,7 +109,7 @@
                                                     <label class="control-label col-md-3">{{ form.date_received.label }}</label>
                                                     <div class="col-md-9">
                                                         <div class="input-group date date-picker" data-date-format="dd-mm-yy">
-                                                            {{ form.date_received(class="form-control") }}
+                                                            {{ form.date_received(class="form-control", autocomplete="off") }}
                                                             <span class="input-group-btn">
                                                                 <button class="btn default" type="button">
                                                                     <i class="fa fa-calendar"></i>
@@ -219,7 +219,7 @@
                                                             <label class="control-label">{{ sample_form.sample_date_sampled.label }}</label>
                                                             <br/>
                                                             <div class="input-group date date-picker col-md-12" data-date-format="dd-mm-yy">
-                                                                {{ sample_form.sample_date_sampled(class="input-group form-control", readonly=true) }}
+                                                                {{ sample_form.sample_date_sampled(class="input-group form-control", autocomplete="off") }}
                                                                 <span class="input-group-btn">
                                                                     <button class="btn default" type="button">
                                                                         <i class="fa fa-calendar"></i>
@@ -235,7 +235,7 @@
                                                             <label class="control-label">{{ sample_form.sample_date_received.label }}</label>
                                                             <br/>
                                                             <div class="input-group date date-picker col-md-12" data-date-format="dd-mm-yy">
-                                                                {{ sample_form.sample_date_received(class="input-group form-control", readonly=true) }}
+                                                                {{ sample_form.sample_date_received(class="input-group form-control", autocomplete="off") }}
                                                                 <span class="input-group-btn">
                                                                     <button class="btn default" type="button">
                                                                         <i class="fa fa-calendar"></i>
@@ -359,7 +359,7 @@
                                                 </div>
                                                 <!--/row-->
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <div class="mt-repeater-input">
                                                             <label class="control-label">{{ sample_form.lineage_id.label }}</label>
                                                             <br/>
@@ -393,6 +393,13 @@
                                                             </label>
                                                             {% endfor %}
                                                         </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-1">
+                                                        <div class="mt-repeater-input">
+                                                            <label class="control-label">{{ sample_form.specimens_in_received_vial.label }}</label>
+                                                                <br/>
+                                                                {{ sample_form.specimens_in_received_vial(class="form-control") }} </div>
                                                     </div>
                                                     <!--/span-->
                                                     <div class="col-md-2">
@@ -432,7 +439,7 @@
                                                                                 <label class="control-label">{{ specimen_form.date_collected.label }}</label>
                                                                                 <br/>
                                                                                 <div class="input-group date date-picker col-md-12" data-date-format="dd-mm-yy">
-                                                                                    {{ specimen_form.date_collected(class="form-control", readonly=true) }}
+                                                                                    {{ specimen_form.date_collected(class="form-control", autocomplete="off") }}
                                                                                     <span class="input-group-btn">
                                                                                         <button class="btn default" type="button">
                                                                                             <i class="fa fa-calendar"></i>

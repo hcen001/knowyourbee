@@ -38,6 +38,8 @@ class Sample(Base):
     lineage_id              = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
     origin_country          = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
 
+    specimens_in_received_vial       = db.Column(db.Integer, nullable=True)
+
     #Sample data and location
     sender_source_id        = db.Column(db.String(32), nullable=False)
     origin_locality         = db.Column(db.String(128), nullable=True)
@@ -88,6 +90,7 @@ class Sample(Base):
         self.longitude = kwargs.get('longitude') or None
         self.additional_gps_info = kwargs.get('additional_gps_info') or None
         self.additional_info = kwargs.get('additional_info') or None
+        self.specimens_in_received_vial = kwargs.get('specimens_in_received_vial') or None
 
     def collected_by(self):
         return self.collector
@@ -103,9 +106,6 @@ class Sample(Base):
 
     def specimens_in_vial(self):
         return len(self.specimens)
-
-    def number_of_specimens_in_vial(self):
-        return len(self.specimens_in_vial())
 
     def sample_quality(self):
         return self.sample_quality

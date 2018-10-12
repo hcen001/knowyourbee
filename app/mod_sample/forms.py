@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import DateField, SelectField, RadioField, StringField, TextAreaField
+from wtforms import DateField, SelectField, RadioField, StringField, TextAreaField, IntegerField
 from wtforms.validators import InputRequired, Optional
+from wtforms.widgets.html5 import NumberInput
 from app.mod_package.models import Location, Person
 from app.mod_util.models import Country
 
@@ -22,6 +23,7 @@ class SampleForm(FlaskForm):
     process_location        = SelectField('Processed at', validators=[InputRequired()])
     sample_date_sampled     = DateField('Date sampled', format='%d-%m-%Y', validators=[Optional()])
     sample_date_received    = DateField('Date received', format='%d-%m-%Y', validators=[Optional()])
+    specimens_in_received_vial  = IntegerField('# spec. in vial', widget=NumberInput(), validators=[Optional()])
 
     # freezer                 = StringField('Freezer', validators=[Optional()])
     # shelf                   = StringField('Shelf', validators=[Optional()])

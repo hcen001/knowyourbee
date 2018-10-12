@@ -88,8 +88,8 @@ def add():
                 sample['package_id'] = package.id
                 sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
                 sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
-                sample['latitude'] = parse_l(sample['latitude'])
-                sample['longitude'] = parse_l(sample['longitude'])
+                sample['latitude'] = parse_l(sample['latitude']) if sample['latitude'] else None
+                sample['longitude'] = parse_l(sample['longitude']) if sample['longitude'] else None
                 sample_db = Sample(**sample)
                 sample_db.add_or_update()
                 package.samples.append(sample_db)
