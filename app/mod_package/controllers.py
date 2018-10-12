@@ -86,8 +86,8 @@ def add():
             samples = data['samples']
             for _, sample in samples.items():
                 sample['package_id'] = package.id
-                sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
-                sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
+                sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y') if sample['sample_date_sampled'] is not '' else None
+                sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y') if sample['sample_date_received'] is not '' else None
                 sample['latitude'] = parse_l(sample['latitude']) if sample['latitude'] else None
                 sample['longitude'] = parse_l(sample['longitude']) if sample['longitude'] else None
                 sample_db = Sample(**sample)
@@ -100,7 +100,7 @@ def add():
                     specimen_db.add_or_update()
                     sample_db.specimens.append(specimen_db)
         except IntegrityError as e:
-            print(e)
+            # print(e)
             flash('Package with ID {} is already registered in the database.'.format(package.package_id), 'danger')
             return redirect(url_for('package.index'))
         else:
@@ -131,30 +131,30 @@ def add_vials(id):
     if request.method == 'POST':
         data = parse_multi_form(request.form)
         pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(data)
+        # pp.pprint(data)
 
         try:
             samples = data['samples']
             for _, sample in samples.items():
                 sample['package_id'] = package.id
-                sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y')
-                sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y')
-                sample['latitude'] = parse_l(sample['latitude'])
-                sample['longitude'] = parse_l(sample['longitude'])
+                sample['sample_date_sampled'] = datetime.strptime(sample['sample_date_sampled'],'%d/%B/%Y') if sample['sample_date_sampled'] is not '' else None
+                sample['sample_date_received'] = datetime.strptime(sample['sample_date_received'],'%d/%B/%Y') if sample['sample_date_received'] is not '' else None
+                sample['latitude'] = parse_l(sample['latitude']) if sample['latitude'] else None
+                sample['longitude'] = parse_l(sample['longitude']) if sample['longitude'] else None
+
                 sample_db = Sample(**sample)
                 sample_db.add_or_update()
                 package.samples.append(sample_db)
                 for _, specimen in sample['specimens'].items():
                     specimen['sample_id'] = sample_db.id
-                    if specimen['date_collected']:
-                        specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y')
-                    else:
-                        specimen['date_collected'] = None
+                    specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y') if specimen['date_collected'] is not '' else None
+                    pp.pprint(specimen)
                     specimen_db = Specimen(**specimen)
                     specimen_db.add_or_update()
                     sample_db.specimens.append(specimen_db)
         except Exception as e:
             flash('An error occured while trying to update package with ID {}.'.format(package.package_id), 'danger')
+            # print(e)
             return redirect(url_for('package.details', id=package.id))
         else:
             sample_db.save()

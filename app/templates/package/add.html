@@ -434,7 +434,7 @@
                                                                                 {{ specimen_form.dna(class="form-control") }} </div>
                                                                         </div>
                                                                         <!--/span-->
-                                                                        <div class="col-md-2">
+                                                                        <div class="col-md-3">
                                                                             <div class="mt-repeater-input mt-checkbox-inline">
                                                                                 <label class="control-label">{{ specimen_form.date_collected.label }}</label>
                                                                                 <br/>
@@ -450,16 +450,11 @@
                                                                             </div>
                                                                         </div>
                                                                         <!--/span-->
-                                                                        <div class="col-md-3">
-                                                                            <div class="mt-repeater-input mt-radio-inline">
-                                                                                <label class="control-label">{{ specimen_form.measurement.label }}</label>
+                                                                        <div class="col-md-2">
+                                                                            <div class="mt-repeater-input">
+                                                                                <label class="control-label">{{ specimen_form.measurement_id.label }}</label>
                                                                                 <br/>
-                                                                                {% for subfield in specimen_form.measurement %}
-                                                                                <label class="mt-radio">
-                                                                                    {{ subfield }} {{subfield.label}}
-                                                                                    <span></span>
-                                                                                </label>
-                                                                                {% endfor %}
+                                                                                {{ specimen_form.measurement_id(class="form-control select2") }}
                                                                             </div>
                                                                         </div>
                                                                         <!--/span-->

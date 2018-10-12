@@ -581,7 +581,7 @@ var FormRepeater = function () {
                                 autoclose: true,
                                 format: "dd/MM/yyyy"
                             });
-
+                            create_select2($("select[name*='measurement_id']"), "DNA measurement");
                             copy_previous_specimen($(this));
                         },
 
@@ -612,6 +612,7 @@ jQuery(document).ready(function() {
     create_select2($("#lineage_id"), "Select lineage");
     create_select2($("#caste_id"), "Select caste");
     create_select2($("#development_stage_id"), "Select dev stage");
+    create_select2($("#measurement_id"), "DNA measurement");
 
     $('#sample_date_sampled, #sample_date_received, #date_collected').datepicker({
         rtl: App.isRTL(),

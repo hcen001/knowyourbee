@@ -154,7 +154,7 @@ class Genus(TaxonBase):
         return data
 
     def __repr__(self):
-        return '<Genus: ID={}, name={}>'.format(self.genus_id, self.name)
+        return '<Genus: ID={}, name={}>'.format(self.id, self.name)
 
 class Species(TaxonBase):
 
@@ -178,7 +178,7 @@ class Species(TaxonBase):
         return data
 
     def __repr__(self):
-        return '<Species: ID={}, name={}>'.format(self.species_id, self.name)
+        return '<Species: ID={}, name={}>'.format(self.id, self.name)
 
 class Subspecies(TaxonBase):
 
@@ -203,7 +203,7 @@ class Subspecies(TaxonBase):
         return data
 
     def __repr__(self):
-        return '<Subspecies: ID={}, name={}>'.format(self.subspecies_id, self.name)
+        return '<Subspecies: ID={}, name={}>'.format(self.id, self.name)
 
 class Lineage(TaxonBase):
 
@@ -228,7 +228,7 @@ class Lineage(TaxonBase):
         return data
 
     def __repr__(self):
-        return '<Lineage: ID={}, name={}>'.format(self.lineage_id, self.name)
+        return '<Lineage: ID={}, name={}>'.format(self.id, self.name)
 
 class Caste(TaxonBase):
 
@@ -247,7 +247,7 @@ class Caste(TaxonBase):
         return data
 
     def __repr__(self):
-        return '<Caste: ID={}, name={}>'.format(self.lineage_id, self.name)
+        return '<Caste: ID={}, name={}>'.format(self.id, self.name)
 
 class Stage(TaxonBase):
 
@@ -266,6 +266,6 @@ class Stage(TaxonBase):
         return data
 
     def __repr__(self):
-        return '<Stage: ID={}, name={}>'.format(self.lineage_id, self.name)
+        return '<Stage: ID={}, name={}>'.format(self.id, self.name)
 
 # from app.mod_specimen.models import Specimen
