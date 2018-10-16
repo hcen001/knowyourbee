@@ -1,4 +1,6 @@
 config/production.py
+start.sh
+app/__init__.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
