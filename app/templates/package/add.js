@@ -602,6 +602,33 @@ jQuery(document).ready(function() {
     FormWizard.init();
     FormRepeater.init();
 
+    $("#id-availability").hide();
+
+    $("#package_id").blur(function(){
+        var package_id = $(this).val().toUpperCase();
+        if (package_id !== '') {
+            $.ajax({
+                url: $SCRIPT_ROOT+'/packages/check_id',
+                type: 'POST',
+                dataType: "json",
+                contentType:"application/json",
+                data: JSON.stringify({"package_id": package_id}),
+            })
+            .done(function(result) {
+                if (result['available']) {
+                    $("#id-availability div div p").html("<strong>"+$("#package_id").val().toUpperCase()+"</strong> is <span class=\"label label-success\">Available</span>");
+                }
+                else {
+                    $("#id-availability div div p").html("<strong>"+$("#package_id").val().toUpperCase()+"</strong> is <span class=\"label label-danger\">Not available</span>");
+                }
+                $("#id-availability").show();
+            });
+        }
+        else {
+            $("#id-availability").hide();
+        };
+    });
+
     create_select2($("#collector"), "Select a collector");
     create_select2($("#processor"), "Select a processor");
     create_select2($("#process_location"), "Process location");

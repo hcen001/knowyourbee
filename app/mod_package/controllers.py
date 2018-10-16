@@ -27,6 +27,15 @@ def index():
     js = render_template('package/index.js')
     return render_template('package/index.html', user=current_user, title='Packages', js=js)
 
+@mod_package.route('/check_id', methods=['POST'])
+@login_required
+def check_id():
+
+    if request.method == 'POST':
+        data = request.get_json()
+        pkg = Package.query.filter(Package.package_id == data['package_id']).all()
+    return jsonify({'available': False if len(pkg) > 0 else True})
+
 @mod_package.route('/all', methods=['GET'])
 @login_required
 def packages():
