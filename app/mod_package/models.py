@@ -138,7 +138,7 @@ class Person(PersonBase):
 
     __tablename__ = 'person'
 
-    role            = db.Column(ARRAY(db.String(4)), default='{P}', server_default='{P}', nullable=False)
+    role            = db.Column(ARRAY(db.Text()), default='{P}', server_default='{P}', nullable=False)
 
     def __init__(self, **kwargs):
 

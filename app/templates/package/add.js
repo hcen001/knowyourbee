@@ -382,9 +382,9 @@ var copy_previous_specimen = function(element) {
     if (specimens.length > 1) {
         var last_specimen = specimens[specimens.length-2];
 
-        update_datepicker($(element).find("input[name*='date_collected']"), last_specimen["date_collected"]);
         var start_date = $(element).closest("div.mt-repeater-item").prev("div.mt-repeater-item").find("input[name*='date_collected']").datepicker('getStartDate');
         update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
+        update_datepicker($(element).find("input[name*='date_collected']"), last_specimen["date_collected"]);
         copy_specimen_data(element, last_specimen);
     };
 };
@@ -400,6 +400,8 @@ var copy_previous_vial = function(element) {
     var vials = repeater['samples'];
     if (vials.length > 1) {
         var last_vial = vials[vials.length-2];
+
+        console.log(last_vial);
 
         $(element).find("input[name*='sender_source_id']").val(last_vial['sender_source_id']);
         $(element).find("input[name*='latitude']").val(last_vial['latitude']);
@@ -428,10 +430,11 @@ var copy_previous_vial = function(element) {
         $(element).find("select[name*='development_stage_id']").val(last_vial["development_stage_id"]).trigger("change.select2");
 
         var start_date = $(element).prev().find("input[name*='sample_date_received']").datepicker('getStartDate');
-        // update_datepicker_startDate($(element).find("input[name*='date_received']"), start_date);
 
-        update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
-        // $(element).find("input[name*='date_collected']").prop("disabled", false);
+        update_datepicker_startDate($(element).find("input[name*='date_received']"), start_date);
+
+        // console.log($(element).find("input[name*='date_collected']"));
+
         update_datepicker($(element).find("input[name*='sample_date_received']"), last_vial["sample_date_received"]);
         update_datepicker($(element).find("input[name*='sample_date_sampled']"), last_vial["sample_date_sampled"]);
 
@@ -442,6 +445,9 @@ var copy_previous_vial = function(element) {
 
         var last_specimen = last_vial['specimens'][0];
 
+        // console.log($(element).find("input[name*='date_collected']"));
+
+        update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
         update_datepicker($(element).find("input[name*='date_collected']"), last_specimen['date_collected']);
 
         $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
@@ -483,16 +489,19 @@ var FormRepeater = function () {
                     create_select2($("select[name*='development_stage_id']"), "Select dev stage");
                     create_select2($("select[name*='measurement_id']"), "DNA measurement");
 
-                    $("input[name*='sample_date_sampled']").datepicker({
+                    $("input[name*='collected']").datepicker({
                         rtl: App.isRTL(),
                         orientation: "left",
                         autoclose: true,
                         format: "dd/MM/yyyy"
-                    }).on('changeDate', function(ev){
-                        // var sample_date = $(ev.target).closest("div.col-md-2").next("div.col-md-2").find("input[name*='sample_date_received']");
-                        // $(sample_date).val("");
-                        // $(sample_date).prop("disabled", false);
-                        // $(sample_date).datepicker("setStartDate", ev.target.value)
+                    });
+
+                    $("input[name*='sample_date_sampled']").datepicker({
+                        rtl: App.isRTL(),
+                        orientation: "left",
+                        autoclose: true,
+                        format: "dd/MM/yyyy",
+                        endDate: $("#date_received").datepicker("getDate")
                     });
                     $("input[name*='sample_date_received']").datepicker({
                         rtl: App.isRTL(),
@@ -507,29 +516,37 @@ var FormRepeater = function () {
                     });
 
                     $("input[name*='latitude']").inputmask({
-                        "mask": "([-]8[7])|([-]90)\˚ [t]7\' [t]7.[7]7\"",
-                        "greedy": false,
+                        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
                         "autoUnmask": true,
-                        "skipOptionalCharacter": "-",
+                        "greedy": false,
                         "placeholder": "",
+                        "skipOptionalCharacter": " ",
                         "definitions": {
-                            "t": {
-                                validator: "[0-5]"
+                            "i": {
+                                validator: "[0-5]" //t
                             },
-                            "8": {
-                                validator: "[0-8]"
+                            "b": {
+                                validator: "[0-8]" //8
                             },
-                            "7": {
-                                validator: "[0-9]"
+                            "c": {
+                                validator: "[0-9]" //7
+                            },
+                            "N": {
+                                validator: "n|N",
+                                casing: "upper"
+                            },
+                            "S": {
+                                validator: "s|S",
+                                casing: "upper"
                             }
                         }
                     });
                     $("input[name*='longitude']").inputmask({
-                        "mask": "[-](1r7|77)\˚ [t]7\' [t]7.[7]7\"",
+                        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
                         "autoUnmask": true,
                         "greedy": false,
-                        "skipOptionalCharacter": "-",
                         "placeholder": "",
+                        "skipOptionalCharacter": " ",
                         "definitions": {
                             "r": {
                                 validator: "[0-7]"
@@ -540,21 +557,19 @@ var FormRepeater = function () {
                             "7": {
                                 validator: "[0-9]"
                             },
-                            "d": {
-                                validator: "^-?(180|1[0-7][0-9]|[0-9]?[0-9])"
+                            "E": {
+                                validator: "e|E",
+                                casing: "upper"
+                            },
+                            "W": {
+                                validator: "w|W",
+                                casing: "upper"
                             }
-                        }
+                        },
                     });
 
                     // $(this).find("input[name*='sample_date_received']").prop("disabled", true);
                     // $(this).find("input[name*='date_collected']").prop("disabled", true);
-
-                    $("input[name*='collected']").datepicker({
-                        rtl: App.isRTL(),
-                        orientation: "left",
-                        autoclose: true,
-                        format: "dd/MM/yyyy"
-                    });
 
                     copy_previous_vial($(this));
                 },
@@ -651,36 +666,44 @@ jQuery(document).ready(function() {
             $(dna_collection_date).val("");
             $(dna_collection_date).prop("disabled", false);
             $(dna_collection_date).datepicker("setStartDate", ev.target.value);
-        }
+        };
     });
 
     // $("input[name*='sample_date_received']").prop("disabled", true);
     // $("input[name*='date_collected']").prop("disabled", true);
 
     $("input[name*='latitude']").inputmask({
-        "mask": "([-]8[7])|([-]90)\˚ [t]7\' [t]7.[7]7\"",
-        "greedy": false,
+        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
         "autoUnmask": true,
-        "skipOptionalCharacter": "-",
+        "greedy": false,
         "placeholder": "",
+        "skipOptionalCharacter": " ",
         "definitions": {
-            "t": {
-                validator: "[0-5]"
+            "i": {
+                validator: "[0-5]" //t
             },
-            "8": {
-                validator: "[0-8]"
+            "b": {
+                validator: "[0-8]" //8
             },
-            "7": {
-                validator: "[0-9]"
+            "c": {
+                validator: "[0-9]" //7
+            },
+            "N": {
+                validator: "n|N",
+                casing: "upper"
+            },
+            "S": {
+                validator: "s|S",
+                casing: "upper"
             }
         }
     });
     $("input[name*='longitude']").inputmask({
-        "mask": "[-](1r7|77)\˚ [t]7\' [t]7.[7]7\"",
+        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
         "autoUnmask": true,
         "greedy": false,
-        "skipOptionalCharacter": "-",
         "placeholder": "",
+        "skipOptionalCharacter": " ",
         "definitions": {
             "r": {
                 validator: "[0-7]"
@@ -691,8 +714,13 @@ jQuery(document).ready(function() {
             "7": {
                 validator: "[0-9]"
             },
-            "d": {
-                validator: "^-?(180|1[0-7][0-9]|[0-9]?[0-9])"
+            "E": {
+                validator: "e|E",
+                casing: "upper"
+            },
+            "W": {
+                validator: "w|W",
+                casing: "upper"
             }
         },
     });

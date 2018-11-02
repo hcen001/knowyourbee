@@ -50,16 +50,6 @@ def details(id):
     js = render_template('package/details.js', package_id=package_data.id)
     return render_template('package/details.html', title='Details for package with ID {}'.format(package_data.id), user=current_user, package=package_data, js=js)
 
-@mod_package.route('/country/<id>/states', methods=['GET'])
-@login_required
-def states(id):
-    return jsonify(State.select_list(id))
-
-@mod_package.route('/state/<id>/cities', methods=['GET'])
-@login_required
-def cities(id):
-    return jsonify(City.select_list(id))
-
 @mod_package.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():

@@ -172,29 +172,37 @@ var FormRepeater = function () {
                     });
 
                     $("input[name*='latitude']").inputmask({
-                        "mask": "([-]8[7])|([-]90)\˚ [t]7\' [t]7.[7]7\"",
-                        "greedy": false,
+                        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
                         "autoUnmask": true,
-                        "skipOptionalCharacter": "-",
+                        "greedy": false,
                         "placeholder": "",
+                        "skipOptionalCharacter": " ",
                         "definitions": {
-                            "t": {
-                                validator: "[0-5]"
+                            "i": {
+                                validator: "[0-5]" //t
                             },
-                            "8": {
-                                validator: "[0-8]"
+                            "b": {
+                                validator: "[0-8]" //8
                             },
-                            "7": {
-                                validator: "[0-9]"
+                            "c": {
+                                validator: "[0-9]" //7
+                            },
+                            "N": {
+                                validator: "n|N",
+                                casing: "upper"
+                            },
+                            "S": {
+                                validator: "s|S",
+                                casing: "upper"
                             }
                         }
                     });
                     $("input[name*='longitude']").inputmask({
-                        "mask": "[-](1r7|77)\˚ [t]7\' [t]7.[7]7\"",
+                        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
                         "autoUnmask": true,
                         "greedy": false,
-                        "skipOptionalCharacter": "-",
                         "placeholder": "",
+                        "skipOptionalCharacter": " ",
                         "definitions": {
                             "r": {
                                 validator: "[0-7]"
@@ -205,10 +213,15 @@ var FormRepeater = function () {
                             "7": {
                                 validator: "[0-9]"
                             },
-                            "d": {
-                                validator: "^-?(180|1[0-7][0-9]|[0-9]?[0-9])"
+                            "E": {
+                                validator: "e|E",
+                                casing: "upper"
+                            },
+                            "W": {
+                                validator: "w|W",
+                                casing: "upper"
                             }
-                        }
+                        },
                     });
 
                     // $(this).find("input[name*='sample_date_received']").prop("disabled", true);
@@ -295,29 +308,37 @@ jQuery(document).ready(function() {
     // $("input[name*='date_collected']").prop("disabled", true);
 
     $("input[name*='latitude']").inputmask({
-        "mask": "([-]8[7])|([-]90)\˚ [t]7\' [t]7.[7]7\"",
-        "greedy": false,
+        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
         "autoUnmask": true,
-        "skipOptionalCharacter": "-",
+        "greedy": false,
         "placeholder": "",
+        "skipOptionalCharacter": " ",
         "definitions": {
-            "t": {
-                validator: "[0-5]"
+            "i": {
+                validator: "[0-5]" //t
             },
-            "8": {
-                validator: "[0-8]"
+            "b": {
+                validator: "[0-8]" //8
             },
-            "7": {
-                validator: "[0-9]"
+            "c": {
+                validator: "[0-9]" //7
+            },
+            "N": {
+                validator: "n|N",
+                casing: "upper"
+            },
+            "S": {
+                validator: "s|S",
+                casing: "upper"
             }
         }
     });
     $("input[name*='longitude']").inputmask({
-        "mask": "[-](1r7|77)\˚ [t]7\' [t]7.[7]7\"",
+        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
         "autoUnmask": true,
         "greedy": false,
-        "skipOptionalCharacter": "-",
         "placeholder": "",
+        "skipOptionalCharacter": " ",
         "definitions": {
             "r": {
                 validator: "[0-7]"
@@ -328,10 +349,15 @@ jQuery(document).ready(function() {
             "7": {
                 validator: "[0-9]"
             },
-            "d": {
-                validator: "^-?(180|1[0-7][0-9]|[0-9]?[0-9])"
+            "E": {
+                validator: "e|E",
+                casing: "upper"
+            },
+            "W": {
+                validator: "w|W",
+                casing: "upper"
             }
-        }
+        },
     });
 
 });

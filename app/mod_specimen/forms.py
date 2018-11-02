@@ -17,6 +17,7 @@ class SpecimenForm(FlaskForm):
     specimen_freezer        = StringField('Specimen Freezer', validators=[InputRequired()])
     specimen_box            = StringField('Specimen Box', validators=[InputRequired()])
     dna_freezer             = StringField('DNA Freezer', validators=[Optional()])
+    wing_box                = StringField('Wing Box', validators=[Optional()])
     dna_box                 = StringField('DNA Box', validators=[Optional()])
     comments                = TextAreaField('Comments', validators=[Optional()])
 

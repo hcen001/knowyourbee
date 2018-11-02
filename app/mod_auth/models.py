@@ -1,5 +1,5 @@
 from app.models import Base, PersonBase
-from app import db, login
+from app import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -131,10 +131,6 @@ class AccountRequest(PersonBase):
 
     def __repr__(self):
         return '<Account request: email={}, name={}>'.format(self.email, self.full_name())
-
-@login.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
 
 class Role(Base):
 

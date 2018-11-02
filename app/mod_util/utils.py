@@ -6,15 +6,15 @@ from app.mod_util.models import Country, State
 from sqlalchemy.types import TypeDecorator, CHAR
 
 def parse_l(value):
-    degrees, minutes, seconds = value.split(" ")
+    degrees, minutes, seconds, direction = value.split(" ")
 
     degrees = degrees[:-1]
     minutes = minutes[:-1]
     seconds = seconds[:-1]
 
-    multiplier = 1 if float(degrees) > 0 else -1
+    multiplier = -1 if direction in ('S', 'W') else 1
 
-    return float(degrees) + multiplier*(float(minutes)/60) + multiplier*(float(seconds)/3600)
+    return multiplier * (float(degrees) + float(minutes)/60 + float(seconds)/3600)
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)

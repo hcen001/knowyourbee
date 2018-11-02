@@ -6,13 +6,14 @@ class Specimen(Base):
 
     __tablename__ = 'specimen'
 
-    collection_sample_id    = db.Column(db.String(32), nullable=False, default='122', server_default='122')
+    collection_sample_id    = db.Column(db.String(32), nullable=False, default='122', server_default='122', unique=True)
     dna                     = db.Column(db.Float, nullable=True)
     date_collected          = db.Column(db.DateTime, nullable=True)
     measurement_id          = db.Column(db.Integer, db.ForeignKey('measurement.id'), nullable=True)
     body_part               = db.Column(db.String(128), nullable=True)
     specimen_freezer        = db.Column(db.String(32), nullable=False)
     specimen_box            = db.Column(db.String(32), nullable=False)
+    wing_box                = db.Column(db.String(32), nullable=True)
     dna_freezer             = db.Column(db.String(32), nullable=True)
     dna_box                 = db.Column(db.String(32), nullable=True)
     comments                = db.Column(db.String(1024), nullable=True)
@@ -33,6 +34,7 @@ class Specimen(Base):
         self.body_part              = kwargs.get('body_part') or None
         self.specimen_freezer       = kwargs.get('specimen_freezer')
         self.specimen_box           = kwargs.get('specimen_box')
+        self.wing_box               = kwargs.get('wing_box') or None
         self.dna_freezer            = kwargs.get('dna_freezer') or None
         self.dna_box                = kwargs.get('dna_box') or None
         self.comments               = kwargs.get('comments') or None
