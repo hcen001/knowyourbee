@@ -24,6 +24,8 @@ from flask_login import LoginManager
 login = LoginManager(app)
 login.login_view = 'auth.login'
 
+from app.mod_auth.models import User
+
 ## commenting this exception helps debugging when there are issues with importing
 @login.user_loader
 def load_user(id):

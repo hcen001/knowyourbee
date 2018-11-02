@@ -34,9 +34,12 @@ var update_datepicker_startDate = function (datepicker, value) {
 
 var copy_specimen_data = function (element, last_specimen) {
     $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
-    $(element).find("input[name*='freezer']").val(last_specimen["freezer"]);
-    $(element).find("input[name*='box']").val(last_specimen["box"]);
-    $(element).find("input[value='"+last_specimen["measurement"]+"']").prop('checked', true);
+    $(element).find("input[name*='specimen_freezer']").val(last_specimen["specimen_freezer"]);
+    $(element).find("input[name*='specimen_box']").val(last_specimen["specimen_box"]);
+    $(element).find("input[name*='dna_freezer']").val(last_specimen["dna_freezer"]);
+    $(element).find("input[name*='dna_box']").val(last_specimen["dna_box"]);
+    $(element).find("input[name*='wing_box']").val(last_specimen["wing_box"]);
+    $(element).find("select[name*='measurement_id']").val(last_specimen["measurement_id"]).trigger("change.select2");
     $(element).find("textarea[name*='comments']").val(last_specimen["comments"]);
 };
 
@@ -73,21 +76,9 @@ var copy_previous_vial = function(element) {
         $(element).find("input[name*='locality']").val(last_vial['locality']);
         $(element).find("input[name*='hive']").val(last_vial['hive']);
         $(element).find("input[name*='additional_info']").val(last_vial['additional_info']);
+        $(element).find("input[name*='specimens_in_received_vial']").val(last_vial['specimens_in_received_vial']);
 
-        // $(element).find("input[name*='freezer']").filter(function(){
-        //     return !this.name.match(/specimens/);
-        // }).val(last_vial['freezer']);
-        // $(element).find("input[name*='shelf']").filter(function(){
-        //     return !this.name.match(/specimens/);
-        // }).val(last_vial['shelf']);
-        // $(element).find("input[name*='box']").filter(function(){
-        //     return !this.name.match(/specimens/);
-        // }).val(last_vial['box']);
-        // $(element).find("textarea[name*='comments']").val(last_vial['comments']);
-
-        $(element).find("input[value='"+last_vial["caste"]+"']").prop('checked', true);
         $(element).find("input[value='"+last_vial["gender"]+"']").prop('checked', true);
-        $(element).find("input[value='"+last_vial["stage"]+"']").prop('checked', true);
         $(element).find("input[value='"+last_vial["sample_quality"]+"']").prop('checked', true);
 
         $(element).find("select[name*='collector']").val(last_vial["collector"]).trigger("change.select2");
@@ -100,12 +91,13 @@ var copy_previous_vial = function(element) {
         $(element).find("select[name*='species_id']").val(last_vial["species_id"]).trigger("change.select2");
         $(element).find("select[name*='subspecies_id']").val(last_vial["subspecies_id"]).trigger("change.select2");
         $(element).find("select[name*='lineage_id']").val(last_vial["lineage_id"]).trigger("change.select2");
+        $(element).find("select[name*='caste_id']").val(last_vial["caste_id"]).trigger("change.select2");
+        $(element).find("select[name*='development_stage_id']").val(last_vial["development_stage_id"]).trigger("change.select2");
 
         var start_date = $(element).prev().find("input[name*='date_received']").datepicker('getStartDate');
-        // update_datepicker_startDate($(element).find("input[name*='date_received']"), start_date);
 
         update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
-        // $(element).find("input[name*='date_collected']").prop("disabled", false);
+
         update_datepicker($(element).find("input[name*='sample_date_received']"), last_vial["sample_date_received"]);
         update_datepicker($(element).find("input[name*='sample_date_sampled']"), last_vial["sample_date_sampled"]);
 
@@ -114,6 +106,7 @@ var copy_previous_vial = function(element) {
         }
 
         var last_specimen = last_vial['specimens'][0];
+        update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
         update_datepicker($(element).find("input[name*='date_collected']"), last_specimen['date_collected']);
 
         $(element).find("input[name*='body_part']").val(last_specimen["body_part"]);
@@ -121,7 +114,10 @@ var copy_previous_vial = function(element) {
         $(element).find("div.inner-repeater").find("input[name*='specimen_box']").val(last_specimen["specimen_box"]);
         $(element).find("div.inner-repeater").find("input[name*='dna_freezer']").val(last_specimen["dna_freezer"]);
         $(element).find("div.inner-repeater").find("input[name*='dna_box']").val(last_specimen["dna_box"]);
-        $(element).find("input[value='"+last_specimen["measurement"]+"']").prop('checked', true);
+        $(element).find("div.inner-repeater").find("input[name*='wing_box']").val(last_specimen["wing_box"]);
+        $(element).find("div.inner-repeater").find("select[name*='measurement_id']").val(last_specimen["measurement_id"]).trigger("change.select2");
+        $(element).find("div.inner-repeater").find("textarea[name*='comments']").val(last_specimen["comments"]);
+
     };
 
 };
@@ -252,7 +248,7 @@ var FormRepeater = function () {
                                 autoclose: true,
                                 format: "dd/MM/yyyy"
                             });
-
+                            create_select2($("select[name*='measurement_id']"), "DNA measurement");
                             copy_previous_specimen($(this));
                         },
 
