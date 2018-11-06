@@ -8,11 +8,15 @@ from sqlalchemy.types import TypeDecorator, CHAR
 def parse_l(value):
     degrees, minutes, seconds, direction = value.split(" ")
 
-    degrees = degrees[:-1]
-    minutes = minutes[:-1]
-    seconds = seconds[:-1]
+    # degrees = degrees[:-1]
+    # minutes = minutes[:-1]
+    # seconds = seconds[:-1]
 
-    multiplier = -1 if direction in ('S', 'W') else 1
+    # print(degrees)
+    # print(minutes)
+    # print(seconds)
+
+    multiplier = -1 if direction.upper() in ('S', 'W') else 1
 
     return multiplier * (float(degrees) + float(minutes)/60 + float(seconds)/3600)
 

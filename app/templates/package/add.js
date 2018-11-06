@@ -1,5 +1,19 @@
 updateMenu('#packages');
 
+$.validator.addMethod("unique", function(value, element) {
+    var parentForm = $(element).closest('form');
+    var timeRepeated = 0;
+    if (value != '') {
+        $(parentForm.find("[name*='collection_sample_id']")).each(function () {
+            if ($(this).val() === value) {
+                timeRepeated++;
+            }
+        });
+    }
+    return timeRepeated === 1 || timeRepeated === 0;
+
+}, "* Duplicate");
+
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -429,7 +443,7 @@ var copy_previous_vial = function(element) {
 
         var start_date = $(element).prev().find("input[name*='sample_date_received']").datepicker('getStartDate');
 
-        update_datepicker_startDate($(element).find("input[name*='date_received']"), start_date);
+        update_datepicker_startDate($(element).find("input[name*='sample_date_received']"), start_date);
 
         update_datepicker($(element).find("input[name*='sample_date_received']"), last_vial["sample_date_received"]);
         update_datepicker($(element).find("input[name*='sample_date_sampled']"), last_vial["sample_date_sampled"]);
@@ -509,58 +523,58 @@ var FormRepeater = function () {
                         $(dna_collection_date).datepicker("setStartDate", ev.target.value)
                     });
 
-                    $("input[name*='latitude']").inputmask({
-                        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
-                        "autoUnmask": true,
-                        "greedy": false,
-                        "placeholder": "",
-                        "skipOptionalCharacter": " ",
-                        "definitions": {
-                            "i": {
-                                validator: "[0-5]" //t
-                            },
-                            "b": {
-                                validator: "[0-8]" //8
-                            },
-                            "c": {
-                                validator: "[0-9]" //7
-                            },
-                            "N": {
-                                validator: "n|N",
-                                casing: "upper"
-                            },
-                            "S": {
-                                validator: "s|S",
-                                casing: "upper"
-                            }
-                        }
-                    });
-                    $("input[name*='longitude']").inputmask({
-                        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
-                        "autoUnmask": true,
-                        "greedy": false,
-                        "placeholder": "",
-                        "skipOptionalCharacter": " ",
-                        "definitions": {
-                            "r": {
-                                validator: "[0-7]"
-                            },
-                            "t": {
-                                validator: "[0-5]"
-                            },
-                            "7": {
-                                validator: "[0-9]"
-                            },
-                            "E": {
-                                validator: "e|E",
-                                casing: "upper"
-                            },
-                            "W": {
-                                validator: "w|W",
-                                casing: "upper"
-                            }
-                        },
-                    });
+                    // $("input[name*='latitude']").inputmask({
+                    //     "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
+                    //     "autoUnmask": true,
+                    //     "greedy": false,
+                    //     "placeholder": "",
+                    //     "skipOptionalCharacter": " ",
+                    //     "definitions": {
+                    //         "i": {
+                    //             validator: "[0-5]" //t
+                    //         },
+                    //         "b": {
+                    //             validator: "[0-8]" //8
+                    //         },
+                    //         "c": {
+                    //             validator: "[0-9]" //7
+                    //         },
+                    //         "N": {
+                    //             validator: "n|N",
+                    //             casing: "upper"
+                    //         },
+                    //         "S": {
+                    //             validator: "s|S",
+                    //             casing: "upper"
+                    //         }
+                    //     }
+                    // });
+                    // $("input[name*='longitude']").inputmask({
+                    //     "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
+                    //     "autoUnmask": true,
+                    //     "greedy": false,
+                    //     "placeholder": "",
+                    //     "skipOptionalCharacter": " ",
+                    //     "definitions": {
+                    //         "r": {
+                    //             validator: "[0-7]"
+                    //         },
+                    //         "t": {
+                    //             validator: "[0-5]"
+                    //         },
+                    //         "7": {
+                    //             validator: "[0-9]"
+                    //         },
+                    //         "E": {
+                    //             validator: "e|E",
+                    //             casing: "upper"
+                    //         },
+                    //         "W": {
+                    //             validator: "w|W",
+                    //             casing: "upper"
+                    //         }
+                    //     },
+                    // });
 
                     // $(this).find("input[name*='sample_date_received']").prop("disabled", true);
                     // $(this).find("input[name*='date_collected']").prop("disabled", true);
@@ -666,57 +680,57 @@ jQuery(document).ready(function() {
     // $("input[name*='sample_date_received']").prop("disabled", true);
     // $("input[name*='date_collected']").prop("disabled", true);
 
-    $("input[name*='latitude']").inputmask({
-        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
-        "autoUnmask": true,
-        "greedy": false,
-        "placeholder": "",
-        "skipOptionalCharacter": " ",
-        "definitions": {
-            "i": {
-                validator: "[0-5]" //t
-            },
-            "b": {
-                validator: "[0-8]" //8
-            },
-            "c": {
-                validator: "[0-9]" //7
-            },
-            "N": {
-                validator: "n|N",
-                casing: "upper"
-            },
-            "S": {
-                validator: "s|S",
-                casing: "upper"
-            }
-        }
-    });
-    $("input[name*='longitude']").inputmask({
-        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
-        "autoUnmask": true,
-        "greedy": false,
-        "placeholder": "",
-        "skipOptionalCharacter": " ",
-        "definitions": {
-            "r": {
-                validator: "[0-7]"
-            },
-            "t": {
-                validator: "[0-5]"
-            },
-            "7": {
-                validator: "[0-9]"
-            },
-            "E": {
-                validator: "e|E",
-                casing: "upper"
-            },
-            "W": {
-                validator: "w|W",
-                casing: "upper"
-            }
-        },
-    });
+    // $("input[name*='latitude']").inputmask({
+    //     "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[c][c]c\" N|S",
+    //     "autoUnmask": true,
+    //     "greedy": false,
+    //     "placeholder": "",
+    //     "skipOptionalCharacter": " ",
+    //     "definitions": {
+    //         "i": {
+    //             validator: "[0-5]" //t
+    //         },
+    //         "b": {
+    //             validator: "[0-8]" //8
+    //         },
+    //         "c": {
+    //             validator: "[0-9]" //7
+    //         },
+    //         "N": {
+    //             validator: "n|N",
+    //             casing: "upper"
+    //         },
+    //         "S": {
+    //             validator: "s|S",
+    //             casing: "upper"
+    //         }
+    //     }
+    // });
+    // $("input[name*='longitude']").inputmask({
+    //     "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7][7]7\" E|W",
+    //     "autoUnmask": true,
+    //     "greedy": false,
+    //     "placeholder": "",
+    //     "skipOptionalCharacter": " ",
+    //     "definitions": {
+    //         "r": {
+    //             validator: "[0-7]"
+    //         },
+    //         "t": {
+    //             validator: "[0-5]"
+    //         },
+    //         "7": {
+    //             validator: "[0-9]"
+    //         },
+    //         "E": {
+    //             validator: "e|E",
+    //             casing: "upper"
+    //         },
+    //         "W": {
+    //             validator: "w|W",
+    //             casing: "upper"
+    //         }
+    //     },
+    // });
 
 });

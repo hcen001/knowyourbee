@@ -147,7 +147,6 @@ def add_vials(id):
                 for _, specimen in sample['specimens'].items():
                     specimen['sample_id'] = sample_db.id
                     specimen['date_collected'] = datetime.strptime(specimen['date_collected'],'%d/%B/%Y') if specimen['date_collected'] is not '' else None
-                    pp.pprint(specimen)
                     specimen_db = Specimen(**specimen)
                     specimen_db.add_or_update()
                     sample_db.specimens.append(specimen_db)

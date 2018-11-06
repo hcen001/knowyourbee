@@ -1,5 +1,19 @@
 updateMenu('#packages');
 
+$.validator.addMethod("unique", function(value, element) {
+    var parentForm = $(element).closest('form');
+    var timeRepeated = 0;
+    if (value != '') {
+        $(parentForm.find("[name*='collection_sample_id']")).each(function () {
+            if ($(this).val() === value) {
+                timeRepeated++;
+            }
+        });
+    }
+    return timeRepeated === 1 || timeRepeated === 0;
+
+}, "* Duplicate");
+
 $(".button-cancel").click(function(e){
     e.preventDefault();
     var choice = confirm("Are you sure you want to cancel? You will lose all data that has not been saved");
@@ -94,9 +108,9 @@ var copy_previous_vial = function(element) {
         $(element).find("select[name*='caste_id']").val(last_vial["caste_id"]).trigger("change.select2");
         $(element).find("select[name*='development_stage_id']").val(last_vial["development_stage_id"]).trigger("change.select2");
 
-        var start_date = $(element).prev().find("input[name*='date_received']").datepicker('getStartDate');
+        var start_date = $(element).prev().find("input[name*='sample_date_received']").datepicker('getStartDate');
 
-        update_datepicker_startDate($(element).find("input[name*='date_collected']"), start_date);
+        update_datepicker_startDate($(element).find("input[name*='sample_date_received']"), start_date);
 
         update_datepicker($(element).find("input[name*='sample_date_received']"), last_vial["sample_date_received"]);
         update_datepicker($(element).find("input[name*='sample_date_sampled']"), last_vial["sample_date_sampled"]);
@@ -167,58 +181,58 @@ var FormRepeater = function () {
                         $(dna_collection_date).datepicker("setStartDate", ev.target.value)
                     });
 
-                    $("input[name*='latitude']").inputmask({
-                        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
-                        "autoUnmask": true,
-                        "greedy": false,
-                        "placeholder": "",
-                        "skipOptionalCharacter": " ",
-                        "definitions": {
-                            "i": {
-                                validator: "[0-5]" //t
-                            },
-                            "b": {
-                                validator: "[0-8]" //8
-                            },
-                            "c": {
-                                validator: "[0-9]" //7
-                            },
-                            "N": {
-                                validator: "n|N",
-                                casing: "upper"
-                            },
-                            "S": {
-                                validator: "s|S",
-                                casing: "upper"
-                            }
-                        }
-                    });
-                    $("input[name*='longitude']").inputmask({
-                        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
-                        "autoUnmask": true,
-                        "greedy": false,
-                        "placeholder": "",
-                        "skipOptionalCharacter": " ",
-                        "definitions": {
-                            "r": {
-                                validator: "[0-7]"
-                            },
-                            "t": {
-                                validator: "[0-5]"
-                            },
-                            "7": {
-                                validator: "[0-9]"
-                            },
-                            "E": {
-                                validator: "e|E",
-                                casing: "upper"
-                            },
-                            "W": {
-                                validator: "w|W",
-                                casing: "upper"
-                            }
-                        },
-                    });
+                    // $("input[name*='latitude']").inputmask({
+                    //     "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
+                    //     "autoUnmask": true,
+                    //     "greedy": false,
+                    //     "placeholder": "",
+                    //     "skipOptionalCharacter": " ",
+                    //     "definitions": {
+                    //         "i": {
+                    //             validator: "[0-5]" //t
+                    //         },
+                    //         "b": {
+                    //             validator: "[0-8]" //8
+                    //         },
+                    //         "c": {
+                    //             validator: "[0-9]" //7
+                    //         },
+                    //         "N": {
+                    //             validator: "n|N",
+                    //             casing: "upper"
+                    //         },
+                    //         "S": {
+                    //             validator: "s|S",
+                    //             casing: "upper"
+                    //         }
+                    //     }
+                    // });
+                    // $("input[name*='longitude']").inputmask({
+                    //     "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
+                    //     "autoUnmask": true,
+                    //     "greedy": false,
+                    //     "placeholder": "",
+                    //     "skipOptionalCharacter": " ",
+                    //     "definitions": {
+                    //         "r": {
+                    //             validator: "[0-7]"
+                    //         },
+                    //         "t": {
+                    //             validator: "[0-5]"
+                    //         },
+                    //         "7": {
+                    //             validator: "[0-9]"
+                    //         },
+                    //         "E": {
+                    //             validator: "e|E",
+                    //             casing: "upper"
+                    //         },
+                    //         "W": {
+                    //             validator: "w|W",
+                    //             casing: "upper"
+                    //         }
+                    //     },
+                    // });
 
                     // $(this).find("input[name*='sample_date_received']").prop("disabled", true);
                     // $(this).find("input[name*='date_collected']").prop("disabled", true);
@@ -265,7 +279,226 @@ var FormRepeater = function () {
 
 }();
 
+var FormWizard = function () {
+
+    return {
+        //main function to initiate the module
+        init: function () {
+            if (!jQuery().bootstrapWizard) {
+                return;
+            }
+
+        var form = $('#submit_form');
+        var error = $('.alert-danger', form);
+        var success = $('.alert-success', form);
+
+        form.validate({
+            doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block help-block-error', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            rules: {
+                //package metadata
+                'sample_collection_id[]': {
+                    required: true,
+                    unique: true
+                }
+            },
+
+            errorPlacement: function (error, element) { // render error placement for each input type
+                if (element.hasClass("select2")) {
+                    error.insertAfter(element.next());
+                } else if (element.parent().hasClass("date-picker")) {
+                    error.insertAfter(element.parent())
+                } else {
+                    error.insertAfter(element); // for other inputs, just perform default behavior
+                }
+            },
+
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                success.hide();
+                error.show();
+                App.scrollTo(error, -200);
+            },
+
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+            },
+
+            unhighlight: function (element) { // revert the change done by hightlight
+                $(element)
+                    .closest('.form-group').removeClass('has-error'); // set error class to the control group
+            },
+
+            success: function (label) {
+                if (label.attr("for") == "gender" || label.attr("for") == "payment[]") { // for checkboxes and radio buttons, no need to show OK icon
+                    label
+                        .closest('.form-group').removeClass('has-error').addClass('has-success');
+                    label.remove(); // remove error label here
+                } else { // display success icon for other inputs
+                    label
+                        .addClass('valid') // mark the current input as valid and display OK icon
+                    .closest('.form-group').removeClass('has-error').addClass('has-success'); // set success class to the control group
+                }
+            },
+
+            submitHandler: function (form) {
+                success.show();
+                error.hide();
+                form.submit();
+                //add here some ajax code to submit your form or just call form.submit() if you want to submit the form without ajax
+            }
+
+        });
+
+            var displayConfirm = function() {
+                var tables = ["vials", "specimens"];
+                var items = $('#submit_form').repeaterVal();
+                $('#tab2 .form-control-static', form).each(function(){
+                    var table = $(this).attr("data-display");
+                    if ( tables.includes(table) ) {
+                        var tbl = $(this).find("table > tbody");
+                        tbl.empty();
+                        if (table == "vials") {
+                            items['samples'].forEach(function(element){
+                                var tr = $('<tr></tr>');
+                                tr.append('<td>'+element.sender_source_id+'</td>');
+                                tr.append('<td>'+element.sample_date_sampled+'</td>');
+                                tr.append('<td>'+element.sample_date_received+'</td>');
+                                tr.append('<td>'+element.specimens.length+'</td>');
+                                tbl.append(tr);
+                            });
+                        };
+                        if (table == "specimens") {
+                            items['samples'].forEach(function(element){
+                                element['specimens'].forEach(function(specimen){
+                                    var tr = $('<tr></tr>');
+                                    tr.append('<td>'+element.sender_source_id+'</td>');
+                                    tr.append('<td>'+specimen.collection_sample_id+'</td>');
+                                    tr.append('<td>'+specimen.dna+'</td>');
+                                    tr.append('<td>'+specimen.date_collected+'</td>');
+                                    tbl.append(tr);
+                                });
+                            });
+                        };
+                    };
+                    if ($(this).attr("data-display") == "number_vials") {
+                        $(this).html(items["samples"].length);
+                        return;
+                    };
+                    if ($(this).attr("data-display") == "number_specimens") {
+                        var total_specimens = 0;
+                        items['samples'].forEach(function(element){
+                            total_specimens = total_specimens + element['specimens'].length;
+                        });
+                        $(this).html(total_specimens);
+                        return;
+                    };
+                    var input = $('[name="'+$(this).attr("data-display")+'"]', form);
+                    // console.log(input);
+                    if (input.is(":radio")) {
+                        input = $('[name="'+$(this).attr("data-display")+'"]:checked', form);
+                    }
+                    if (input.is(":text") || input.is("textarea")) {
+                        $(this).html(input.val());
+                    } else if (input.is("select")) {
+                        var selected_status = $('#'+$(this).attr("data-display")).select2('data');
+                        $(this).html(selected_status[0].text);
+                    } else if (input.is(":radio") && input.is(":checked")) {
+                        $(this).html(input.attr("data-title"));
+                    }
+                });
+            }
+
+            var handleTitle = function(tab, navigation, index) {
+                var total = navigation.find('li').length;
+                var current = index + 1;
+                // set wizard title
+                $('.step-title', $('#form_wizard_1')).text('Step ' + (index + 1) + ' of ' + total);
+                // set done steps
+                jQuery('li', $('#form_wizard_1')).removeClass("done");
+                var li_list = navigation.find('li');
+                for (var i = 0; i < index; i++) {
+                    jQuery(li_list[i]).addClass("done");
+                }
+
+                if (current == 1) {
+                    $('#form_wizard_1').find('.button-previous').hide();
+                } else {
+                    $('#form_wizard_1').find('.button-previous').show();
+                }
+
+                if (current >= total) {
+                    $('#form_wizard_1').find('.button-next').hide();
+                    $('#form_wizard_1').find('.button-submit').show();
+                    displayConfirm();
+                } else {
+                    $('#form_wizard_1').find('.button-next').show();
+                    $('#form_wizard_1').find('.button-submit').hide();
+                }
+                App.scrollTo($('.page-title'));
+            }
+
+            // default form wizard
+            $('#form_wizard_1').bootstrapWizard({
+                'nextSelector': '.button-next',
+                'previousSelector': '.button-previous',
+                onTabClick: function (tab, navigation, index, clickedIndex) {
+                    return false;
+
+                    success.hide();
+                    error.hide();
+                    if (form.valid() == false) {
+                        return false;
+                    }
+
+                    handleTitle(tab, navigation, clickedIndex);
+                },
+                onNext: function (tab, navigation, index) {
+                    success.hide();
+                    error.hide();
+
+                    if (form.valid() == false) {
+                        return false;
+                    }
+
+                    handleTitle(tab, navigation, index);
+                },
+                onPrevious: function (tab, navigation, index) {
+                    success.hide();
+                    error.hide();
+
+                    handleTitle(tab, navigation, index);
+                },
+                onTabShow: function (tab, navigation, index) {
+                    var total = navigation.find('li').length;
+                    var current = index + 1;
+                    var $percent = (current / total) * 100;
+                    $('#form_wizard_1').find('.progress-bar').css({
+                        width: $percent + '%'
+                    });
+                }
+            });
+
+            $('#form_wizard_1').find('.button-previous').hide();
+            $('#form_wizard_1 .button-submit').click(function () {
+                $(form).submit();
+            }).hide();
+
+            //apply validation on select2 dropdown value change, this only needed for chosen dropdown integration.
+            $('.select2', form).change(function () {
+                form.validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input
+            });
+
+        }
+
+    };
+
+}();
+
 jQuery(document).ready(function() {
+    FormWizard.init();
     FormRepeater.init();
 
     create_select2($("#collector"), "Select a collector");
@@ -303,57 +536,61 @@ jQuery(document).ready(function() {
     // $("input[name*='sample_date_received']").prop("disabled", true);
     // $("input[name*='date_collected']").prop("disabled", true);
 
-    $("input[name*='latitude']").inputmask({
-        "mask": "(bc|c)|(\\90)\˚ (ic|c)|(60)\' [i]c.[i]c\" N|S",
-        "autoUnmask": true,
-        "greedy": false,
-        "placeholder": "",
-        "skipOptionalCharacter": " ",
-        "definitions": {
-            "i": {
-                validator: "[0-5]" //t
-            },
-            "b": {
-                validator: "[0-8]" //8
-            },
-            "c": {
-                validator: "[0-9]" //7
-            },
-            "N": {
-                validator: "n|N",
-                casing: "upper"
-            },
-            "S": {
-                validator: "s|S",
-                casing: "upper"
-            }
-        }
-    });
-    $("input[name*='longitude']").inputmask({
-        "mask": "(1r7|77)|(180)\˚ [t]7|(60)\' [t]7.[7]7\" E|W",
-        "autoUnmask": true,
-        "greedy": false,
-        "placeholder": "",
-        "skipOptionalCharacter": " ",
-        "definitions": {
-            "r": {
-                validator: "[0-7]"
-            },
-            "t": {
-                validator: "[0-5]"
-            },
-            "7": {
-                validator: "[0-9]"
-            },
-            "E": {
-                validator: "e|E",
-                casing: "upper"
-            },
-            "W": {
-                validator: "w|W",
-                casing: "upper"
-            }
-        },
-    });
+    // $("input[name*='latitude']").inputmask({
+    //     // "mask": "99/99/99.999 N|S",
+    //     // "mask": "(bc|c)|(90)/(ic|c)|(60)/[i]c.[c][c]c/N|S",
+    //     // "mask": "(bc|c)|(90)\\˚ (ic|c)|(60)\\' [i]c.[c][c]c\\'' N|S",
+    //     "mask": "99\\˚ 99\\' 99.999\\'' N|S",
+    //     // "regex": "([0-8]?[0-9]|90)° ([0-5]?[0-9]|60)' ([0-5]?[0-9]).([0-9]{1,3})'' [NSns]",
+    //     "autoUnmask": true,
+    //     "greedy": false,
+    //     "placeholder": "",
+    //     "skipOptionalCharacter": " ",
+    //     "definitions": {
+    //         "i": {
+    //             validator: "[0-5]" //t
+    //         },
+    //         "b": {
+    //             validator: "[0-8]" //8
+    //         },
+    //         "c": {
+    //             validator: "[0-9]" //7
+    //         },
+    //         "N": {
+    //             validator: "n|N",
+    //             casing: "upper"
+    //         },
+    //         "S": {
+    //             validator: "s|S",
+    //             casing: "upper"
+    //         }
+    //     }
+    // });
+    // $("input[name*='longitude']").inputmask({
+    //     "mask": "(1r7|77)|(180)\\˚ [t]7|(60)\\' [t]7.[7][7]7\\'' E|W",
+    //     "autoUnmask": true,
+    //     "greedy": false,
+    //     "placeholder": "",
+    //     "skipOptionalCharacter": " ",
+    //     "definitions": {
+    //         "r": {
+    //             validator: "[0-7]"
+    //         },
+    //         "t": {
+    //             validator: "[0-5]"
+    //         },
+    //         "7": {
+    //             validator: "[0-9]"
+    //         },
+    //         "E": {
+    //             validator: "e|E",
+    //             casing: "upper"
+    //         },
+    //         "W": {
+    //             validator: "w|W",
+    //             casing: "upper"
+    //         }
+    //     },
+    // });
 
 });
