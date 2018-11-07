@@ -27,7 +27,7 @@ class Sample(Base):
     genus_id                = db.Column(db.Integer, db.ForeignKey('genus.id'), nullable=False)
     species_id              = db.Column(db.Integer, db.ForeignKey('species.id'), nullable=False)
     subspecies_id           = db.Column(db.Integer, db.ForeignKey('subspecies.id'), nullable=False)
-    lineage_id              = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=False)
+    lineage_id              = db.Column(db.Integer, db.ForeignKey('lineage.id'), nullable=True)
     origin_country          = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=True)
 
     specimens_in_received_vial       = db.Column(db.Integer, nullable=True)
@@ -73,7 +73,7 @@ class Sample(Base):
         self.genus_id = kwargs.get('genus_id')
         self.species_id = kwargs.get('species_id')
         self.subspecies_id = kwargs.get('subspecies_id')
-        self.lineage_id = kwargs.get('lineage_id')
+        self.lineage_id = kwargs.get('lineage_id') or None
         self.origin_country = kwargs.get('country_id') or None
         self.sender_source_id = kwargs.get('sender_source_id')
         self.origin_locality = kwargs.get('origin_locality') or None

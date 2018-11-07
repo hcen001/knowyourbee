@@ -32,7 +32,7 @@ class SampleForm(FlaskForm):
     genus_id                = SelectField('Genus', validators=[InputRequired()])
     species_id              = SelectField('Species', validators=[InputRequired()])
     subspecies_id           = SelectField('Subspecies', validators=[InputRequired()])
-    lineage_id              = SelectField('Lineage', validators=[InputRequired()])
+    lineage_id              = SelectField('Lineage', validators=[Optional()])
     sample_quality          = RadioField('95% Ethanol', choices=[(1, 'Yes'),(0, 'No')], validators=[InputRequired()])
     gender                  = RadioField('Gender', validators=[InputRequired()])
     caste_id                = SelectField('Caste', validators=[InputRequired()])
