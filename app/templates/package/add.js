@@ -14,6 +14,19 @@ $.validator.addMethod("unique", function(value, element) {
 
 }, "* Duplicate");
 
+$.validator.addMethod("regex", function(value, element) {
+
+    var regexp = '';
+    if ($(element).attr('id') === 'latitude') {
+        regexp = '(\\d{1,2})\\s(\\d{1,2})\\s(\\d{1,2}(\\.\\d{1,3})?)\\s[NSns]$';
+    } else {
+        regexp = '(\\d{1,2})\\s(\\d{1,2})\\s(\\d{1,2}(\\.\\d{1,3})?)\\s[EWew]$';
+    };
+    var re = new RegExp(regexp);
+    return this.optional(element) || re.test(value);
+
+}, "Please check your input.");
+
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};

@@ -14,6 +14,19 @@ $.validator.addMethod("unique", function(value, element) {
 
 }, "* Duplicate");
 
+$.validator.addMethod("regex", function(value, element) {
+
+    var regexp = '';
+    if ($(element).attr('id') === 'latitude') {
+        regexp = '(\\d{1,2})\\s(\\d{1,2})\\s(\\d{1,2}(\\.\\d{1,3})?)\\s[NSns]$';
+    } else {
+        regexp = '(\\d{1,2})\\s(\\d{1,2})\\s(\\d{1,2}(\\.\\d{1,3})?)\\s[EWew]$';
+    };
+    var re = new RegExp(regexp);
+    return this.optional(element) || re.test(value);
+
+}, "Please check your input.");
+
 $(".button-cancel").click(function(e){
     e.preventDefault();
     var choice = confirm("Are you sure you want to cancel? You will lose all data that has not been saved");
@@ -299,9 +312,17 @@ var FormWizard = function () {
             focusInvalid: false, // do not focus the last invalid input
             rules: {
                 //package metadata
-                'sample_collection_id[]': {
-                    required: true,
-                    unique: true
+                // 'collection_sample_id[]': {
+                //     required: true,
+                //     unique: true
+                // },
+                'latitude[]': {
+                    regex: true
+                    // regex: '/(\d{1,2})\s(\d{1,2})\s(\d{1,2}(\.\d{1,3})?)\s[NSns]'
+                },
+                'longitude[]': {
+                    regex: true
+                    // regex: '/(\d{1,2})\s(\d{1,2})\s(\d{1,2}(\.\d{1,3})?)\s[EWew]'
                 }
             },
 
