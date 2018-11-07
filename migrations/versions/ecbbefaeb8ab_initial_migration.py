@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 39b4d85c8b87
+Revision ID: ecbbefaeb8ab
 Revises: 
-Create Date: 2018-11-02 14:26:14.328525
+Create Date: 2018-11-07 10:48:31.997230
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '39b4d85c8b87'
+revision = 'ecbbefaeb8ab'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -234,6 +234,7 @@ def upgrade():
     sa.Column('development_stage_id', sa.Integer(), nullable=False),
     sa.Column('genus_id', sa.Integer(), nullable=False),
     sa.Column('species_id', sa.Integer(), nullable=False),
+    sa.Column('sample_quality', sa.Boolean(), server_default='t', nullable=False),
     sa.Column('subspecies_id', sa.Integer(), nullable=False),
     sa.Column('lineage_id', sa.Integer(), nullable=False),
     sa.Column('origin_country', sa.Integer(), nullable=True),

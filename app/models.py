@@ -23,7 +23,11 @@ class Base(db.Model):
             self.active = False
 
         try:
+            # print('DIR', dir(self))
             db.session.add(self)
+            # print(self.__dict__)
+            # print(self.__dict__)
+            # db.session.execute(self.__table__.insert(values=self.__dict__, prefixes=['OR IGNORE']))
             db.session.flush()
         except IntegrityError as e:
             raise
