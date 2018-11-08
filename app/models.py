@@ -47,8 +47,8 @@ class PersonBase(Base):
 
     fname = db.Column('fname', db.String(128), nullable=False, default='First name', server_default='First name')
     lname = db.Column('lname', db.String(128), nullable=False, default='Last name', server_default='Last name')
-    email = db.Column('email', db.String(128), nullable=False, default='someone@xample.org', server_default='someone@xample.org', unique=True)
-    phone = db.Column('phone', db.String(128), nullable=False, default='N/A', server_default='N/A')
+    email = db.Column('email', db.String(128), nullable=True, default='someone@xample.org', server_default='someone@xample.org', unique=True)
+    phone = db.Column('phone', db.String(128), nullable=True, default='N/A', server_default='N/A')
 
     @property
     def full_name(self):

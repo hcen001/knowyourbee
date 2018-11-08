@@ -24,7 +24,7 @@ class CollaboratorForm(FlaskForm):
 
     first_name          = StringField('First name', validators=[InputRequired()])
     last_name           = StringField('Last name', validators=[InputRequired()])
-    email               = EmailField('Email', validators=[InputRequired(), Email()])
+    email               = EmailField('Email', validators=[Optional(), Email()])
     phone               = StringField('Phone', validators=[Optional()])
     roles               = Select2MultipleField('Roles', validators=[InputRequired()])
 
@@ -36,9 +36,9 @@ class PartnerForm(FlaskForm):
 
     first_name          = StringField('First name', validators=[InputRequired()])
     last_name           = StringField('Last name', validators=[InputRequired()])
-    email               = EmailField('Email', validators=[InputRequired(), Email()])
+    email               = EmailField('Email', validators=[Optional(), Email()])
     institution         = StringField('Institution', validators=[InputRequired()])
-    phone               = StringField('Phone', validators=[InputRequired()])
+    phone               = StringField('Phone', validators=[Optional()])
 
 class LocationForm(FlaskForm):
 

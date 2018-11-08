@@ -144,8 +144,8 @@ class Person(PersonBase):
 
         self.fname = kwargs.get('first_name')
         self.lname = kwargs.get('last_name')
-        self.email = kwargs.get('email')
-        self.phone = kwargs.get('phone')
+        self.email = kwargs.get('email') or None
+        self.phone = kwargs.get('phone') or None
         self.role = kwargs.get('role')
 
     def sent_packages(self):
@@ -201,9 +201,9 @@ class Partner(PersonBase):
     def __init__(self, fname, lname, email, institution, phone):
         self.fname          = fname
         self.lname          = lname
-        self.email          = email
+        self.email          = email or None
         self.institution    = institution
-        self.phone          = phone
+        self.phone          = phone or None
 
     @classmethod
     def select_list(cls):
