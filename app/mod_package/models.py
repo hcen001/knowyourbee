@@ -90,7 +90,8 @@ class Package(Base):
                     _specimen = {}
                     number_specimen += 1
                     _specimen['collection_sample_id'] = specimen.collection_sample_id
-                    _specimen['cooperator'] = specimen.sample.collected_by().full_name
+                    _specimen['cooperator'] = package.partner.full_name if package.partner else 'N/A'
+                    # _specimen['cooperator'] = specimen.sample.collected_by().full_name
                     _specimen['number_specimens'] = '{}/{}'.format(number_specimen, len(specimens))
                     _specimen['date_received'] = specimen.sample.date_received.strftime('%d/%B/%Y')
                     _specimen['country'] = specimen.sample.country.name if specimen.sample.country else 'N/A'

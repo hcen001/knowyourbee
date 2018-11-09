@@ -90,7 +90,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2"><strong>Partner:</strong></label>
                                 <div class="col-md-">
-                                    <p class="form-control-static"> {{ package.partner.institution or 'N/A' }} </p>
+                                    <p class="form-control-static"> {{ package.partner.full_name +' - '+ package.partner.institution or 'N/A' }} </p>
                                 </div>
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                             <thead>
                                 <tr>
                                     <th> Collection Specimen ID </th>
-                                    <th> Cooperator name </th>
+                                    <th> Partner name </th>
                                     <th> Number specimens in received vial </th>
                                     <th> Date received </th>
                                     <th> Country </th>
