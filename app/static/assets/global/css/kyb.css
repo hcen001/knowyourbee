@@ -20,7 +20,7 @@ h3.block {
 }
 
 .mt-repeater-item:nth-child(odd), div[data-repeater-list="specimens"] > .mt-repeater-item:nth-child(odd){
-    background-color: #F2F4F4 !important;
+    background-color: #C1C3C3 !important;
 }
 
 div.dt-buttons {
