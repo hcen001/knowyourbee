@@ -15,12 +15,12 @@ h3.block {
     padding: 0 !important;
 }
 
-.mt-repeater-item:nth-child(even), div[data-repeater-list="specimens"] > .mt-repeater-item:nth-child(even) {
+div[data-repeater-list="samples"] > .mt-repeater-item:nth-child(even) {
     background-color: #FFFFFF !important;
 }
 
-.mt-repeater-item:nth-child(odd), div[data-repeater-list="specimens"] > .mt-repeater-item:nth-child(odd){
-    background-color: #C1C3C3 !important;
+div[data-repeater-list="samples"] > .mt-repeater-item:nth-child(odd){
+    background-color: #A9AAAA !important;
 }
 
 div.dt-buttons {
