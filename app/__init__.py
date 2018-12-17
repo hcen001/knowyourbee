@@ -69,5 +69,4 @@ def make_shell_context():
             'Genus': Genus, 'Species': Species, 'Subspecies': Subspecies, \
             'Lineage': Lineage, 'Person': Person, 'Partner': Partner, \
             'Location': Location, 'Courier': Courier, 'Country': Country, \
-            'State': State, 'City': City, 'Caste': Caste, 'Stage': Stage, \
-            'DNAMeasurement': DNAMeasurement}
+            'Caste': Caste, 'Stage': Stage, 'DNAMeasurement': DNAMeasurement}
