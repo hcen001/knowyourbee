@@ -76,7 +76,7 @@ class Sample(Base):
         self.lineage_id = kwargs.get('lineage_id') or None
         self.origin_country = kwargs.get('country_id') or None
         self.sender_source_id = kwargs.get('sender_source_id')
-        self.origin_locality = kwargs.get('origin_locality') or None
+        self.origin_locality = kwargs.get('locality') or None
         self.hive = kwargs.get('hive') or None
         self.latitude = kwargs.get('latitude') or None
         self.longitude = kwargs.get('longitude') or None
